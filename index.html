@@ -9,12 +9,32 @@
 <meta property="og:title" content="Karthick A — Founder & Embedded Systems Engineer">
 <meta property="og:description" content="I build industrial embedded systems end-to-end — from datasheet to deployed product.">
 <meta property="og:url" content="https://karthick-a.github.io/portfolio/">
-<meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/og-banner.jpg">
+<meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg"><!-- TODO: replace with assets/images/og-banner.jpg (1200x630) when ready -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Karthick A — Founder & Embedded Systems Engineer">
 <meta name="twitter:description" content="I build industrial embedded systems end-to-end — from datasheet to deployed product.">
-<meta name="twitter:image" content="https://karthick-a.github.io/portfolio/assets/images/og-banner.jpg">
+<meta name="twitter:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0f1c'/%3E%3Crect x='8' y='8' width='16' height='16' rx='2' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3Cpath d='M12 8V4M20 8V4M12 28v-4M20 28v-4M8 12H4M8 20H4M28 12h-4M28 20h-4' stroke='%2322d3ee' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="canonical" href="https://karthick-a.github.io/portfolio/">
+<script>document.documentElement.classList.add('js');</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Karthick A",
+  "jobTitle": "Founder & Embedded Systems Engineer",
+  "worksFor": { "@type": "Organization", "name": "Spark Invotech Pvt Ltd" },
+  "email": "mailto:karthick24092003@gmail.com",
+  "telephone": "+91 7094828457",
+  "address": { "@type": "PostalAddress", "addressLocality": "Chennai", "addressCountry": "IN" },
+  "url": "https://karthick-a.github.io/portfolio/",
+  "image": "https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg",
+  "sameAs": [
+    "https://linkedin.com/in/karthick-a-83a352211",
+    "https://github.com/karthick-a"
+  ]
+}
+</script>
 <style>
 :root{
   --bg:#0a0f1c;
@@ -128,14 +148,21 @@ section:nth-of-type(even){background:var(--bg-2)}
 h2{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:750;letter-spacing:-.3px;margin-bottom:14px}
 .sec-intro{color:var(--muted);max-width:640px;margin-bottom:48px}
 
-/* reveal on scroll */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-.reveal.visible{opacity:1;transform:none}
+/* reveal on scroll — only hidden when JS is running (progressive enhancement) */
+.js .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.js .reveal.visible{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .reveal{opacity:1;transform:none;transition:none}
+  .js .reveal{opacity:1;transform:none;transition:none}
   .scroll-hint{animation:none}
 }
+.skip-link{
+  position:absolute;left:-9999px;top:0;z-index:100;
+  background:var(--accent);color:#04121a;padding:10px 18px;
+  border-radius:0 0 10px 0;font-weight:700;
+}
+.skip-link:focus{left:0}
+section[id]{scroll-margin-top:70px}
 
 /* ---------- Timeline / project cards ---------- */
 .timeline{position:relative;padding-left:34px}
@@ -230,6 +257,10 @@ h2{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:750;letter-spacing:-.3px;mar
 .pdet summary::after{content:"▾";transition:transform .2s;font-size:.75rem}
 .pdet[open] summary::after{transform:rotate(180deg)}
 .pdet .prow{font-size:.88rem}
+@media(max-width:400px){
+  .prow{grid-template-columns:1fr;gap:2px;margin-bottom:12px}
+  .prow .pl{padding-top:0}
+}
 
 /* ---------- Engineering Notes ---------- */
 .notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
@@ -322,10 +353,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 </head>
 <body>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
 <nav>
   <div class="nav-inner">
     <div class="brand">KARTHICK<span> A</span></div>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">☰</button>
     <ul class="nav-links" id="navLinks">
       <li><a href="#projects">Projects</a></li>
       <li><a href="#skills">Skills</a></li>
@@ -340,7 +373,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 
 <!-- ================= HERO ================= -->
 <header>
-  <canvas id="hero-canvas"></canvas>
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-content">
     <div class="hero-kicker">Spark Invotech Pvt Ltd · Chennai</div>
     <h1>Karthick A</h1>
@@ -365,29 +398,31 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   <div class="scroll-hint">Scroll</div>
 </header>
 
+<main id="main">
+
 <!-- ================= STATS ================= -->
 <section class="stats" aria-label="Key numbers">
   <div class="wrap">
     <div class="stats-grid">
       <div class="stat reveal">
-        <div class="stat-num" data-count="8" data-suffix="+">0</div>
+        <div class="stat-num" data-count="8" data-suffix="+">8+</div>
         <div class="stat-label">Hardware Products Built</div>
       </div>
       <div class="stat reveal">
-        <div class="stat-num" data-count="2">0</div>
+        <div class="stat-num" data-count="2">2</div>
         <div class="stat-label">Enterprise Clients Served</div>
       </div>
       <div class="stat reveal">
-        <div class="stat-num" data-count="15" data-suffix="+">0</div>
+        <div class="stat-num" data-count="15" data-suffix="+">15+</div>
         <div class="stat-label">Sensor Types Integrated</div>
       </div>
       <div class="stat reveal">
-        <div class="stat-num" data-count="6">0</div>
+        <div class="stat-num" data-count="6">6</div>
         <div class="stat-label">Communication Protocols</div>
         <div class="stat-sub">UART · SPI · I2C · CAN · RS485 · LoRa</div>
       </div>
       <div class="stat reveal">
-        <div class="stat-num" data-count="3">0</div>
+        <div class="stat-num" data-count="3">3</div>
         <div class="stat-label">Grants &amp; Recognitions</div>
       </div>
     </div>
@@ -689,23 +724,23 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
     <h2 class="reveal">Recognition along the way</h2>
     <div class="ach-grid">
       <div class="ach-card reveal">
-        <div class="ach-icon">🏆</div>
+        <div class="ach-icon" aria-hidden="true">🏆</div>
         <div><h3>Youth Co:Lab (UNDP)</h3><p>Top 20 National Finalist — selected for the 5-day intensive workshop.</p></div>
       </div>
       <div class="ach-card reveal">
-        <div class="ach-icon">🧭</div>
+        <div class="ach-icon" aria-hidden="true">🧭</div>
         <div><h3>Smart India Hackathon 2025</h3><p>Served as a Team Mentor.</p></div>
       </div>
       <div class="ach-card reveal">
-        <div class="ach-icon">🚀</div>
+        <div class="ach-icon" aria-hidden="true">🚀</div>
         <div><h3>DPIIT Startup Recognition</h3><p>Spark Invotech is a DPIIT-recognized startup, incubated at Sri Sairam Techno Incubation Foundation.</p></div>
       </div>
       <div class="ach-card reveal">
-        <div class="ach-icon">💡</div>
+        <div class="ach-icon" aria-hidden="true">💡</div>
         <div><h3>IVP Voucher Grant</h3><p>Grant received for Spark Invotech.</p></div>
       </div>
       <div class="ach-card reveal">
-        <div class="ach-icon">📜</div>
+        <div class="ach-icon" aria-hidden="true">📜</div>
         <div><h3>Certifications</h3><p>IIT Bombay (Arduino) · IIRS/ISRO ×5 · IEEE ×3+ · NPTEL ×2.</p></div>
       </div>
     </div>
@@ -774,15 +809,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
         <h2 class="reveal">Let's talk</h2>
         <p class="sec-intro reveal" style="margin-bottom:0">Whether it's a project for Spark Invotech or an embedded engineering role, I read every message myself.</p>
         <ul class="contact-list reveal">
-          <li><span class="ci">✉️</span><a href="mailto:karthick24092003@gmail.com">karthick24092003@gmail.com</a></li>
-          <li><span class="ci">📞</span><a href="tel:+917094828457">+91 70948 28457</a></li>
-          <li><span class="ci">💼</span><a href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener">linkedin.com/in/karthick-a-83a352211</a></li>
-          <li><span class="ci">🐙</span><a href="https://github.com/karthick-a" target="_blank" rel="noopener">github.com/karthick-a</a></li>
+          <li><span class="ci" aria-hidden="true">✉️</span><a href="mailto:karthick24092003@gmail.com">karthick24092003@gmail.com</a></li>
+          <li><span class="ci" aria-hidden="true">📞</span><a href="tel:+917094828457">+91 70948 28457</a></li>
+          <li><span class="ci" aria-hidden="true">💼</span><a href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener">linkedin.com/in/karthick-a-83a352211</a></li>
+          <li><span class="ci" aria-hidden="true">🐙</span><a href="https://github.com/karthick-a" target="_blank" rel="noopener">github.com/karthick-a</a></li>
         </ul>
       </div>
       <div class="contact-card reveal">
         <div class="avatar">
-          <img src="assets/images/profile/karthick.jpg" alt="Karthick A"
+          <img src="assets/images/profile/karthick.jpg" alt="Karthick A" loading="lazy" decoding="async"
                onerror="this.parentNode.textContent='KA'">
         </div>
         <h3>Karthick A</h3>
@@ -793,6 +828,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   </div>
 </section>
 
+</main>
+
 <footer>
   © 2026 Karthick A · Spark Invotech Pvt Ltd · Built from the datasheet up.
 </footer>
@@ -802,8 +839,13 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
 // ---------- Nav ----------
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
-navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
-navLinks.addEventListener('click', e => { if (e.target.tagName === 'A') navLinks.classList.remove('open'); });
+navToggle.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  navToggle.setAttribute('aria-expanded', open);
+});
+navLinks.addEventListener('click', e => {
+  if (e.target.tagName === 'A') { navLinks.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); }
+});
 
 // ---------- Reveal on scroll ----------
 const io = new IntersectionObserver(entries => {
@@ -945,17 +987,24 @@ window.addEventListener('load', () => {
   resize();
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let raf;
+  let raf, heroVisible = true;
   function animate() {
     if (reduced) { renderer.render(scene, camera); return; } // single static frame
     board.rotation.y += 0.0035;
     renderer.render(scene, camera);
     raf = requestAnimationFrame(animate);
   }
-  document.addEventListener('visibilitychange', () => {
+  // Run the loop only while the hero is on screen and the tab is visible
+  function control() {
+    cancelAnimationFrame(raf);
     if (reduced) return;
-    if (document.hidden) cancelAnimationFrame(raf); else animate();
-  });
+    if (!document.hidden && heroVisible) animate();
+  }
+  document.addEventListener('visibilitychange', control);
+  new IntersectionObserver(entries => {
+    heroVisible = entries[0].isIntersecting;
+    control();
+  }).observe(canvas.parentElement);
 });
 </script>
 </body>
