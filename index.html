@@ -164,25 +164,53 @@ h2{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:750;letter-spacing:-.3px;mar
 .skip-link:focus{left:0}
 section[id]{scroll-margin-top:70px}
 
-/* ---------- Timeline / project cards ---------- */
-.timeline{position:relative;padding-left:34px}
-.timeline::before{
-  content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;
-  background:linear-gradient(to bottom,var(--accent),var(--line) 85%);
-}
-.tl-item{position:relative;margin-bottom:44px}
-.tl-item:last-child{margin-bottom:0}
-.tl-item::before{
-  content:"";position:absolute;left:-33px;top:8px;width:12px;height:12px;border-radius:50%;
-  background:var(--bg);border:3px solid var(--accent);
-}
+/* ---------- Project showcase grid ---------- */
 .tl-date{color:var(--accent);font-size:.82rem;font-weight:600;letter-spacing:1.2px;text-transform:uppercase}
-.proj-card{
-  margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;
-  overflow:hidden;display:grid;grid-template-columns:280px 1fr;
-  transition:border-color .25s,background .25s;
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.pcard{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  display:flex;flex-direction:column;cursor:pointer;
+  transition:border-color .25s,transform .25s,background .25s;
 }
-.proj-card:hover{border-color:rgba(34,211,238,.45);background:var(--card-hover)}
+.pcard:hover{border-color:rgba(34,211,238,.45);background:var(--card-hover);transform:translateY(-3px)}
+.pcard .proj-media{flex:none;height:150px;min-height:150px}
+.pcard-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:9px;flex:1}
+.pcard-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pcard-year{color:var(--muted);font-size:.76rem;letter-spacing:.6px;white-space:nowrap}
+.pcard h3{font-size:1.04rem;font-weight:700;line-height:1.35}
+.pcard-line{color:var(--muted);font-size:.88rem;flex:1}
+.pcard-more{
+  background:none;border:none;color:var(--accent);font-weight:600;font-size:.88rem;
+  cursor:pointer;text-align:left;padding:0;font-family:inherit;
+}
+.pcard-more::after{content:" →"}
+.earlier{
+  margin:40px 0 4px;color:var(--muted);font-size:.9rem;font-weight:600;
+  letter-spacing:1.6px;text-transform:uppercase;
+}
+
+/* ---------- Project detail dialog ---------- */
+.pdlg{
+  border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--text);
+  max-width:640px;width:calc(100vw - 40px);padding:0;
+}
+.pdlg::backdrop{background:rgba(4,8,16,.72);backdrop-filter:blur(3px)}
+.pdlg-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:16px;
+  padding:22px 26px;border-bottom:1px solid var(--line);
+}
+.pdlg-head h3{font-size:1.2rem;line-height:1.3}
+.pdlg-meta{color:var(--muted);font-size:.85rem;margin-top:4px}
+.pdlg-x{
+  flex:none;background:none;border:1px solid var(--line);border-radius:8px;color:var(--text);
+  width:34px;height:34px;cursor:pointer;font-size:1rem;line-height:1;
+}
+.pdlg-x:hover{border-color:var(--accent);color:var(--accent)}
+.pdlg-body{padding:22px 26px;max-height:65vh;overflow:auto}
+.pdlg-body h4{
+  color:var(--accent);font-size:.74rem;letter-spacing:2px;text-transform:uppercase;
+  margin:20px 0 12px;border-top:1px solid var(--line);padding-top:16px;
+}
 .proj-media{position:relative;min-height:200px;background:#0b1222}
 .proj-media img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .proj-media.ph{
@@ -200,13 +228,10 @@ section[id]{scroll-margin-top:70px}
 .proj-media.ph::after{
   content:attr(data-label);color:var(--muted);font-size:.8rem;letter-spacing:1px;text-transform:uppercase;
 }
-.proj-body{padding:26px 28px}
-.proj-body h3{font-size:1.25rem;font-weight:700;margin-bottom:4px}
 .proj-status{
   display:inline-block;margin:6px 0 12px;padding:3px 12px;border-radius:99px;
   background:var(--accent-dim);color:var(--accent);font-size:.76rem;font-weight:600;letter-spacing:.6px;
 }
-.proj-body p{color:var(--muted);font-size:.95rem}
 .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .tag{
   font-size:.74rem;padding:4px 11px;border-radius:99px;
@@ -216,10 +241,6 @@ section[id]{scroll-margin-top:70px}
 .tl-mini h3{font-size:1.05rem;margin-bottom:4px}
 .tl-mini p{color:var(--muted);font-size:.92rem}
 .mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:10px}
-@media(max-width:760px){
-  .proj-card{grid-template-columns:1fr}
-  .proj-media{min-height:170px}
-}
 
 /* ---------- Hero chips ---------- */
 .hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px;max-width:640px}
@@ -248,15 +269,6 @@ section[id]{scroll-margin-top:70px}
 .prow .pv{color:var(--muted)}
 .prow .pv strong{color:var(--text);font-weight:600}
 .prow .tags{margin-top:0}
-.pdet{margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
-.pdet summary{
-  cursor:pointer;list-style:none;color:var(--accent);font-size:.82rem;font-weight:600;
-  padding:8px 0;display:flex;align-items:center;gap:7px;user-select:none;
-}
-.pdet summary::-webkit-details-marker{display:none}
-.pdet summary::after{content:"▾";transition:transform .2s;font-size:.75rem}
-.pdet[open] summary::after{transform:rotate(180deg)}
-.pdet .prow{font-size:.88rem}
 @media(max-width:400px){
   .prow{grid-template-columns:1fr;gap:2px;margin-bottom:12px}
   .prow .pl{padding-top:0}
@@ -435,204 +447,285 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   <div class="wrap">
     <div class="sec-kicker reveal">Projects</div>
     <h2 class="reveal">Things I've actually built and shipped</h2>
-    <p class="sec-intro reveal">Every project here went through my hands completely — architecture, circuit and PCB design, firmware, testing, and delivery. Nothing on this list is a simulation or a course exercise.</p>
+    <p class="sec-intro reveal">Every project here went through my hands completely — architecture, PCB, firmware, testing, and delivery. Open any card for the full engineering breakdown.</p>
 
-    <div class="timeline">
+    <div class="proj-grid">
 
-      <div class="tl-item reveal">
-        <div class="tl-date">2025 – 2026 · Delivered to Delphi TVS</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Cold Chamber System">
-            <img src="assets/images/products/cold-chamber.jpg" alt="Cold Chamber Monitoring System" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
-          </div>
-          <div class="proj-body">
-            <h3>Cold Chamber Monitoring System</h3>
-            <span class="proj-status">Delivered — client project</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">Cold chambers cycling +50&nbsp;°C → −20&nbsp;°C needed reliable multi-point logging where cables and Wi-Fi fail.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">3-node network — sensor node → RS485 → storage/relay hub → LoRa → PC gateway, with dual live/silent-store modes.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP32</span><span class="tag">RS485 (DE/RE half-duplex)</span><span class="tag">LoRa E32</span><span class="tag">SPIFFS</span><span class="tag">Embedded C++</span><span class="tag">Python PC software</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Delivered to Delphi TVS.</strong></span></div>
-            <details class="pdet"><summary>Engineering details</summary>
-              <div class="prow"><span class="pl">Hardware</span><span class="pv">Three ESP32 nodes; RS485 transceivers wired half-duplex; LoRa E32 modules covering the 1–10 km hop.</span></div>
-              <div class="prow"><span class="pl">Firmware</span><span class="pv">Embedded C++ with SPIFFS flash logging; dual live-transmit / silent-store modes; session state survives power cycles.</span></div>
-              <div class="prow"><span class="pl">Comms</span><span class="pv">Two-hop link — RS485 then LoRa — with a command/ACK protocol and 3 retries end to end.</span></div>
-              <div class="prow"><span class="pl">Challenges</span><span class="pv">Command acknowledgment over a two-hop link, state persistence across power cycles, and getting half-duplex timing right.</span></div>
-            </details>
-          </div>
+      <article class="pcard reveal" data-dialog="dlg-coldchamber">
+        <div class="proj-media" data-label="Cold Chamber System">
+          <img src="assets/images/products/cold-chamber.jpg" alt="Cold Chamber Monitoring System" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
         </div>
-      </div>
-
-      <div class="tl-item reveal">
-        <div class="tl-date">2024 – Present · Prototype, real-vehicle tested</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Dual-Fuel ECU">
-            <img src="assets/images/products/ecu.jpg" alt="Dual-Fuel Engine Control Unit" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
-          </div>
-          <div class="proj-body">
-            <h3>Dual-Fuel Engine Control Unit (ECU)</h3>
-            <span class="proj-status">Tested live on a running boat</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">LPG/CNG conversion for IC engines needs costly ECUs.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">A low-cost, customizable ECU with MAP, EGT, and engine-speed sensing plus CAN.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">STM32</span><span class="tag">ESP32</span><span class="tag">Arduino Mega</span><span class="tag">ADS1115</span><span class="tag">CAN</span><span class="tag">PlatformIO</span><span class="tag">STM32CubeIDE</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Prototype — tested live on a running boat.</strong></span></div>
-            <details class="pdet"><summary>Engineering details</summary>
-              <div class="prow"><span class="pl">Hardware</span><span class="pv">STM32/ESP32/Arduino Mega boards with an ADS1115 precision ADC; MAP, EGT, and engine-speed sensor interfaces.</span></div>
-              <div class="prow"><span class="pl">Firmware</span><span class="pv">Multiple iterations in Embedded C via PlatformIO and STM32CubeIDE; calibration done in-house.</span></div>
-              <div class="prow"><span class="pl">Comms</span><span class="pv">CAN module for engine data.</span></div>
-              <div class="prow"><span class="pl">Challenges</span><span class="pv">Calibrating sensors on a real engine, marine vibration and electrical noise, and iterating firmware between live tests.</span></div>
-            </details>
-          </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Delivered</span><span class="pcard-year">2025 – 2026</span></div>
+          <h3>Cold Chamber Monitoring System</h3>
+          <p class="pcard-line">3-node distributed sensor network delivered to Delphi TVS — RS485 + LoRa across a 1–10 km link.</p>
+          <div class="tags"><span class="tag">ESP32</span><span class="tag">RS485</span><span class="tag">LoRa</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
         </div>
-      </div>
-
-      <div class="tl-item reveal">
-        <div class="tl-date">2024 – Present · Production initiated</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Oil Control Unit">
-            <img src="assets/images/products/ocu.jpg" alt="Oil Control Unit" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
+      </article>
+      <dialog class="pdlg" id="dlg-coldchamber" aria-labelledby="t-coldchamber">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-coldchamber">Cold Chamber Monitoring System</h3>
+            <p class="pdlg-meta">2025 – 2026 · Client project for Delphi TVS</p>
           </div>
-          <div class="proj-body">
-            <h3>Oil Control Unit (OCU)</h3>
-            <span class="proj-status">V2 in market testing</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">Manual oil pump control is imprecise.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">An electronic PWM controller on a custom PCB.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP8266</span><span class="tag">MOSFET / TIP122 power stage</span><span class="tag">PWM control</span><span class="tag">Custom PCB</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Production initiated — V2 in market testing.</strong></span></div>
-            <details class="pdet"><summary>Engineering details</summary>
-              <div class="prow"><span class="pl">Hardware</span><span class="pv">ESP8266 with a MOSFET/TIP122 power stage on a custom PCB — designed, manufactured, and tested by me.</span></div>
-              <div class="prow"><span class="pl">Firmware</span><span class="pv">PWM control loop on the ESP8266.</span></div>
-              <div class="prow"><span class="pl">Challenges</span><span class="pv">Power-stage thermal design, and moving from a working prototype to a manufacturable board.</span></div>
-            </details>
-          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
         </div>
-      </div>
-
-      <div class="tl-item reveal">
-        <div class="tl-date">POC for Indo Tech Transformers Ltd</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Transformer IoT">
-            <img src="assets/images/products/transformer-iot.jpg" alt="Industrial Transformer Monitoring System" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
-          </div>
-          <div class="proj-body">
-            <h3>Industrial Transformer Monitoring System</h3>
-            <span class="proj-status">POC completed</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">Transformer health was monitored manually.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">An IoT node streaming pressure, voltage, current, temperature, and running hours to the cloud and a P10 LED display.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP</span><span class="tag">PT100</span><span class="tag">ZMPT101B</span><span class="tag">SCT013</span><span class="tag">RTC + SD</span><span class="tag">HTTP/JSON</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>POC completed for Indo Tech Transformers Ltd.</strong></span></div>
-            <details class="pdet"><summary>Engineering details</summary>
-              <div class="prow"><span class="pl">Hardware</span><span class="pv">ESP with PT100 temperature, ZMPT101B voltage, and SCT013 current sensors; RTC and SD card on board.</span></div>
-              <div class="prow"><span class="pl">Firmware</span><span class="pv">Periodic sampling with running-hours tracking and SD logging as a local fallback.</span></div>
-              <div class="prow"><span class="pl">Comms</span><span class="pv">HTTP/JSON APIs to the cloud; P10 LED display for on-site readout.</span></div>
-              <div class="prow"><span class="pl">Challenges</span><span class="pv">AC measurement calibration, industrial electrical noise, and keeping cloud API delivery reliable.</span></div>
-            </details>
-          </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">Cold chambers cycling +50&nbsp;°C → −20&nbsp;°C needed reliable multi-point logging where cables and Wi-Fi fail.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">3-node network — sensor node → RS485 → storage/relay hub → LoRa → PC gateway, with dual live/silent-store modes.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP32</span><span class="tag">RS485 (DE/RE half-duplex)</span><span class="tag">LoRa E32</span><span class="tag">SPIFFS</span><span class="tag">Embedded C++</span><span class="tag">Python PC software</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Delivered to Delphi TVS.</strong></span></div>
+          <h4>Engineering details</h4>
+          <div class="prow"><span class="pl">Hardware</span><span class="pv">Three ESP32 nodes; RS485 transceivers wired half-duplex; LoRa E32 modules covering the 1–10 km hop.</span></div>
+          <div class="prow"><span class="pl">Firmware</span><span class="pv">Embedded C++ with SPIFFS flash logging; dual live-transmit / silent-store modes; session state survives power cycles.</span></div>
+          <div class="prow"><span class="pl">Comms</span><span class="pv">Two-hop link — RS485 then LoRa — with a command/ACK protocol and 3 retries end to end.</span></div>
+          <div class="prow"><span class="pl">Challenges</span><span class="pv">Command acknowledgment over a two-hop link, state persistence across power cycles, and getting half-duplex timing right.</span></div>
         </div>
-      </div>
+      </dialog>
 
-      <div class="tl-item reveal">
-        <div class="tl-date">Milestone project</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="ATtiny Board">
-            <img src="assets/images/products/pcb-attiny.jpg" alt="ATtiny chip-level board" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
-          </div>
-          <div class="proj-body">
-            <h3>ATtiny Chip-Level Board</h3>
-            <span class="proj-status">Datasheet → working board</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">Module-based designs limit cost and size.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">My first fully datasheet-driven bare-IC board — schematic to firmware, no modules, no reference shield.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ATtiny</span><span class="tag">Custom PCB</span><span class="tag">PlatformIO</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Working board — my module-to-IC transition milestone.</strong></span></div>
-            <details class="pdet"><summary>Engineering details</summary>
-              <div class="prow"><span class="pl">Hardware</span><span class="pv">Bare ATtiny IC on a custom PCB — schematic, layout, and fabrication all from the datasheet up.</span></div>
-              <div class="prow"><span class="pl">Firmware</span><span class="pv">Written and flashed via PlatformIO.</span></div>
-              <div class="prow"><span class="pl">Challenges</span><span class="pv">Reading datasheets without app-note hand-holding, and getting the programming and fuse setup right.</span></div>
-            </details>
-          </div>
+      <article class="pcard reveal" data-dialog="dlg-ecu">
+        <div class="proj-media" data-label="Dual-Fuel ECU">
+          <img src="assets/images/products/ecu.jpg" alt="Dual-Fuel Engine Control Unit" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
         </div>
-      </div>
-
-      <div class="tl-item reveal">
-        <div class="tl-date">Product developed</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Injector Multiplier">
-            <img src="assets/images/products/injector.jpg" alt="Injector Multiplier" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
-          </div>
-          <div class="proj-body">
-            <h3>Injector Multiplier</h3>
-            <span class="proj-status">Product developed</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">A single injector output must drive four injectors.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">A 1-input → 4-output driver rated 12&nbsp;V / 8&nbsp;A peak per channel.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">Power electronics</span><span class="tag">Protection design</span><span class="tag">12 V / 8 A per channel</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Product developed.</strong></span></div>
-            <details class="pdet"><summary>Engineering details</summary>
-              <div class="prow"><span class="pl">Hardware</span><span class="pv">Four-channel power stage switching 12&nbsp;V at 8&nbsp;A peak per channel.</span></div>
-              <div class="prow"><span class="pl">Challenges</span><span class="pv">Peak-current handling, and protecting each channel from faults.</span></div>
-            </details>
-          </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Boat-tested prototype</span><span class="pcard-year">2024 – present</span></div>
+          <h3>Dual-Fuel Engine Control Unit (ECU)</h3>
+          <p class="pcard-line">Low-cost dual-fuel ECU for IC engines — tested live on a running marine engine.</p>
+          <div class="tags"><span class="tag">STM32</span><span class="tag">CAN</span><span class="tag">ADS1115</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
         </div>
-      </div>
-
-      <div class="tl-item reveal">
-        <div class="tl-date">2026 · Prototype</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Intelligent AVAS">
-            <img src="assets/images/products/avas.jpg" alt="Intelligent AVAS" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
+      </article>
+      <dialog class="pdlg" id="dlg-ecu" aria-labelledby="t-ecu">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-ecu">Dual-Fuel Engine Control Unit (ECU)</h3>
+            <p class="pdlg-meta">2024 – present · Prototype, real-vehicle tested</p>
           </div>
-          <div class="proj-body">
-            <h3>Intelligent AVAS — Acoustic Vehicle Alerting System</h3>
-            <span class="proj-status">Prototyped 2026</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">Silent EVs endanger pedestrians.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">An acoustic alert system prototype for electric vehicles.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP32-S3</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Prototyped 2026.</strong></span></div>
-          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
         </div>
-      </div>
-
-      <div class="tl-item reveal">
-        <div class="tl-date">College-trust funded</div>
-        <div class="proj-card">
-          <div class="proj-media" data-label="Biogas Plant">
-            <img src="assets/images/products/biogas.jpg" alt="Portable Biogas Plant" loading="lazy"
-                 onerror="this.parentNode.classList.add('ph');this.remove()">
-          </div>
-          <div class="proj-body">
-            <h3>Portable Biogas Plant</h3>
-            <span class="proj-status">Engineering design</span>
-            <div class="prow"><span class="pl">Problem</span><span class="pv">Manual biogas plants are labor-heavy.</span></div>
-            <div class="prow"><span class="pl">Solution</span><span class="pv">Automated stirring, water-scrubbing + MDEA purification, and mobile monitoring.</span></div>
-            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">Automated stirring</span><span class="tag">MDEA purification</span><span class="tag">Mobile monitoring</span></span></span></div>
-            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Engineering design — college-trust funded.</strong></span></div>
-          </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">LPG/CNG conversion for IC engines needs costly ECUs.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">A low-cost, customizable ECU with MAP, EGT, and engine-speed sensing plus CAN.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">STM32</span><span class="tag">ESP32</span><span class="tag">Arduino Mega</span><span class="tag">ADS1115</span><span class="tag">CAN</span><span class="tag">PlatformIO</span><span class="tag">STM32CubeIDE</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Prototype — tested live on a running boat.</strong></span></div>
+          <h4>Engineering details</h4>
+          <div class="prow"><span class="pl">Hardware</span><span class="pv">STM32/ESP32/Arduino Mega boards with an ADS1115 precision ADC; MAP, EGT, and engine-speed sensor interfaces.</span></div>
+          <div class="prow"><span class="pl">Firmware</span><span class="pv">Multiple iterations in Embedded C via PlatformIO and STM32CubeIDE; calibration done in-house.</span></div>
+          <div class="prow"><span class="pl">Comms</span><span class="pv">CAN module for engine data.</span></div>
+          <div class="prow"><span class="pl">Challenges</span><span class="pv">Calibrating sensors on a real engine, marine vibration and electrical noise, and iterating firmware between live tests.</span></div>
         </div>
-      </div>
+      </dialog>
 
-      <div class="tl-item reveal">
-        <div class="tl-date">BE era · 2020 – 2024</div>
-        <div class="mini-grid">
-          <div class="tl-mini" style="margin-top:0">
-            <h3>Cloud Fusion Logger</h3>
-            <p>Smart IoT logger with predictive maintenance.</p>
-          </div>
-          <div class="tl-mini" style="margin-top:0">
-            <h3>Multi Controller</h3>
-            <p>Multi-sensor management controller.</p>
-          </div>
-          <div class="tl-mini" style="margin-top:0">
-            <h3>Mars Rover</h3>
-            <p>Automated rover science-test procedures.</p>
-          </div>
+      <article class="pcard reveal" data-dialog="dlg-ocu">
+        <div class="proj-media" data-label="Oil Control Unit">
+          <img src="assets/images/products/ocu.jpg" alt="Oil Control Unit" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
         </div>
-      </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Production initiated</span><span class="pcard-year">2024 – present</span></div>
+          <h3>Oil Control Unit (OCU)</h3>
+          <p class="pcard-line">Electronic oil pump controller on a custom PCB — V2 now in market testing.</p>
+          <div class="tags"><span class="tag">ESP8266</span><span class="tag">PWM</span><span class="tag">Custom PCB</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
+        </div>
+      </article>
+      <dialog class="pdlg" id="dlg-ocu" aria-labelledby="t-ocu">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-ocu">Oil Control Unit (OCU)</h3>
+            <p class="pdlg-meta">2024 – present · Production initiated, V2 in market testing</p>
+          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
+        </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">Manual oil pump control is imprecise.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">An electronic PWM controller on a custom PCB.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP8266</span><span class="tag">MOSFET / TIP122 power stage</span><span class="tag">PWM control</span><span class="tag">Custom PCB</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Production initiated — V2 in market testing.</strong></span></div>
+          <h4>Engineering details</h4>
+          <div class="prow"><span class="pl">Hardware</span><span class="pv">ESP8266 with a MOSFET/TIP122 power stage on a custom PCB — designed, manufactured, and tested by me.</span></div>
+          <div class="prow"><span class="pl">Firmware</span><span class="pv">PWM control loop on the ESP8266.</span></div>
+          <div class="prow"><span class="pl">Challenges</span><span class="pv">Power-stage thermal design, and moving from a working prototype to a manufacturable board.</span></div>
+        </div>
+      </dialog>
 
+      <article class="pcard reveal" data-dialog="dlg-transformer">
+        <div class="proj-media" data-label="Transformer IoT">
+          <img src="assets/images/products/transformer-iot.jpg" alt="Industrial Transformer Monitoring System" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">POC completed</span><span class="pcard-year">Indo Tech Ltd</span></div>
+          <h3>Industrial Transformer Monitoring</h3>
+          <p class="pcard-line">IoT health monitoring for industrial transformers — sensors to cloud plus a P10 LED display.</p>
+          <div class="tags"><span class="tag">PT100</span><span class="tag">HTTP/JSON</span><span class="tag">SD + RTC</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
+        </div>
+      </article>
+      <dialog class="pdlg" id="dlg-transformer" aria-labelledby="t-transformer">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-transformer">Industrial Transformer Monitoring System</h3>
+            <p class="pdlg-meta">POC for Indo Tech Transformers Ltd</p>
+          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
+        </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">Transformer health was monitored manually.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">An IoT node streaming pressure, voltage, current, temperature, and running hours to the cloud and a P10 LED display.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP</span><span class="tag">PT100</span><span class="tag">ZMPT101B</span><span class="tag">SCT013</span><span class="tag">RTC + SD</span><span class="tag">HTTP/JSON</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>POC completed for Indo Tech Transformers Ltd.</strong></span></div>
+          <h4>Engineering details</h4>
+          <div class="prow"><span class="pl">Hardware</span><span class="pv">ESP with PT100 temperature, ZMPT101B voltage, and SCT013 current sensors; RTC and SD card on board.</span></div>
+          <div class="prow"><span class="pl">Firmware</span><span class="pv">Periodic sampling with running-hours tracking and SD logging as a local fallback.</span></div>
+          <div class="prow"><span class="pl">Comms</span><span class="pv">HTTP/JSON APIs to the cloud; P10 LED display for on-site readout.</span></div>
+          <div class="prow"><span class="pl">Challenges</span><span class="pv">AC measurement calibration, industrial electrical noise, and keeping cloud API delivery reliable.</span></div>
+        </div>
+      </dialog>
+
+      <article class="pcard reveal" data-dialog="dlg-attiny">
+        <div class="proj-media" data-label="ATtiny Board">
+          <img src="assets/images/products/pcb-attiny.jpg" alt="ATtiny chip-level board" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Working board</span><span class="pcard-year">Milestone</span></div>
+          <h3>ATtiny Chip-Level Board</h3>
+          <p class="pcard-line">First fully datasheet-driven bare-IC design — schematic to firmware, no modules.</p>
+          <div class="tags"><span class="tag">ATtiny</span><span class="tag">Custom PCB</span><span class="tag">PlatformIO</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
+        </div>
+      </article>
+      <dialog class="pdlg" id="dlg-attiny" aria-labelledby="t-attiny">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-attiny">ATtiny Chip-Level Board</h3>
+            <p class="pdlg-meta">Milestone project · Datasheet → working board</p>
+          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
+        </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">Module-based designs limit cost and size.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">My first fully datasheet-driven bare-IC board — schematic to firmware, no modules, no reference shield.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ATtiny</span><span class="tag">Custom PCB</span><span class="tag">PlatformIO</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Working board — my module-to-IC transition milestone.</strong></span></div>
+          <h4>Engineering details</h4>
+          <div class="prow"><span class="pl">Hardware</span><span class="pv">Bare ATtiny IC on a custom PCB — schematic, layout, and fabrication all from the datasheet up.</span></div>
+          <div class="prow"><span class="pl">Firmware</span><span class="pv">Written and flashed via PlatformIO.</span></div>
+          <div class="prow"><span class="pl">Challenges</span><span class="pv">Reading datasheets without app-note hand-holding, and getting the programming and fuse setup right.</span></div>
+          <div class="prow"><span class="pl">More</span><span class="pv">The full story is in my note: <a href="articles/module-to-bare-ic.html">Module to Bare IC</a>.</span></div>
+        </div>
+      </dialog>
+
+      <article class="pcard reveal" data-dialog="dlg-injector">
+        <div class="proj-media" data-label="Injector Multiplier">
+          <img src="assets/images/products/injector.jpg" alt="Injector Multiplier" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Product developed</span></div>
+          <h3>Injector Multiplier</h3>
+          <p class="pcard-line">1-input → 4-output injector driver, 12&nbsp;V / 8&nbsp;A peak per channel.</p>
+          <div class="tags"><span class="tag">Power electronics</span><span class="tag">Protection design</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
+        </div>
+      </article>
+      <dialog class="pdlg" id="dlg-injector" aria-labelledby="t-injector">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-injector">Injector Multiplier</h3>
+            <p class="pdlg-meta">Product developed · Power electronics</p>
+          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
+        </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">A single injector output must drive four injectors.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">A 1-input → 4-output driver rated 12&nbsp;V / 8&nbsp;A peak per channel.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">Power electronics</span><span class="tag">Protection design</span><span class="tag">12 V / 8 A per channel</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Product developed.</strong></span></div>
+          <h4>Engineering details</h4>
+          <div class="prow"><span class="pl">Hardware</span><span class="pv">Four-channel power stage switching 12&nbsp;V at 8&nbsp;A peak per channel.</span></div>
+          <div class="prow"><span class="pl">Challenges</span><span class="pv">Peak-current handling, and protecting each channel from faults.</span></div>
+        </div>
+      </dialog>
+
+      <article class="pcard reveal" data-dialog="dlg-avas">
+        <div class="proj-media" data-label="Intelligent AVAS">
+          <img src="assets/images/products/avas.jpg" alt="Intelligent AVAS" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Prototype</span><span class="pcard-year">2026</span></div>
+          <h3>Intelligent AVAS</h3>
+          <p class="pcard-line">Pedestrian-alert acoustic system for quiet electric vehicles.</p>
+          <div class="tags"><span class="tag">ESP32-S3</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
+        </div>
+      </article>
+      <dialog class="pdlg" id="dlg-avas" aria-labelledby="t-avas">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-avas">Intelligent AVAS — Acoustic Vehicle Alerting System</h3>
+            <p class="pdlg-meta">2026 · Prototype</p>
+          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
+        </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">Silent EVs endanger pedestrians.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">An acoustic alert system prototype for electric vehicles.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP32-S3</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Prototyped 2026.</strong></span></div>
+        </div>
+      </dialog>
+
+      <article class="pcard reveal" data-dialog="dlg-biogas">
+        <div class="proj-media" data-label="Biogas Plant">
+          <img src="assets/images/products/biogas.jpg" alt="Portable Biogas Plant" loading="lazy"
+               onerror="this.parentNode.classList.add('ph');this.remove()">
+        </div>
+        <div class="pcard-body">
+          <div class="pcard-top"><span class="proj-status">Engineering design</span></div>
+          <h3>Portable Biogas Plant</h3>
+          <p class="pcard-line">Automated stirring, gas purification, and mobile monitoring — college-trust funded.</p>
+          <div class="tags"><span class="tag">Automation</span><span class="tag">MDEA purification</span></div>
+          <button class="pcard-more" aria-haspopup="dialog">View details</button>
+        </div>
+      </article>
+      <dialog class="pdlg" id="dlg-biogas" aria-labelledby="t-biogas">
+        <div class="pdlg-head">
+          <div>
+            <h3 id="t-biogas">Portable Biogas Plant</h3>
+            <p class="pdlg-meta">Engineering design · College-trust funded</p>
+          </div>
+          <form method="dialog"><button class="pdlg-x" aria-label="Close">✕</button></form>
+        </div>
+        <div class="pdlg-body">
+          <div class="prow"><span class="pl">Problem</span><span class="pv">Manual biogas plants are labor-heavy.</span></div>
+          <div class="prow"><span class="pl">Solution</span><span class="pv">Automated stirring, water-scrubbing + MDEA purification, and mobile monitoring.</span></div>
+          <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">Automated stirring</span><span class="tag">MDEA purification</span><span class="tag">Mobile monitoring</span></span></span></div>
+          <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Engineering design — college-trust funded.</strong></span></div>
+        </div>
+      </dialog>
+
+    </div>
+
+    <h3 class="earlier reveal">Earlier work — BE era (2020 – 2024)</h3>
+    <div class="mini-grid">
+      <div class="tl-mini reveal" style="margin-top:0">
+        <h3>Cloud Fusion Logger</h3>
+        <p>Smart IoT logger with predictive maintenance.</p>
+      </div>
+      <div class="tl-mini reveal" style="margin-top:0">
+        <h3>Multi Controller</h3>
+        <p>Multi-sensor management controller.</p>
+      </div>
+      <div class="tl-mini reveal" style="margin-top:0">
+        <h3>Mars Rover</h3>
+        <p>Automated rover science-test procedures.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -845,6 +938,18 @@ navToggle.addEventListener('click', () => {
 });
 navLinks.addEventListener('click', e => {
   if (e.target.tagName === 'A') { navLinks.classList.remove('open'); navToggle.setAttribute('aria-expanded', 'false'); }
+});
+
+// ---------- Project detail dialogs ----------
+document.querySelectorAll('.pcard[data-dialog]').forEach(card => {
+  const dlg = document.getElementById(card.dataset.dialog);
+  if (!dlg) return;
+  card.addEventListener('click', () => {
+    dlg.showModal();
+    document.body.style.overflow = 'hidden';
+  });
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }); // backdrop click
+  dlg.addEventListener('close', () => { document.body.style.overflow = ''; });
 });
 
 // ---------- Reveal on scroll ----------
