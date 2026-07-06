@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RS485 in the Real World: Mistakes I Made and Fixed — Karthick A</title>
+<meta name="description" content="Field lessons on RS485 half-duplex timing, termination, and grounding from a delivered industrial monitoring system.">
+<meta name="robots" content="noindex"><!-- remove this line when the article is finished -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0f1c'/%3E%3Crect x='8' y='8' width='16' height='16' rx='2' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3Cpath d='M12 8V4M20 8V4M12 28v-4M20 28v-4M8 12H4M8 20H4M28 12h-4M28 20h-4' stroke='%2322d3ee' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0a0f1c;--card:#101a2f;--line:#1c2a47;--text:#e9eef7;--muted:#9aa8c0;--accent:#22d3ee}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+nav{position:sticky;top:0;background:rgba(10,15,28,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 0;z-index:10}
+article{padding:60px 0 90px}
+.kicker{color:var(--accent);font-size:.8rem;letter-spacing:2.5px;text-transform:uppercase;font-weight:600}
+h1{font-size:clamp(1.7rem,4.5vw,2.5rem);line-height:1.2;margin:12px 0 10px;letter-spacing:-.3px}
+.byline{color:var(--muted);font-size:.9rem;margin-bottom:34px}
+.draft{display:inline-block;margin-left:10px;padding:3px 12px;border-radius:99px;background:rgba(250,204,21,.12);color:#facc15;font-size:.74rem;font-weight:700;letter-spacing:1px;vertical-align:middle}
+h2{font-size:1.35rem;margin:42px 0 12px;letter-spacing:-.2px}
+p{color:var(--muted);margin-bottom:16px}
+.todo{border:1px dashed rgba(250,204,21,.5);border-radius:10px;padding:16px 20px;color:#d8c88a;font-size:.92rem;background:rgba(250,204,21,.04);margin-bottom:16px}
+.todo::before{content:"DRAFT — to write: ";font-weight:700;color:#facc15}
+footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a href="../index.html#notes">← Karthick A — Engineering Notes</a></div></nav>
+<article class="wrap">
+  <span class="kicker">Field lessons</span>
+  <h1>RS485 in the Real World: Mistakes I Made and Fixed <span class="draft">DRAFT</span></h1>
+  <p class="byline">Karthick A · Founder &amp; Embedded Systems Engineer, Spark Invotech</p>
+
+  <p>RS485 looks simple on paper: two wires, differential signalling, done. Then you wire up a real industrial system and discover everything the tutorials never mentioned. This is what I learned building a multi-node monitoring network that actually shipped to a client.</p>
+  <div class="todo">Opening story — the first time the bus went silent and why.</div>
+
+  <h2>Mistake 1: Trusting the DE/RE pin timing</h2>
+  <div class="todo">Half-duplex direction switching — what went wrong, how I found it, the fix.</div>
+
+  <h2>Mistake 2: Skipping termination "because the cable is short"</h2>
+  <div class="todo">When reflections started corrupting frames, and where the 120 Ω resistors actually belong.</div>
+
+  <h2>Mistake 3: Assuming the other node heard me</h2>
+  <div class="todo">Why I ended up with a command/ACK protocol with 3 retries, and how it saved the project.</div>
+
+  <h2>What I'd do differently from day one</h2>
+  <div class="todo">Checklist — grounding, biasing, timing margins, protocol design.</div>
+
+  <h2>Conclusion</h2>
+  <div class="todo">Wrap-up — RS485 rewards paranoia; the system that shipped.</div>
+</article>
+<footer>© 2026 Karthick A · <a href="../index.html">Portfolio</a></footer>
+</body>
+</html>

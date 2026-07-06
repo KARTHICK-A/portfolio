@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Karthick A — Founder &amp; Embedded Systems Engineer</title>
 <meta name="description" content="Karthick A — Founder & Embedded Systems Engineer at Spark Invotech. I build industrial embedded systems end-to-end: firmware, PCB design, and industrial IoT, delivered to clients like Delphi TVS and Indo Tech Transformers.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Karthick A — Founder & Embedded Systems Engineer">
+<meta property="og:description" content="I build industrial embedded systems end-to-end — from datasheet to deployed product.">
+<meta property="og:url" content="https://karthick-a.github.io/portfolio/">
+<meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/og-banner.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Karthick A — Founder & Embedded Systems Engineer">
+<meta name="twitter:description" content="I build industrial embedded systems end-to-end — from datasheet to deployed product.">
+<meta name="twitter:image" content="https://karthick-a.github.io/portfolio/assets/images/og-banner.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0f1c'/%3E%3Crect x='8' y='8' width='16' height='16' rx='2' fill='none' stroke='%2322d3ee' stroke-width='2'/%3E%3Cpath d='M12 8V4M20 8V4M12 28v-4M20 28v-4M8 12H4M8 20H4M28 12h-4M28 20h-4' stroke='%2322d3ee' stroke-width='2'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -179,10 +188,60 @@ h2{font-size:clamp(1.7rem,3.6vw,2.4rem);font-weight:750;letter-spacing:-.3px;mar
 .tl-mini{margin-top:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 26px}
 .tl-mini h3{font-size:1.05rem;margin-bottom:4px}
 .tl-mini p{color:var(--muted);font-size:.92rem}
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:10px}
 @media(max-width:760px){
   .proj-card{grid-template-columns:1fr}
   .proj-media{min-height:170px}
 }
+
+/* ---------- Hero chips ---------- */
+.hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px;max-width:640px}
+.hero-chips .tag{border-color:rgba(34,211,238,.35);color:#c3d3e8;background:rgba(34,211,238,.06);font-size:.78rem}
+
+/* ---------- Stats bar ---------- */
+.stats{padding:54px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.stat{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:24px 16px;text-align:center;
+}
+.stat-num{font-size:clamp(1.7rem,3.4vw,2.4rem);font-weight:800;color:var(--accent);line-height:1.1}
+.stat-label{margin-top:6px;color:var(--text);font-size:.86rem;font-weight:600}
+.stat-sub{margin-top:4px;color:var(--muted);font-size:.72rem;letter-spacing:.4px}
+.stats-caption{margin-top:16px;text-align:center;color:var(--muted);font-size:.82rem;font-style:italic}
+@media(max-width:900px){.stats-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- Scannable project rows ---------- */
+.prow{display:grid;grid-template-columns:84px 1fr;gap:12px;margin-bottom:9px;font-size:.92rem}
+.prow .pl{
+  color:var(--accent);font-size:.68rem;letter-spacing:1.4px;text-transform:uppercase;
+  font-weight:700;padding-top:3px;
+}
+.prow .pv{color:var(--muted)}
+.prow .pv strong{color:var(--text);font-weight:600}
+.prow .tags{margin-top:0}
+.pdet{margin-top:14px;border-top:1px solid var(--line);padding-top:4px}
+.pdet summary{
+  cursor:pointer;list-style:none;color:var(--accent);font-size:.82rem;font-weight:600;
+  padding:8px 0;display:flex;align-items:center;gap:7px;user-select:none;
+}
+.pdet summary::-webkit-details-marker{display:none}
+.pdet summary::after{content:"▾";transition:transform .2s;font-size:.75rem}
+.pdet[open] summary::after{transform:rotate(180deg)}
+.pdet .prow{font-size:.88rem}
+
+/* ---------- Engineering Notes ---------- */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.note-card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px;
+  display:flex;flex-direction:column;transition:border-color .25s,transform .25s;
+}
+.note-card:hover{border-color:rgba(34,211,238,.45);transform:translateY(-3px)}
+.note-tag{color:var(--accent);font-size:.72rem;letter-spacing:1.4px;text-transform:uppercase;font-weight:700}
+.note-card h3{font-size:1.08rem;margin:10px 0 8px}
+.note-card p{color:var(--muted);font-size:.9rem;flex:1}
+.note-card .read{margin-top:16px;font-weight:600;font-size:.9rem}
 
 /* ---------- Skills ---------- */
 .skill-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
@@ -273,6 +332,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
       <li><a href="#services">Work With Me</a></li>
       <li><a href="#achievements">Achievements</a></li>
       <li><a href="#education">Education</a></li>
+      <li><a href="#notes">Notes</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
@@ -287,6 +347,16 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
     <div class="hero-title">Founder &amp; <em>Embedded Systems Engineer</em></div>
     <p class="hero-line">I build industrial embedded systems end-to-end — from datasheet to deployed product.</p>
     <p class="hero-meta">Firmware · PCB design · Industrial IoT — shipped to clients like Delphi TVS and Indo Tech Transformers.</p>
+    <p class="hero-meta">M.E. Embedded Systems (2026) · DPIIT-recognized founder · Chennai, India</p>
+    <div class="hero-chips">
+      <span class="tag">Embedded Systems Engineer</span>
+      <span class="tag">Founder of Spark Invotech</span>
+      <span class="tag">8+ Hardware Products Built</span>
+      <span class="tag">Industrial IoT</span>
+      <span class="tag">PCB Design</span>
+      <span class="tag">Firmware</span>
+      <span class="tag">Production Engineering</span>
+    </div>
     <div class="hero-cta">
       <a class="btn btn-primary" href="#projects">See my work</a>
       <a class="btn btn-ghost" href="#contact">Get in touch</a>
@@ -294,6 +364,36 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   </div>
   <div class="scroll-hint">Scroll</div>
 </header>
+
+<!-- ================= STATS ================= -->
+<section class="stats" aria-label="Key numbers">
+  <div class="wrap">
+    <div class="stats-grid">
+      <div class="stat reveal">
+        <div class="stat-num" data-count="8" data-suffix="+">0</div>
+        <div class="stat-label">Hardware Products Built</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-num" data-count="2">0</div>
+        <div class="stat-label">Enterprise Clients Served</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-num" data-count="15" data-suffix="+">0</div>
+        <div class="stat-label">Sensor Types Integrated</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-num" data-count="6">0</div>
+        <div class="stat-label">Communication Protocols</div>
+        <div class="stat-sub">UART · SPI · I2C · CAN · RS485 · LoRa</div>
+      </div>
+      <div class="stat reveal">
+        <div class="stat-num" data-count="3">0</div>
+        <div class="stat-label">Grants &amp; Recognitions</div>
+      </div>
+    </div>
+    <p class="stats-caption reveal">Every number here is defensible in an interview.</p>
+  </div>
+</section>
 
 <!-- ================= PROJECTS ================= -->
 <section id="projects">
@@ -314,10 +414,16 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <div class="proj-body">
             <h3>Cold Chamber Monitoring System</h3>
             <span class="proj-status">Delivered — client project</span>
-            <p>A 3-node distributed sensor network monitoring cold chamber temperature profiles from +50&nbsp;°C down to −20&nbsp;°C. Node&nbsp;1 acquires sensor data, Node&nbsp;2 stores and relays it, Node&nbsp;3 bridges to a PC with Python software I wrote. Commands are acknowledged with a 3-retry protocol, and sessions survive power cycles.</p>
-            <div class="tags">
-              <span class="tag">ESP32</span><span class="tag">RS485 half-duplex</span><span class="tag">LoRa E32 (1–10 km)</span><span class="tag">SPIFFS logging</span><span class="tag">Command/ACK protocol</span><span class="tag">Python PC software</span>
-            </div>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">Cold chambers cycling +50&nbsp;°C → −20&nbsp;°C needed reliable multi-point logging where cables and Wi-Fi fail.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">3-node network — sensor node → RS485 → storage/relay hub → LoRa → PC gateway, with dual live/silent-store modes.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP32</span><span class="tag">RS485 (DE/RE half-duplex)</span><span class="tag">LoRa E32</span><span class="tag">SPIFFS</span><span class="tag">Embedded C++</span><span class="tag">Python PC software</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Delivered to Delphi TVS.</strong></span></div>
+            <details class="pdet"><summary>Engineering details</summary>
+              <div class="prow"><span class="pl">Hardware</span><span class="pv">Three ESP32 nodes; RS485 transceivers wired half-duplex; LoRa E32 modules covering the 1–10 km hop.</span></div>
+              <div class="prow"><span class="pl">Firmware</span><span class="pv">Embedded C++ with SPIFFS flash logging; dual live-transmit / silent-store modes; session state survives power cycles.</span></div>
+              <div class="prow"><span class="pl">Comms</span><span class="pv">Two-hop link — RS485 then LoRa — with a command/ACK protocol and 3 retries end to end.</span></div>
+              <div class="prow"><span class="pl">Challenges</span><span class="pv">Command acknowledgment over a two-hop link, state persistence across power cycles, and getting half-duplex timing right.</span></div>
+            </details>
           </div>
         </div>
       </div>
@@ -332,10 +438,16 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <div class="proj-body">
             <h3>Dual-Fuel Engine Control Unit (ECU)</h3>
             <span class="proj-status">Tested live on a running boat</span>
-            <p>A low-cost, customizable ECU for dual-fuel IC engine conversion — proven on a marine engine, not just a bench. It reads MAP, engine speed, and exhaust gas temperature, and I did the sensor calibration and integration in-house across multiple firmware versions.</p>
-            <div class="tags">
-              <span class="tag">STM32</span><span class="tag">ESP32</span><span class="tag">Arduino Mega</span><span class="tag">ADS1115</span><span class="tag">MAP / EGT sensors</span><span class="tag">CAN</span>
-            </div>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">LPG/CNG conversion for IC engines needs costly ECUs.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">A low-cost, customizable ECU with MAP, EGT, and engine-speed sensing plus CAN.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">STM32</span><span class="tag">ESP32</span><span class="tag">Arduino Mega</span><span class="tag">ADS1115</span><span class="tag">CAN</span><span class="tag">PlatformIO</span><span class="tag">STM32CubeIDE</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Prototype — tested live on a running boat.</strong></span></div>
+            <details class="pdet"><summary>Engineering details</summary>
+              <div class="prow"><span class="pl">Hardware</span><span class="pv">STM32/ESP32/Arduino Mega boards with an ADS1115 precision ADC; MAP, EGT, and engine-speed sensor interfaces.</span></div>
+              <div class="prow"><span class="pl">Firmware</span><span class="pv">Multiple iterations in Embedded C via PlatformIO and STM32CubeIDE; calibration done in-house.</span></div>
+              <div class="prow"><span class="pl">Comms</span><span class="pv">CAN module for engine data.</span></div>
+              <div class="prow"><span class="pl">Challenges</span><span class="pv">Calibrating sensors on a real engine, marine vibration and electrical noise, and iterating firmware between live tests.</span></div>
+            </details>
           </div>
         </div>
       </div>
@@ -350,10 +462,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <div class="proj-body">
             <h3>Oil Control Unit (OCU)</h3>
             <span class="proj-status">V2 in market testing</span>
-            <p>An electronic oil pump controller with a MOSFET/TIP122 power stage and PWM control. I designed the custom PCB, had it manufactured, and tested it myself — version 2 is now out in market testing.</p>
-            <div class="tags">
-              <span class="tag">ESP8266</span><span class="tag">MOSFET / TIP122</span><span class="tag">PWM control</span><span class="tag">Custom PCB</span>
-            </div>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">Manual oil pump control is imprecise.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">An electronic PWM controller on a custom PCB.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP8266</span><span class="tag">MOSFET / TIP122 power stage</span><span class="tag">PWM control</span><span class="tag">Custom PCB</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Production initiated — V2 in market testing.</strong></span></div>
+            <details class="pdet"><summary>Engineering details</summary>
+              <div class="prow"><span class="pl">Hardware</span><span class="pv">ESP8266 with a MOSFET/TIP122 power stage on a custom PCB — designed, manufactured, and tested by me.</span></div>
+              <div class="prow"><span class="pl">Firmware</span><span class="pv">PWM control loop on the ESP8266.</span></div>
+              <div class="prow"><span class="pl">Challenges</span><span class="pv">Power-stage thermal design, and moving from a working prototype to a manufacturable board.</span></div>
+            </details>
           </div>
         </div>
       </div>
@@ -368,10 +485,16 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <div class="proj-body">
             <h3>Industrial Transformer Monitoring System</h3>
             <span class="proj-status">POC completed</span>
-            <p>Industrial IoT monitoring for transformers: pressure, voltage, current, temperature, and running hours streamed to the cloud and shown on a P10 LED display. Built with proper industrial sensors and local SD logging as a fallback.</p>
-            <div class="tags">
-              <span class="tag">PT100</span><span class="tag">ZMPT101B</span><span class="tag">SCT013</span><span class="tag">RTC + SD logging</span><span class="tag">HTTP/JSON APIs</span><span class="tag">P10 LED display</span>
-            </div>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">Transformer health was monitored manually.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">An IoT node streaming pressure, voltage, current, temperature, and running hours to the cloud and a P10 LED display.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP</span><span class="tag">PT100</span><span class="tag">ZMPT101B</span><span class="tag">SCT013</span><span class="tag">RTC + SD</span><span class="tag">HTTP/JSON</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>POC completed for Indo Tech Transformers Ltd.</strong></span></div>
+            <details class="pdet"><summary>Engineering details</summary>
+              <div class="prow"><span class="pl">Hardware</span><span class="pv">ESP with PT100 temperature, ZMPT101B voltage, and SCT013 current sensors; RTC and SD card on board.</span></div>
+              <div class="prow"><span class="pl">Firmware</span><span class="pv">Periodic sampling with running-hours tracking and SD logging as a local fallback.</span></div>
+              <div class="prow"><span class="pl">Comms</span><span class="pv">HTTP/JSON APIs to the cloud; P10 LED display for on-site readout.</span></div>
+              <div class="prow"><span class="pl">Challenges</span><span class="pv">AC measurement calibration, industrial electrical noise, and keeping cloud API delivery reliable.</span></div>
+            </details>
           </div>
         </div>
       </div>
@@ -386,10 +509,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <div class="proj-body">
             <h3>ATtiny Chip-Level Board</h3>
             <span class="proj-status">Datasheet → working board</span>
-            <p>My first fully datasheet-driven design around a bare IC — no modules, no reference shield. Schematic, PCB layout, fabrication, and firmware via PlatformIO, all from the datasheet up. This was my transition from module-based design to true IC-level engineering.</p>
-            <div class="tags">
-              <span class="tag">ATtiny</span><span class="tag">Bare-IC design</span><span class="tag">PCB fabrication</span><span class="tag">PlatformIO</span>
-            </div>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">Module-based designs limit cost and size.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">My first fully datasheet-driven bare-IC board — schematic to firmware, no modules, no reference shield.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ATtiny</span><span class="tag">Custom PCB</span><span class="tag">PlatformIO</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Working board — my module-to-IC transition milestone.</strong></span></div>
+            <details class="pdet"><summary>Engineering details</summary>
+              <div class="prow"><span class="pl">Hardware</span><span class="pv">Bare ATtiny IC on a custom PCB — schematic, layout, and fabrication all from the datasheet up.</span></div>
+              <div class="prow"><span class="pl">Firmware</span><span class="pv">Written and flashed via PlatformIO.</span></div>
+              <div class="prow"><span class="pl">Challenges</span><span class="pv">Reading datasheets without app-note hand-holding, and getting the programming and fuse setup right.</span></div>
+            </details>
           </div>
         </div>
       </div>
@@ -403,11 +531,33 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           </div>
           <div class="proj-body">
             <h3>Injector Multiplier</h3>
-            <span class="proj-status">Power electronics</span>
-            <p>A 1-input to 4-output injector driver handling 12&nbsp;V at 8&nbsp;A peak per channel. Mostly a power electronics and protection design problem — getting four channels to switch cleanly without letting the magic smoke out.</p>
-            <div class="tags">
-              <span class="tag">12 V / 8 A per channel</span><span class="tag">Injector driving</span><span class="tag">Protection design</span>
-            </div>
+            <span class="proj-status">Product developed</span>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">A single injector output must drive four injectors.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">A 1-input → 4-output driver rated 12&nbsp;V / 8&nbsp;A peak per channel.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">Power electronics</span><span class="tag">Protection design</span><span class="tag">12 V / 8 A per channel</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Product developed.</strong></span></div>
+            <details class="pdet"><summary>Engineering details</summary>
+              <div class="prow"><span class="pl">Hardware</span><span class="pv">Four-channel power stage switching 12&nbsp;V at 8&nbsp;A peak per channel.</span></div>
+              <div class="prow"><span class="pl">Challenges</span><span class="pv">Peak-current handling, and protecting each channel from faults.</span></div>
+            </details>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-date">2026 · Prototype</div>
+        <div class="proj-card">
+          <div class="proj-media" data-label="Intelligent AVAS">
+            <img src="assets/images/products/avas.jpg" alt="Intelligent AVAS" loading="lazy"
+                 onerror="this.parentNode.classList.add('ph');this.remove()">
+          </div>
+          <div class="proj-body">
+            <h3>Intelligent AVAS — Acoustic Vehicle Alerting System</h3>
+            <span class="proj-status">Prototyped 2026</span>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">Silent EVs endanger pedestrians.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">An acoustic alert system prototype for electric vehicles.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">ESP32-S3</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Prototyped 2026.</strong></span></div>
           </div>
         </div>
       </div>
@@ -422,27 +572,29 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <div class="proj-body">
             <h3>Portable Biogas Plant</h3>
             <span class="proj-status">Engineering design</span>
-            <p>An automated portable biogas plant with motorized stirring, water-scrubbing plus MDEA gas purification, and mobile monitoring. Funded by a college trust — chemistry and embedded control working together.</p>
-            <div class="tags">
-              <span class="tag">Automated stirring</span><span class="tag">MDEA purification</span><span class="tag">Mobile monitoring</span>
-            </div>
+            <div class="prow"><span class="pl">Problem</span><span class="pv">Manual biogas plants are labor-heavy.</span></div>
+            <div class="prow"><span class="pl">Solution</span><span class="pv">Automated stirring, water-scrubbing + MDEA purification, and mobile monitoring.</span></div>
+            <div class="prow"><span class="pl">Stack</span><span class="pv"><span class="tags"><span class="tag">Automated stirring</span><span class="tag">MDEA purification</span><span class="tag">Mobile monitoring</span></span></span></div>
+            <div class="prow"><span class="pl">Result</span><span class="pv"><strong>Engineering design — college-trust funded.</strong></span></div>
           </div>
         </div>
       </div>
 
       <div class="tl-item reveal">
-        <div class="tl-date">2026 · Prototype</div>
-        <div class="tl-mini">
-          <h3>Intelligent AVAS — Acoustic Vehicle Alerting System</h3>
-          <p>A pedestrian-alert audio system for quiet EVs, prototyped on the ESP32-S3.</p>
-        </div>
-      </div>
-
-      <div class="tl-item reveal">
         <div class="tl-date">BE era · 2020 – 2024</div>
-        <div class="tl-mini">
-          <h3>Cloud Fusion Logger · Multi Controller · Mars Rover</h3>
-          <p>Where it started: a smart IoT logger with predictive maintenance, a multi-sensor management controller, and automated rover science-test procedures.</p>
+        <div class="mini-grid">
+          <div class="tl-mini" style="margin-top:0">
+            <h3>Cloud Fusion Logger</h3>
+            <p>Smart IoT logger with predictive maintenance.</p>
+          </div>
+          <div class="tl-mini" style="margin-top:0">
+            <h3>Multi Controller</h3>
+            <p>Multi-sensor management controller.</p>
+          </div>
+          <div class="tl-mini" style="margin-top:0">
+            <h3>Mars Rover</h3>
+            <p>Automated rover science-test procedures.</p>
+          </div>
         </div>
       </div>
 
@@ -522,7 +674,8 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
     <div class="svc-cta reveal">
       <div>
         <h3>Have a project in mind?</h3>
-        <p>Tell me what you're trying to build. I'll reply with an honest assessment of how I'd approach it.</p>
+        <p>Tell me what you're trying to build. I'll reply with an honest assessment of how I'd approach it.<br>
+        <strong style="color:var(--text)">Available for project engagements now — remote or on-site.</strong></p>
       </div>
       <a class="btn btn-primary" href="mailto:karthick24092003@gmail.com">Email me</a>
     </div>
@@ -584,6 +737,34 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
   </div>
 </section>
 
+<!-- ================= ENGINEERING NOTES ================= -->
+<section id="notes">
+  <div class="wrap">
+    <div class="sec-kicker reveal">Engineering Notes</div>
+    <h2 class="reveal">Lessons from building real hardware — mistakes included</h2>
+    <div class="notes-grid">
+      <a class="note-card reveal" href="articles/rs485-in-the-real-world.html" style="text-decoration:none">
+        <span class="note-tag">Field lessons</span>
+        <h3>RS485 in the Real World: Mistakes I Made and Fixed</h3>
+        <p>What the textbooks skip about half-duplex timing, termination, and grounding — learned the hard way on a delivered industrial system.</p>
+        <span class="read">Read →</span>
+      </a>
+      <a class="note-card reveal" href="articles/module-to-bare-ic.html" style="text-decoration:none">
+        <span class="note-tag">Design journey</span>
+        <h3>Module to Bare IC: My First Datasheet-Driven ATtiny Board</h3>
+        <p>The jump from dev modules to a bare IC on your own PCB — and why the datasheet is scarier and friendlier than it looks.</p>
+        <span class="read">Read →</span>
+      </a>
+      <a class="note-card reveal" href="articles/stm32-vs-esp32.html" style="text-decoration:none">
+        <span class="note-tag">Decision making</span>
+        <h3>STM32 vs ESP32: How I Choose for Industrial Products</h3>
+        <p>Both sit on my bench. Here's the practical checklist I actually use when a client project lands — cost, connectivity, and determinism.</p>
+        <span class="read">Read →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ================= CONTACT ================= -->
 <section id="contact">
   <div class="wrap">
@@ -596,7 +777,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;text-align:center;color:v
           <li><span class="ci">✉️</span><a href="mailto:karthick24092003@gmail.com">karthick24092003@gmail.com</a></li>
           <li><span class="ci">📞</span><a href="tel:+917094828457">+91 70948 28457</a></li>
           <li><span class="ci">💼</span><a href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener">linkedin.com/in/karthick-a-83a352211</a></li>
-          <li><span class="ci">🐙</span><a href="https://github.com/KARTHICK-A" target="_blank" rel="noopener">github.com/KARTHICK-A</a></li>
+          <li><span class="ci">🐙</span><a href="https://github.com/karthick-a" target="_blank" rel="noopener">github.com/karthick-a</a></li>
         </ul>
       </div>
       <div class="contact-card reveal">
@@ -629,6 +810,25 @@ const io = new IntersectionObserver(entries => {
   entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('visible'); io.unobserve(en.target); } });
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ---------- Stat count-up ----------
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const statIO = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    statIO.unobserve(en.target);
+    const el = en.target, target = +el.dataset.count, suffix = el.dataset.suffix || '';
+    if (reducedMotion || document.hidden) { el.textContent = target + suffix; return; }
+    const t0 = performance.now(), dur = 1100;
+    const done = setTimeout(() => { el.textContent = target + suffix; }, dur + 500); // safety net if rAF stalls
+    (function tick(t) {
+      const p = Math.min((t - t0) / dur, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
+      if (p < 1) requestAnimationFrame(tick); else clearTimeout(done);
+    })(t0);
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('.stat-num').forEach(el => statIO.observe(el));
 
 // ---------- Hero 3D (three.js) ----------
 window.addEventListener('load', () => {
