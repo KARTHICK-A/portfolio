@@ -41,16 +41,22 @@ footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:v
   <div class="todo">Which sections actually matter first — pinout, electrical characteristics, minimal connection diagram.</div>
 
   <h2>Schematic and layout decisions</h2>
-  <div class="todo">Decoupling, reset circuitry, programming header — what I got right and what I'd change.</div>
+  <div class="todo">Decoupling, reset circuitry, programming header — what I got right and what I'd change. Be specific about mistakes (a wrong value, a missed pull-up) — specificity is what makes this credible. Include the schematic and a PCB layout screenshot.</div>
 
   <h2>Fabrication and bring-up</h2>
-  <div class="todo">First power-on ritual, checking rails before connecting the programmer.</div>
+  <div class="todo">First power-on ritual, checking rails before connecting the programmer — and the anxiety of flashing with no dev-board safety net. Add a photo of the bench setup and, if possible, the "first blink" moment.</div>
 
   <h2>Programming with PlatformIO</h2>
-  <div class="todo">Toolchain setup, fuse configuration, and the first successful flash.</div>
+  <div class="todo">Toolchain setup, fuse configuration (which settings tripped me up), and the first successful flash.</div>
+
+  <h2>Parts and toolchain</h2>
+  <div class="todo">Reproducible detail embedded readers want: exact ATtiny variant, clock configuration, small BOM table, and the actual platformio.ini snippet with fuse settings.</div>
 
   <h2>Conclusion</h2>
   <div class="todo">What changed in how I design after this board — the module-to-IC milestone.</div>
+
+  <h2>Related notes</h2>
+  <p><a href="rs485-in-the-real-world.html">RS485 in the Real World: Mistakes I Made and Fixed</a> · <a href="stm32-vs-esp32.html">STM32 vs ESP32: How I Choose for Industrial Products</a></p>
 </article>
 <footer>© 2026 Karthick A · <a href="../index.html">Portfolio</a></footer>
 </body>

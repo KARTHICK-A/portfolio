@@ -38,19 +38,22 @@ footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:v
   <div class="todo">Opening story — the first time the bus went silent and why.</div>
 
   <h2>Mistake 1: Trusting the DE/RE pin timing</h2>
-  <div class="todo">Half-duplex direction switching — what went wrong, how I found it, the fix.</div>
+  <div class="todo">Half-duplex direction switching on the cold-chamber network — what went wrong, how I found it, the fix. Include a photo of the node wiring or a timing sketch.</div>
 
   <h2>Mistake 2: Skipping termination "because the cable is short"</h2>
-  <div class="todo">When reflections started corrupting frames, and where the 120 Ω resistors actually belong.</div>
+  <div class="todo">When reflections started corrupting frames, and where the 120 Ω resistors actually belong. Mention the environment: +50 °C → −20 °C chamber, factory-floor grounding.</div>
 
   <h2>Mistake 3: Assuming the other node heard me</h2>
-  <div class="todo">Why I ended up with a command/ACK protocol with 3 retries, and how it saved the project.</div>
+  <div class="todo">The exact logic of the command/ACK protocol with 3 retries over the two-hop RS485 → LoRa link, and how it saved the Delphi TVS delivery.</div>
 
   <h2>What I'd do differently from day one</h2>
   <div class="todo">Checklist — grounding, biasing, timing margins, protocol design.</div>
 
   <h2>Conclusion</h2>
   <div class="todo">Wrap-up — RS485 rewards paranoia; the system that shipped.</div>
+
+  <h2>Related notes</h2>
+  <p><a href="stm32-vs-esp32.html">STM32 vs ESP32: How I Choose for Industrial Products</a> · <a href="module-to-bare-ic.html">Module to Bare IC: My First Datasheet-Driven ATtiny Board</a></p>
 </article>
 <footer>© 2026 Karthick A · <a href="../index.html">Portfolio</a></footer>
 </body>
