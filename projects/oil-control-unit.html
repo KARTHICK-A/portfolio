@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oil Control Unit (OCU) — Karthick A</title>
+<meta name="description" content="Case study: an electronic controller for oil pumps with PWM-controlled power delivery — version 2 in market testing.">
+<link rel="canonical" href="https://karthick-a.github.io/portfolio/projects/oil-control-unit.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23101418'/%3E%3Crect x='8' y='8' width='16' height='16' rx='2' fill='none' stroke='%232BC98A' stroke-width='2'/%3E%3Cpath d='M12 8V4M20 8V4M12 28v-4M20 28v-4M8 12H4M8 20H4M28 12h-4M28 20h-4' stroke='%232BC98A' stroke-width='2'/%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js');if(sessionStorage.getItem('wipe'))document.documentElement.classList.add('wiping');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+</head>
+<body class="tone-dark">
+
+<div class="wipe" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand mono" href="../index.html">KARTHICK A</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navMenu">
+      <span></span><span></span>
+    </button>
+    <nav id="navMenu" class="nav-menu">
+      <ul>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#journey">Journey</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#services">Services</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<header class="case-hero tone-dark">
+  <div class="container">
+    <p class="eyebrow mono">CASE STUDY</p>
+    <h1>Oil Control Unit (OCU)</h1>
+    <div class="case-tags">
+      <span class="status-tag">2024–Present · V2 in market testing</span>
+    </div>
+    <div class="case-media frame" data-label="OIL CONTROL UNIT">
+      <img src="../assets/images/products/ocu.jpg" alt="Oil Control Unit" decoding="async"
+           onerror="this.parentNode.classList.add('ph');this.remove()">
+    </div>
+  </div>
+</header>
+
+<main id="main" class="case-body tone-light grid-bg tone-cut">
+  <div class="container">
+    <div class="case-sec" data-reveal>
+      <span class="case-label">Overview</span>
+      <p>An electronic controller for oil pumps with PWM-controlled power delivery.</p>
+    </div>
+    <div class="case-sec" data-reveal>
+      <span class="case-label">The Problem</span>
+      <p>Mechanical oil-pump control lacks precision and remote adjustability; the unit needed a robust power stage in a compact, manufacturable board.</p>
+    </div>
+    <div class="case-sec" data-reveal>
+      <span class="case-label">System Architecture</span>
+      <p>ESP8266 control core driving a MOSFET/TIP122 power stage under PWM; custom PCB designed, manufactured, and tested through two hardware versions.</p>
+    </div>
+    <div class="case-sec" data-reveal>
+      <span class="case-label">My Role &amp; What I Built</span>
+      <p>Circuit design, PCB layout, manufacturing coordination, firmware, and field iteration to V2.</p>
+    </div>
+    <div class="case-sec" data-reveal>
+      <span class="case-label">Tech Stack</span>
+      <ul class="tags"><li>ESP8266</li><li>MOSFET/TIP122 power stage</li><li>PWM</li><li>Custom PCB</li></ul>
+    </div>
+    <div class="case-sec" data-reveal>
+      <span class="case-label">Outcome</span>
+      <p>Version 2 is in market testing.</p>
+    </div>
+
+    <div class="case-next" data-reveal>
+      <span class="mono">NEXT PROJECT</span>
+      <a href="./transformer-iot.html">Transformer Monitoring System →</a>
+    </div>
+  </div>
+</main>
+
+<footer id="contact" class="tone-dark tone-cut">
+  <div class="container">
+    <svg class="divider" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+      <path class="div-path" d="M0,20 L300,20 L322,8 L340,32 L362,20 L620,20 L640,26 L700,14 L760,20 L1200,20" fill="none"/>
+    </svg>
+    <p class="eyebrow mono" data-reveal>CONTACT</p>
+    <h2 data-reveal>Let's talk.</h2>
+    <p class="section-intro" data-reveal>A project for Spark Invotech, or an embedded engineering role.</p>
+    <div class="contact-grid" data-reveal>
+      <ul class="c-links">
+        <li><a href="mailto:karthick24092003@gmail.com">karthick24092003@gmail.com</a></li>
+        <li><a href="tel:+917094828457">+91 70948 28457</a></li>
+        <li><a href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener">linkedin.com/in/karthick-a-83a352211</a></li>
+        <li><a href="https://github.com/KARTHICK-A" target="_blank" rel="noopener">github.com/KARTHICK-A</a></li>
+      </ul>
+      <a class="btn btn-line magnetic" href="../assets/docs/Karthick_A_Resume.pdf" download>Download Resume</a>
+    </div>
+  </div>
+  <div class="giant" aria-hidden="true"><span class="giant-name">KARTHICK A</span></div>
+  <div class="foot-line">
+    <div class="container mono">© 2026 Karthick A · Spark Invotech Pvt Ltd</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="../main.js"></script>
+</body>
+</html>
