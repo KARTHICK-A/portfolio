@@ -9,21 +9,22 @@ Personal portfolio of **Karthick A** — Founder & Embedded Systems Engineer, Sp
 ## Structure
 
 ```
-├── index.html              ← the whole site (single file, no build step)
+├── index.html              ← markup (all copy lives here)
+├── styles.css              ← all styling (black theme, signal-green accent)
+├── main.js                 ← GSAP + Lenis animations (site works without it too)
+├── articles/               ← engineering-note drafts (not linked yet)
 └── assets/
     ├── images/products/    ← project photos (ecu.jpg, ocu.jpg, cold-chamber.jpg, ...)
     ├── images/profile/     ← profile photo (karthick.jpg)
-    ├── models/             ← optional 3D model for the hero (hero.glb)
     └── docs/               ← resume (Karthick_A_Resume.pdf)
 ```
 
-Opens directly in a browser by double-clicking `index.html` — no server needed. Missing images fall back to clean placeholders automatically.
+Static site, no build step. GSAP/ScrollTrigger/Lenis load from CDN; if they fail (or `prefers-reduced-motion` is set) the site renders fully without animation. Missing images fall back to styled placeholders automatically.
 
 ## Updating
 
-- **New project:** copy an existing `tl-item` block in `index.html`, edit the text and tags, and drop a photo into `assets/images/products/`.
+- **New project:** copy a `<article class="card">` block in `index.html`, edit the text and tags, and drop a photo into `assets/images/products/`.
 - **New photo/resume:** just replace the file — filenames are wired in already.
-- **Hero 3D model:** export a `.glb` as `assets/models/hero.glb`; it loads automatically on the hosted site, otherwise a procedural PCB renders.
 
 ## Contact
 
