@@ -7,17 +7,32 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- scroll reveal ---------- */
 document.querySelectorAll('.section, .eng-grid, .stack, .bom').forEach(el => el.classList.add('reveal'));
-const io = new IntersectionObserver((es) => {
-  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { threshold: 0.06 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+const revealEls = document.querySelectorAll('.reveal');
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06 });
+  revealEls.forEach(el => io.observe(el));
+} else {
+  revealEls.forEach(el => el.classList.add('in'));
+}
 
 /* ---------- scroll progress trace ---------- */
 const bar = document.getElementById('progress');
-if (bar) addEventListener('scroll', () => {
-  const max = document.body.scrollHeight - innerHeight;
-  bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
-}, { passive: true });
+if (bar) {
+  const drawProgress = () => {
+    const max = document.body.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+  };
+  addEventListener('scroll', drawProgress, { passive: true });
+  addEventListener('resize', drawProgress);
+  drawProgress(); // reloading mid-page must not start the trace at 0%
+}
 
 /* ---------- open a project row from anywhere ---------- */
 function openProject(ref) {
@@ -35,13 +50,19 @@ function openProject(ref) {
 function initBoard() {
   const canvas = document.getElementById('pcb3d');
   const tip = document.getElementById('tip');
-  if (!canvas || !window.THREE) return;
+  const panel = document.querySelector('.hero-board');
+  // without three.js or WebGL there is nothing to show: drop the panel entirely
+  // rather than leave a hole in the hero
+  const giveUp = () => { if (panel) panel.hidden = true; };
+  if (!canvas) return;
+  if (!window.THREE) return giveUp();
 
   const COPPER = 0xe8a33d, SUB = 0x14261d, DARK = 0x0b0d0f;
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  } catch (e) { return; }
+  } catch (e) { return giveUp(); }
+  if (!renderer.getContext()) return giveUp();
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
   const scene = new THREE.Scene();
@@ -264,7 +285,9 @@ function initBoard() {
   resize();
 
   let t = 0, visible = true;
-  new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(canvas);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(canvas);
+  }
 
   (function loop() {
     requestAnimationFrame(loop);

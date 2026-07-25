@@ -89,6 +89,7 @@ h1 .stroke{color:transparent;-webkit-text-stroke:2px var(--copper)}
 
 /* 3D board panel */
 .hero-board{position:relative;height:min(78vh,680px);z-index:1}
+.hero-board[hidden]{display:none}
 #pcb3d{width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab}
 #pcb3d:active{cursor:grabbing}
 #tip{
@@ -107,6 +108,17 @@ h1 .stroke{color:transparent;-webkit-text-stroke:2px var(--copper)}
 .ticker-track{display:flex;white-space:nowrap;animation:tick 30s linear infinite;padding:.7rem 0;font-size:.72rem;letter-spacing:.18em;color:var(--copper)}
 @keyframes tick{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.ticker-track{animation:none}.led{animation:none}}
+
+/* ---------- Spec strip ---------- */
+.specs{
+  max-width:var(--max);margin:0 auto;padding:3rem 1.5rem;position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;
+  background:var(--line);border:1px solid var(--line);
+}
+.specs{margin-top:3.5rem;margin-bottom:.5rem;padding:0}
+.spec{background:var(--bg);padding:1.6rem 1.3rem;display:flex;flex-direction:column;gap:.5rem}
+.spec strong{font-family:var(--disp);font-weight:700;font-size:clamp(1.6rem,3vw,2.3rem);color:var(--copper);line-height:1}
+.spec span{color:var(--muted);font-size:.66rem;letter-spacing:.1em;line-height:1.7}
 
 /* ---------- Sections ---------- */
 .section{max-width:var(--max);margin:0 auto;padding:7rem 1.5rem;position:relative;z-index:2}
@@ -181,6 +193,8 @@ h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,4.6vw,3.2rem);
 .pad:hover::after{background:var(--copper);box-shadow:0 0 10px var(--copper)}
 .pad span{color:var(--muted);font-size:.65rem;letter-spacing:.16em}
 .pad strong{font-weight:500;font-size:.92rem;word-break:break-all}
+.pad-doc{border-color:var(--copper-dim)}
+.pad-doc strong{color:var(--copper)}
 
 /* ---------- Footer ---------- */
 .footer{

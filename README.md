@@ -24,5 +24,7 @@ assets/
   images/profile/     profile photo
 ```
 
-Static, no build step. If JavaScript or WebGL is unavailable — or the visitor prefers
-reduced motion — the board is skipped and the page still reads completely.
+Static, no build step. If JavaScript or WebGL is unavailable the board panel is removed
+and the page still reads completely. When the visitor prefers reduced motion the board is
+still drawn and stays clickable, but nothing animates on its own — no auto-rotation,
+float, LED blink or ticker.
