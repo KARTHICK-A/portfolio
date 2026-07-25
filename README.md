@@ -1,31 +1,28 @@
 # Karthick A — Portfolio
 
-Personal portfolio of **Karthick A** — Founder & Embedded Systems Engineer, Spark Invotech Pvt Ltd, Chennai.
+Personal site of **Karthick A**, Embedded Product Engineer in Chennai — automotive ECU
+electronics, custom PCB design, embedded C/C++ and industrial IoT.
 
-> I build industrial embedded systems end-to-end — from datasheet to deployed product.
+**Live:** https://karthick-a.github.io/portfolio/
 
-**Live site:** https://karthick-a.github.io/portfolio/
+## The idea
+
+The page is built like a board, not like a résumé. The hero renders a real 3D circuit
+board (three.js/WebGL) where **every IC is one project** — hover a chip to see what it is,
+click it to open that project's entry in the bill of projects below. Projects are listed as
+a BOM with reference designators (U1–U6), skills as a layer stack-up, contact links as
+test points. No dates, no timeline.
 
 ## Structure
 
 ```
-├── index.html              ← markup (all copy lives here)
-├── styles.css              ← all styling (black theme, signal-green accent)
-├── main.js                 ← GSAP + Lenis animations (site works without it too)
-├── articles/               ← engineering-note drafts (not linked yet)
-└── assets/
-    ├── images/products/    ← project photos (ecu.jpg, ocu.jpg, cold-chamber.jpg, ...)
-    ├── images/profile/     ← profile photo (karthick.jpg)
-    └── docs/               ← resume (Karthick_A_Resume.pdf)
+index.html            markup and all copy
+styles.css            styling — dark substrate, copper accents, silkscreen type
+script.js             3D board, chip→project navigation, scroll reveal + progress
+assets/
+  vendor/three.min.js three.js r160, vendored so the site has no CDN dependency
+  images/profile/     profile photo
 ```
 
-Static site, no build step. GSAP/ScrollTrigger/Lenis load from CDN; if they fail (or `prefers-reduced-motion` is set) the site renders fully without animation. Missing images fall back to styled placeholders automatically.
-
-## Updating
-
-- **New project:** copy a `<article class="card">` block in `index.html`, edit the text and tags, and drop a photo into `assets/images/products/`.
-- **New photo/resume:** just replace the file — filenames are wired in already.
-
-## Contact
-
-karthick24092003@gmail.com · [LinkedIn](https://linkedin.com/in/karthick-a-83a352211)
+Static, no build step. If JavaScript or WebGL is unavailable — or the visitor prefers
+reduced motion — the board is skipped and the page still reads completely.
