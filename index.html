@@ -11,214 +11,223 @@
 <meta property="og:description" content="Automotive ECU electronics · Custom PCB design · Embedded C/C++ · Industrial IoT">
 <meta property="og:url" content="https://karthick-a.github.io/portfolio/">
 <meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231c1b1a'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23ecebe7'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0b'/%3E%3Ccircle cx='7' cy='7' r='2.5' fill='none' stroke='%23e8a33d' stroke-width='1.5'/%3E%3Ccircle cx='25' cy='25' r='2.5' fill='none' stroke='%23e8a33d' stroke-width='1.5'/%3E%3Cpath d='M9 7h10v10h6M7 9v8h8v8' fill='none' stroke='%23e8a33d' stroke-width='1.5'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Karthick A","jobTitle":"Embedded Product Engineer","worksFor":{"@type":"Organization","name":"Spark Invotech Pvt Ltd"},"email":"mailto:karthick24092003@gmail.com","telephone":"+91 7094828457","address":{"@type":"PostalAddress","addressLocality":"Chennai","addressCountry":"IN"},"url":"https://karthick-a.github.io/portfolio/","sameAs":["https://linkedin.com/in/karthick-a-83a352211","https://github.com/KARTHICK-A"]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 
 <a class="skip-link" href="#work">Skip to content</a>
 
-<header class="nav">
-  <a class="brand" href="#top">Karthick&nbsp;A</a>
-  <nav aria-label="Main">
-    <a href="#work">Work</a>
-    <a href="#about">About</a>
-    <a href="#experience">Experience</a>
-    <a class="pill pill-small" href="#contact">Contact</a>
+<!-- top status bar, like a board silkscreen header -->
+<header class="topbar mono">
+  <span class="tb-id">KA·REV7C</span>
+  <nav aria-label="Main" class="tb-nav">
+    <a href="#work">[ WORK ]</a>
+    <a href="#board">[ ENGINEER ]</a>
+    <a href="#contact">[ CONTACT ]</a>
   </nav>
+  <span class="tb-state"><i class="led" aria-hidden="true"></i> PWR·OK</span>
+  <i class="tb-trace" id="progress" aria-hidden="true"></i>
 </header>
 
-<main id="top">
+<main>
 
-<!-- HERO -->
-<section class="hero">
-  <canvas id="dots" aria-hidden="true"></canvas>
-  <div class="hero-inner reveal">
-    <p class="eyebrow">Embedded Product Engineer — Chennai, India</p>
-    <h1>I build embedded products,<br>from schematic to a<br>running engine.</h1>
-    <p class="lede">Automotive ECU electronics · custom PCB design · embedded C/C++ · industrial IoT. End-to-end hardware ownership: concept, design, firmware, bring-up and field validation.</p>
+<!-- ============ HERO ============ -->
+<section class="hero fid" id="top">
+  <div class="hero-copy">
+    <p class="mono desig">KARTHICK A · CHENNAI, IN</p>
+    <h1>
+      <span>EMBEDDED</span>
+      <span class="stroke">PRODUCT</span>
+      <span>ENGINEER</span>
+    </h1>
+    <p class="mono hero-sub">// schematic → PCB → firmware → running engine<br>// automotive ECU · power electronics · industrial IoT</p>
     <div class="hero-cta">
-      <a class="pill" href="#work">See my work</a>
-      <a class="ghost" href="mailto:karthick24092003@gmail.com">karthick24092003@gmail.com</a>
+      <a class="btn-trace" href="#work">PROBE MY WORK <span aria-hidden="true">→</span></a>
+      <a class="btn-line mono" href="#contact">CONTACT</a>
     </div>
+  </div>
+  <div class="hero-board">
+    <canvas id="pcb3d" aria-label="Interactive 3D circuit board — each chip opens a project" role="img"></canvas>
+    <div id="tip" class="mono" hidden></div>
+    <p class="mono board-hint" aria-hidden="true">DRAG TO ROTATE · TAP A CHIP TO OPEN ITS PROJECT</p>
   </div>
 </section>
 
-<!-- CAPABILITIES -->
-<section class="section" id="capabilities">
-  <div class="grid-3">
-    <div class="cap reveal">
-      <span class="dot"></span>
-      <h3>Engine &amp; ECU electronics</h3>
-      <p>Dual-fuel ECU (LPG/CNG), injector drivers and fuel-control logic. Real-time engine sensing — MAP, EGT, RPM — with in-house sensor calibration and CAN interfacing.</p>
-    </div>
-    <div class="cap reveal">
-      <span class="dot"></span>
-      <h3>Hardware &amp; PCB design</h3>
-      <p>Schematic capture to validated boards: MOSFET driver stages, buck and linear supplies, flyback and reverse-polarity protection. Altium, KiCad, EasyEDA, Proteus.</p>
-    </div>
-    <div class="cap reveal">
-      <span class="dot"></span>
-      <h3>Firmware &amp; industrial IoT</h3>
-      <p>Interrupt-driven embedded C/C++ on STM32, ESP32 and ATtiny. CAN, RS485, LoRa, SPI, I2C. Data logging, cloud sync over HTTP/JSON, and PC-side capture tooling.</p>
-    </div>
+<!-- ticker -->
+<div class="ticker mono" aria-hidden="true">
+  <div class="ticker-track">
+    <span>STM32 ▸ ESP32-S3 ▸ ATTINY BARE-IC ▸ CAN ▸ RS485 ▸ LoRa ▸ 12V/8A INJECTOR DRIVE ▸ MAP·EGT·RPM ▸ ALTIUM ▸ KiCAD ▸ EMBEDDED C/C++ ▸ FIELD-VALIDATED ▸&nbsp;</span><span>STM32 ▸ ESP32-S3 ▸ ATTINY BARE-IC ▸ CAN ▸ RS485 ▸ LoRa ▸ 12V/8A INJECTOR DRIVE ▸ MAP·EGT·RPM ▸ ALTIUM ▸ KiCAD ▸ EMBEDDED C/C++ ▸ FIELD-VALIDATED ▸&nbsp;</span>
+  </div>
+</div>
+
+<!-- absolute-maximum-ratings style spec strip -->
+<section class="specs" aria-label="Key figures">
+  <div class="spec"><strong>6</strong><span class="mono">products designed<br>end-to-end</span></div>
+  <div class="spec"><strong>2</strong><span class="mono">commercial deployments<br>Delphi TVS · Indo Tech</span></div>
+  <div class="spec"><strong>16</strong><span class="mono">injector channels<br>driven from 4</span></div>
+  <div class="spec"><strong>70 °C</strong><span class="mono">validated span<br>+50 to −20 °C</span></div>
+  <div class="spec"><strong>1</strong><span class="mono">marine engine<br>running on my ECU</span></div>
+</section>
+
+<!-- ============ WORK — BILL OF PROJECTS ============ -->
+<section class="section fid" id="work">
+  <div class="sec-head">
+    <p class="mono sec-no">/// 01</p>
+    <h2>BILL OF<br>PROJECTS</h2>
+    <p class="mono sec-note">REFDES · QTY 6 · ALL PLACED &amp; SOLDERED — tap a row to inspect</p>
+  </div>
+
+  <div class="bom">
+
+    <details class="row" open>
+      <summary>
+        <span class="mono ref">U1</span>
+        <span class="rname">DUAL-FUEL ENGINE CONTROL UNIT <em>(LPG/CNG)</em></span>
+        <span class="mono rtag">AUTOMOTIVE · MARINE-VERIFIED</span>
+        <span class="mono rx" aria-hidden="true">[+]</span>
+      </summary>
+      <div class="rbody">
+        <p>Indigenous low-cost ECU architecture converting IC engines to dual-fuel LPG/CNG — including a marine engine retrofit. Real-time engine sensing (MAP, EGT, engine speed) through a precision ADC with in-house calibration across firmware versions; fuel and injector control logic implemented in-house. V1 verified on a running marine engine under operating load.</p>
+        <p class="mono chips">STM32 ▸ ESP32 ▸ ARDUINO MEGA ▸ ADS1115 ▸ MAP/EGT/RPM ▸ CAN ▸ EMBEDDED C ▸ STM32CubeIDE</p>
+      </div>
+    </details>
+
+    <details class="row">
+      <summary>
+        <span class="mono ref">U2</span>
+        <span class="rname">INJECTOR MULTIPLIER</span>
+        <span class="mono rtag">POWER ELECTRONICS · 4→16 CH</span>
+        <span class="mono rx" aria-hidden="true">[+]</span>
+      </summary>
+      <div class="rbody">
+        <p>Power-electronics module multiplying 4 ECU injector channels to drive up to 16 injectors — so large multi-cylinder engines can run on a low-channel, low-cost ECU. Driver stages rated 12 V / 8 A peak per channel with MOSFET switching, flyback and reverse-polarity protection, on a custom PCB.</p>
+        <p class="mono chips">MOSFET DRIVE ▸ FLYBACK PROT ▸ REV-POLARITY PROT ▸ CUSTOM PCB</p>
+      </div>
+    </details>
+
+    <details class="row">
+      <summary>
+        <span class="mono ref">U3</span>
+        <span class="rname">ACOUSTIC VEHICLE ALERTING SYSTEM</span>
+        <span class="mono rtag">EV SAFETY · PROTOTYPE</span>
+        <span class="mono rx" aria-hidden="true">[+]</span>
+      </summary>
+      <div class="rbody">
+        <p>Pedestrian-safety prototype for quiet EVs — a speed-dependent acoustic warning system where tone and volume rise with vehicle speed, extending engine-sensing work into EV safety hardware.</p>
+        <p class="mono chips">ESP32-S3 ▸ PWM AUDIO ▸ ANALOG SPEED INPUT ▸ C/C++ ▸ PLATFORMIO</p>
+      </div>
+    </details>
+
+    <details class="row">
+      <summary>
+        <span class="mono ref">U4</span>
+        <span class="rname">OIL CONTROL UNIT</span>
+        <span class="mono rtag">AUTOMOTIVE · 2 HW VERSIONS</span>
+        <span class="mono rx" aria-hidden="true">[+]</span>
+      </summary>
+      <div class="rbody">
+        <p>Electronic oil-pump controller for regulated oil delivery. Designed, manufactured and verified two hardware versions on custom PCBs — ESP8266 control, PWM output, MOSFET/TIP122 power stage with protection.</p>
+        <p class="mono chips">ESP8266 ▸ PWM ▸ MOSFET/TIP122 STAGE ▸ CUSTOM PCB</p>
+      </div>
+    </details>
+
+    <details class="row">
+      <summary>
+        <span class="mono ref">U5</span>
+        <span class="rname">TRANSFORMER CONDITION MONITORING</span>
+        <span class="mono rtag">INDO TECH · POC DONE</span>
+        <span class="mono rx" aria-hidden="true">[+]</span>
+      </summary>
+      <div class="rbody">
+        <p>IoT logger for Indo Tech Transformers (power-equipment manufacturer): pressure, voltage, current, temperature and running hours acquired with RTC timestamping, local storage and cloud sync. POC completed with on-site validation.</p>
+        <p class="mono chips">ESP ▸ PT100 ▸ ZMPT101B ▸ SCT013 ▸ RTC ▸ SD LOG ▸ HTTP/JSON ▸ P10 LED</p>
+      </div>
+    </details>
+
+    <details class="row">
+      <summary>
+        <span class="mono ref">U6</span>
+        <span class="rname">COLD CHAMBER MONITORING SYSTEM</span>
+        <span class="mono rtag">DELPHI TVS · DELIVERED</span>
+        <span class="mono rx" aria-hidden="true">[+]</span>
+      </summary>
+      <div class="rbody">
+        <p>3-node distributed data logger profiling +50 °C → −20 °C for a diesel fuel-injection manufacturer. Command/ACK protocol with 3-retry logic and session persistence across power cycles; validated on-site before handover.</p>
+        <p class="mono chips">ESP32 ▸ RS485 HALF-DUPLEX ▸ LoRa E32 ~200 m ▸ SPIFFS ▸ PYTHON PC TOOL</p>
+      </div>
+    </details>
+
   </div>
 </section>
 
-<!-- WORK -->
-<section class="section" id="work">
-  <p class="eyebrow reveal">Selected work</p>
-  <h2 class="reveal">Products that shipped —<br>to engines, factories and the field.</h2>
-
-  <div class="work-list">
-
-    <details class="work reveal">
-      <summary>
-        <span class="work-title">Dual-Fuel Engine Control Unit (LPG/CNG)</span>
-        <span class="work-tag">Automotive · Spark Invotech</span>
-        <span class="work-plus" aria-hidden="true"></span>
-      </summary>
-      <div class="work-body">
-        <p>An indigenous, low-cost ECU architecture that converts IC engines to dual-fuel LPG/CNG — including a marine engine retrofit. Integrated real-time engine sensing (MAP, EGT, engine speed) through a precision ADC with in-house calibration, and implemented the fuel and injector control logic. V1 was verified on a running marine engine under operating load.</p>
-        <p class="tech">STM32 · ESP32 · Arduino Mega · ADS1115 · MAP / EGT / RPM sensors · CAN · Embedded C · STM32CubeIDE</p>
-      </div>
-    </details>
-
-    <details class="work reveal">
-      <summary>
-        <span class="work-title">Injector Multiplier</span>
-        <span class="work-tag">Power electronics · ECU expansion</span>
-        <span class="work-plus" aria-hidden="true"></span>
-      </summary>
-      <div class="work-body">
-        <p>A power-electronics module that multiplies 4 ECU injector channels to drive up to 16 injectors — letting large multi-cylinder engines run on a low-channel, low-cost ECU. Driver stages rated 12&nbsp;V / 8&nbsp;A peak per channel, with MOSFET switching, flyback and reverse-polarity protection on a custom PCB.</p>
-        <p class="tech">MOSFET driver stages · flyback protection · reverse-polarity protection · custom PCB</p>
-      </div>
-    </details>
-
-    <details class="work reveal">
-      <summary>
-        <span class="work-title">Acoustic Vehicle Alerting System (AVAS)</span>
-        <span class="work-tag">EV safety · Prototype</span>
-        <span class="work-plus" aria-hidden="true"></span>
-      </summary>
-      <div class="work-body">
-        <p>A pedestrian-safety prototype for quiet electric vehicles: a speed-dependent acoustic warning system where tone and volume rise with vehicle speed — extending engine-sensing work into EV safety hardware.</p>
-        <p class="tech">ESP32-S3 · PWM audio generation · analog speed input · Embedded C/C++ · PlatformIO</p>
-      </div>
-    </details>
-
-    <details class="work reveal">
-      <summary>
-        <span class="work-title">Oil Control Unit</span>
-        <span class="work-tag">Automotive · Two hardware versions</span>
-        <span class="work-plus" aria-hidden="true"></span>
-      </summary>
-      <div class="work-body">
-        <p>An electronic oil pump controller for regulated oil delivery. Designed, manufactured and verified two hardware versions on custom PCBs — ESP8266 control, PWM output, and a MOSFET/TIP122 power stage with protection.</p>
-        <p class="tech">ESP8266 · PWM · MOSFET / TIP122 power stage · custom PCB</p>
-      </div>
-    </details>
-
-    <details class="work reveal">
-      <summary>
-        <span class="work-title">Transformer Condition Monitoring</span>
-        <span class="work-tag">Industrial IoT · Indo Tech Transformers</span>
-        <span class="work-plus" aria-hidden="true"></span>
-      </summary>
-      <div class="work-body">
-        <p>An IoT logger for a power-equipment manufacturer, acquiring pressure, voltage, current, temperature and running hours with RTC timestamping, local storage and cloud sync. Proof of concept completed with on-site validation.</p>
-        <p class="tech">ESP · PT100 · ZMPT101B · SCT013 · RTC · SD logging · HTTP/JSON cloud APIs · P10 LED display</p>
-      </div>
-    </details>
-
-    <details class="work reveal">
-      <summary>
-        <span class="work-title">Cold Chamber Monitoring System</span>
-        <span class="work-tag">Industrial IoT · Delphi TVS · Delivered</span>
-        <span class="work-plus" aria-hidden="true"></span>
-      </summary>
-      <div class="work-body">
-        <p>A 3-node distributed data logger for temperature profiling from +50&nbsp;°C down to −20&nbsp;°C at a diesel fuel-injection systems manufacturer. Architected a command/ACK protocol with 3-retry logic and session persistence across power cycles; validated on-site before handover.</p>
-        <p class="tech">ESP32 · RS485 half-duplex (DE/RE) · LoRa E32 (~200 m deployed) · SPIFFS logging · Python PC interface</p>
-      </div>
-    </details>
-
+<!-- ============ THE ENGINEER ============ -->
+<section class="section fid" id="board">
+  <div class="sec-head">
+    <p class="mono sec-no">/// 02</p>
+    <h2>THE<br>ENGINEER</h2>
+    <p class="mono sec-note">SUBSTRATE · FR-4 · MADE IN CHENNAI</p>
   </div>
-</section>
 
-<!-- ABOUT -->
-<section class="section about" id="about">
-  <div class="about-grid">
-    <div class="reveal">
-      <p class="eyebrow">About</p>
-      <h2>Hardware you can hold,<br>firmware you can trust.</h2>
-      <p class="body">I'm Karthick, an embedded product engineer and co-founder at Spark Invotech, a DPIIT-recognized embedded systems company in Chennai. I architect and deliver commercial embedded products end-to-end — requirements, hardware architecture, schematic, PCB layout, firmware, bring-up, validation and customer deployment.</p>
-      <p class="body">My work runs on real machines: a dual-fuel ECU verified on a running marine engine, and industrial monitoring electronics commissioned for Delphi&nbsp;TVS and Indo&nbsp;Tech&nbsp;Transformers with on-site validation.</p>
-      <ul class="facts">
-        <li>M.E. Embedded System Technologies — Sri Sai Ram Engineering College</li>
-        <li>B.E. Electrical &amp; Electronics Engineering — First Class</li>
-        <li>Youth Co:Lab (UNDP) Top-20 Finalist · SIH Mentor · DPIIT Startup · IVP Grant</li>
-        <li>Certifications: IIT Bombay · IIRS/ISRO · IEEE · NPTEL</li>
+  <div class="eng-grid">
+    <figure class="portrait">
+      <img src="./assets/images/profile/karthick.jpg" alt="Karthick A" loading="lazy" width="420" height="420">
+      <figcaption class="mono">FIG.1 — KARTHICK A · EMBEDDED PRODUCT ENGINEER</figcaption>
+    </figure>
+    <div class="eng-copy">
+      <p>Co-founder at <strong>Spark Invotech</strong>, a DPIIT-recognized embedded systems company. I own hardware end-to-end: requirements → architecture → schematic → PCB layout → firmware → bring-up → validation → customer deployment.</p>
+      <p>My boards run on real machines — a dual-fuel ECU verified on a running marine engine, and industrial monitoring electronics commissioned on-site for <strong>Delphi TVS</strong> and <strong>Indo Tech Transformers</strong>.</p>
+      <ul class="mono speclist">
+        <li><span>EDU</span>M.E. Embedded System Technologies · B.E. EEE (First Class) — Sri Sai Ram Engg.</li>
+        <li><span>XP</span>Embedded Product Engineer — Spark Invotech · R&amp;D Intern — AbhiVijay Technologies</li>
+        <li><span>AWD</span>Youth Co:Lab (UNDP) Top-20 · SIH Mentor · DPIIT Startup · IVP Grant</li>
+        <li><span>CERT</span>IIT Bombay · IIRS/ISRO ×5 · IEEE ×3 · NPTEL ×2</li>
+        <li><span>LANG</span>English (professional) · Tamil (native)</li>
       </ul>
     </div>
-    <figure class="portrait reveal">
-      <img src="./assets/images/profile/karthick.jpg" alt="Karthick A" loading="lazy" width="420" height="420">
-    </figure>
+  </div>
+
+  <!-- layer stack = skills -->
+  <div class="stack">
+    <p class="mono stack-label">LAYER STACK-UP — CAPABILITIES</p>
+    <div class="layer"><span class="mono lno">L1</span><span class="lname">ECU &amp; ENGINE ELECTRONICS</span><span class="mono ldet">dual-fuel control · injector drivers · MAP/EGT/RPM sensing · CAN</span></div>
+    <div class="layer"><span class="mono lno">L2</span><span class="lname">HARDWARE &amp; PCB</span><span class="mono ldet">MOSFET stages · buck/linear supplies · flyback prot · Altium · KiCad</span></div>
+    <div class="layer"><span class="mono lno">L3</span><span class="lname">FIRMWARE</span><span class="mono ldet">embedded C/C++ · interrupt-driven · state machines · STM32/ESP32/ATtiny</span></div>
+    <div class="layer"><span class="mono lno">L4</span><span class="lname">PROTOCOLS &amp; IoT</span><span class="mono ldet">CAN · RS485 · LoRa · SPI/I2C/UART · HTTP/JSON · SD/SPIFFS logging</span></div>
+    <div class="layer"><span class="mono lno">L5</span><span class="lname">TEST &amp; DEBUG</span><span class="mono ldet">oscilloscope · ST-Link SWD · UPDI · custom UART capture tooling</span></div>
   </div>
 </section>
 
-<!-- EXPERIENCE -->
-<section class="section" id="experience">
-  <p class="eyebrow reveal">Experience</p>
-  <div class="xp reveal">
-    <div>
-      <h3>Embedded Product Engineer</h3>
-      <p class="muted">Spark Invotech Pvt Ltd, Chennai — co-founder</p>
-    </div>
-    <p class="body">Leading dual-fuel ECU and injector-driver development for IC engines, and delivering industrial monitoring electronics to manufacturing clients — from architecture to on-site commissioning and documentation.</p>
+<!-- ============ CONTACT ============ -->
+<section class="section fid contact" id="contact">
+  <div class="sec-head">
+    <p class="mono sec-no">/// 03</p>
+    <h2>SOLDER A<br>CONNECTION</h2>
+    <p class="mono sec-note">TEST POINTS — ALL PADS EXPOSED</p>
   </div>
-  <div class="xp reveal">
-    <div>
-      <h3>R&amp;D Engineer Intern</h3>
-      <p class="muted">AbhiVijay Technologies, Chennai</p>
-    </div>
-    <p class="body">Developed ECU and OCU hardware — R&amp;D, hardware design, testing and system-integration validation for automotive electronic control units.</p>
-  </div>
-</section>
-
-<!-- TOOLKIT -->
-<section class="section" id="toolkit">
-  <p class="eyebrow reveal">Toolkit</p>
-  <p class="chips reveal">
-    <span>STM32 F1/F4</span><span>ESP32 / S3</span><span>ESP8266</span><span>ATtiny bare-IC</span><span>Embedded C/C++</span><span>FreeRTOS (learning)</span><span>Altium Designer</span><span>KiCad</span><span>CAN</span><span>RS485</span><span>LoRa</span><span>SPI / I2C / UART</span><span>Oscilloscope</span><span>ST-Link SWD</span><span>UPDI</span><span>PlatformIO</span><span>Git</span>
-  </p>
-</section>
-
-<!-- CONTACT -->
-<section class="section contact" id="contact">
-  <p class="eyebrow reveal">Contact</p>
-  <h2 class="reveal">Have a product idea<br>that needs real hardware?</h2>
-  <div class="hero-cta reveal">
-    <a class="pill" href="mailto:karthick24092003@gmail.com">Write to me</a>
-    <a class="ghost" href="tel:+917094828457">+91 70948 28457</a>
-    <a class="ghost" href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener">LinkedIn</a>
+  <div class="pads">
+    <a class="pad" href="mailto:karthick24092003@gmail.com"><span class="mono">TP1 · EMAIL</span><strong>karthick24092003@gmail.com</strong></a>
+    <a class="pad" href="tel:+917094828457"><span class="mono">TP2 · CALL</span><strong>+91 70948 28457</strong></a>
+    <a class="pad" href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener"><span class="mono">TP3 · LINKEDIN</span><strong>/in/karthick-a</strong></a>
+    <a class="pad" href="https://github.com/KARTHICK-A" target="_blank" rel="noopener"><span class="mono">TP4 · GITHUB</span><strong>/KARTHICK-A</strong></a>
+    <a class="pad pad-doc" href="./assets/docs/Karthick_A_Resume.pdf" download><span class="mono">TP5 · DATASHEET</span><strong>Download résumé (PDF) ↓</strong></a>
   </div>
 </section>
 
 </main>
 
-<footer class="footer">
-  <span>© Karthick A — Chennai, India</span>
-  <span>English · Tamil</span>
+<footer class="footer mono">
+  <span>© KARTHICK A · DESIGNED &amp; ROUTED IN CHENNAI</span>
+  <span>NO DRC ERRORS · REV 7C</span>
 </footer>
 
+<script src="./assets/vendor/three.min.js" defer></script>
 <script src="./script.js" defer></script>
 </body>
 </html>
