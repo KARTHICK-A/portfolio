@@ -11,9 +11,24 @@
 <meta property="og:description" content="Automotive ECU electronics · Custom PCB design · Embedded C/C++ · Industrial IoT">
 <meta property="og:url" content="https://karthick-a.github.io/portfolio/">
 <meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg">
+<meta property="og:image:alt" content="Karthick A, Embedded Product Engineer">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Karthick A — Embedded Product Engineer">
+<meta name="twitter:description" content="Automotive ECU electronics · Custom PCB design · Embedded C/C++ · Industrial IoT">
+<meta name="twitter:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg">
+<meta name="theme-color" content="#0a0a0b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0b'/%3E%3Ccircle cx='7' cy='7' r='2.5' fill='none' stroke='%23e8a33d' stroke-width='1.5'/%3E%3Ccircle cx='25' cy='25' r='2.5' fill='none' stroke='%23e8a33d' stroke-width='1.5'/%3E%3Cpath d='M9 7h10v10h6M7 9v8h8v8' fill='none' stroke='%23e8a33d' stroke-width='1.5'/%3E%3C/svg%3E">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Person","name":"Karthick A","jobTitle":"Embedded Product Engineer","worksFor":{"@type":"Organization","name":"Spark Invotech Pvt Ltd"},"email":"mailto:karthick24092003@gmail.com","telephone":"+91 7094828457","address":{"@type":"PostalAddress","addressLocality":"Chennai","addressCountry":"IN"},"url":"https://karthick-a.github.io/portfolio/","sameAs":["https://linkedin.com/in/karthick-a-83a352211","https://github.com/KARTHICK-A"]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"Projects by Karthick A","itemListElement":[
+{"@type":"ListItem","position":1,"item":{"@type":"CreativeWork","name":"Dual-Fuel Engine Control Unit (LPG/CNG)","description":"Indigenous low-cost ECU converting IC engines to dual-fuel LPG/CNG, verified on a running marine engine.","creator":{"@type":"Person","name":"Karthick A"}}},
+{"@type":"ListItem","position":2,"item":{"@type":"CreativeWork","name":"Injector Multiplier","description":"Power-electronics module multiplying 4 ECU injector channels to 16 at 12 V / 8 A peak per channel.","creator":{"@type":"Person","name":"Karthick A"}}},
+{"@type":"ListItem","position":3,"item":{"@type":"CreativeWork","name":"Acoustic Vehicle Alerting System","description":"Speed-dependent acoustic pedestrian-safety prototype for electric vehicles on ESP32-S3.","creator":{"@type":"Person","name":"Karthick A"}}},
+{"@type":"ListItem","position":4,"item":{"@type":"CreativeWork","name":"Oil Control Unit","description":"Electronic oil-pump controller; two hardware versions designed, manufactured and verified.","creator":{"@type":"Person","name":"Karthick A"}}},
+{"@type":"ListItem","position":5,"item":{"@type":"CreativeWork","name":"Transformer Condition Monitoring","description":"Industrial IoT logger for Indo Tech Transformers with RTC-timestamped local storage and cloud sync.","creator":{"@type":"Person","name":"Karthick A"}}},
+{"@type":"ListItem","position":6,"item":{"@type":"CreativeWork","name":"Cold Chamber Monitoring System","description":"3-node distributed temperature logger (+50 °C to −20 °C) delivered to Delphi TVS.","creator":{"@type":"Person","name":"Karthick A"}}}]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +37,7 @@
 </head>
 <body>
 
-<a class="skip-link" href="#work">Skip to content</a>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <!-- top status bar, like a board silkscreen header -->
 <header class="topbar mono">
@@ -36,7 +51,7 @@
   <i class="tb-trace" id="progress" aria-hidden="true"></i>
 </header>
 
-<main>
+<main id="main">
 
 <!-- ============ HERO ============ -->
 <section class="hero fid" id="top">
@@ -47,10 +62,10 @@
       <span class="stroke">PRODUCT</span>
       <span>ENGINEER</span>
     </h1>
-    <p class="mono hero-sub">// schematic → PCB → firmware → running engine<br>// automotive ECU · power electronics · industrial IoT</p>
+    <p class="mono hero-sub" id="boot" data-lines="// schematic → PCB → firmware → running engine&#10;// automotive ECU · power electronics · industrial IoT">// schematic → PCB → firmware → running engine<br>// automotive ECU · power electronics · industrial IoT<span class="caret" aria-hidden="true"></span></p>
     <div class="hero-cta">
       <a class="btn-trace" href="#work">PROBE MY WORK <span aria-hidden="true">→</span></a>
-      <a class="btn-line mono" href="#contact">CONTACT</a>
+      <a class="btn-line mono" href="./assets/docs/Karthick_A_Resume.pdf" download>RÉSUMÉ ↓</a>
     </div>
   </div>
   <div class="hero-board">
@@ -90,11 +105,15 @@
       <summary>
         <span class="mono ref">U1</span>
         <span class="rname">DUAL-FUEL ENGINE CONTROL UNIT <em>(LPG/CNG)</em></span>
-        <span class="mono rtag">AUTOMOTIVE · MARINE-VERIFIED</span>
+        <span class="mono rtag"><b class="star" title="Featured project">★</b> AUTOMOTIVE · MARINE-VERIFIED</span>
         <span class="mono rx" aria-hidden="true">[+]</span>
       </summary>
       <div class="rbody">
-        <p>Indigenous low-cost ECU architecture converting IC engines to dual-fuel LPG/CNG — including a marine engine retrofit. Real-time engine sensing (MAP, EGT, engine speed) through a precision ADC with in-house calibration across firmware versions; fuel and injector control logic implemented in-house. V1 verified on a running marine engine under operating load.</p>
+        <dl class="pco">
+          <div><dt class="mono">PROBLEM</dt><dd>Converting IC engines to LPG/CNG needs an ECU that senses and doses fuel in real time — imported units cost too much for retrofit markets.</dd></div>
+          <div><dt class="mono">CONSTRAINTS</dt><dd>Low-cost BOM · engine-bay conditions · in-house sensor calibration (MAP, EGT, RPM via precision ADC) · marine retrofit variant.</dd></div>
+          <div><dt class="mono">OUTCOME</dt><dd>V1 verified on a running marine engine under operating load; calibration held across firmware revisions.</dd></div>
+        </dl>
         <p class="mono chips">STM32 ▸ ESP32 ▸ ARDUINO MEGA ▸ ADS1115 ▸ MAP/EGT/RPM ▸ CAN ▸ EMBEDDED C ▸ STM32CubeIDE</p>
       </div>
     </details>
@@ -103,11 +122,15 @@
       <summary>
         <span class="mono ref">U2</span>
         <span class="rname">INJECTOR MULTIPLIER</span>
-        <span class="mono rtag">POWER ELECTRONICS · 4→16 CH</span>
+        <span class="mono rtag"><b class="star" title="Featured project">★</b> POWER ELECTRONICS · 4→16 CH</span>
         <span class="mono rx" aria-hidden="true">[+]</span>
       </summary>
       <div class="rbody">
-        <p>Power-electronics module multiplying 4 ECU injector channels to drive up to 16 injectors — so large multi-cylinder engines can run on a low-channel, low-cost ECU. Driver stages rated 12 V / 8 A peak per channel with MOSFET switching, flyback and reverse-polarity protection, on a custom PCB.</p>
+        <dl class="pco">
+          <div><dt class="mono">PROBLEM</dt><dd>Affordable ECUs ship with 4 injector channels; large multi-cylinder engines need up to 16.</dd></div>
+          <div><dt class="mono">CONSTRAINTS</dt><dd>12 V / 8 A peak per channel · inductive loads demand flyback and reverse-polarity protection · custom PCB.</dd></div>
+          <div><dt class="mono">OUTCOME</dt><dd>4 channels multiplied to 16 — big engines run on a low-channel, low-cost ECU.</dd></div>
+        </dl>
         <p class="mono chips">MOSFET DRIVE ▸ FLYBACK PROT ▸ REV-POLARITY PROT ▸ CUSTOM PCB</p>
       </div>
     </details>
@@ -120,7 +143,11 @@
         <span class="mono rx" aria-hidden="true">[+]</span>
       </summary>
       <div class="rbody">
-        <p>Pedestrian-safety prototype for quiet EVs — a speed-dependent acoustic warning system where tone and volume rise with vehicle speed, extending engine-sensing work into EV safety hardware.</p>
+        <dl class="pco">
+          <div><dt class="mono">PROBLEM</dt><dd>Quiet EVs are a pedestrian hazard; regulation is moving toward mandatory acoustic alerting.</dd></div>
+          <div><dt class="mono">CONSTRAINTS</dt><dd>Tone and volume must track vehicle speed continuously from an analog speed input.</dd></div>
+          <div><dt class="mono">OUTCOME</dt><dd>Working prototype on ESP32-S3 — engine-sensing work extended into EV safety hardware.</dd></div>
+        </dl>
         <p class="mono chips">ESP32-S3 ▸ PWM AUDIO ▸ ANALOG SPEED INPUT ▸ C/C++ ▸ PLATFORMIO</p>
       </div>
     </details>
@@ -133,7 +160,11 @@
         <span class="mono rx" aria-hidden="true">[+]</span>
       </summary>
       <div class="rbody">
-        <p>Electronic oil-pump controller for regulated oil delivery. Designed, manufactured and verified two hardware versions on custom PCBs — ESP8266 control, PWM output, MOSFET/TIP122 power stage with protection.</p>
+        <dl class="pco">
+          <div><dt class="mono">PROBLEM</dt><dd>Oil pumps need regulated electronic delivery in place of fixed mechanical feed.</dd></div>
+          <div><dt class="mono">CONSTRAINTS</dt><dd>Compact custom PCB · MOSFET/TIP122 power stage with protection · PWM-controlled output.</dd></div>
+          <div><dt class="mono">OUTCOME</dt><dd>Two hardware versions designed, manufactured and verified.</dd></div>
+        </dl>
         <p class="mono chips">ESP8266 ▸ PWM ▸ MOSFET/TIP122 STAGE ▸ CUSTOM PCB</p>
       </div>
     </details>
@@ -146,7 +177,11 @@
         <span class="mono rx" aria-hidden="true">[+]</span>
       </summary>
       <div class="rbody">
-        <p>IoT logger for Indo Tech Transformers (power-equipment manufacturer): pressure, voltage, current, temperature and running hours acquired with RTC timestamping, local storage and cloud sync. POC completed with on-site validation.</p>
+        <dl class="pco">
+          <div><dt class="mono">PROBLEM</dt><dd>A transformer manufacturer needed live condition data — pressure, voltage, current, temperature, running hours — off the factory floor.</dd></div>
+          <div><dt class="mono">CONSTRAINTS</dt><dd>Industrial environment · RTC-timestamped local storage that survives connectivity loss · cloud sync over HTTP/JSON.</dd></div>
+          <div><dt class="mono">OUTCOME</dt><dd>POC completed for Indo Tech Transformers with on-site validation.</dd></div>
+        </dl>
         <p class="mono chips">ESP ▸ PT100 ▸ ZMPT101B ▸ SCT013 ▸ RTC ▸ SD LOG ▸ HTTP/JSON ▸ P10 LED</p>
       </div>
     </details>
@@ -155,11 +190,15 @@
       <summary>
         <span class="mono ref">U6</span>
         <span class="rname">COLD CHAMBER MONITORING SYSTEM</span>
-        <span class="mono rtag">DELPHI TVS · DELIVERED</span>
+        <span class="mono rtag"><b class="star" title="Featured project">★</b> DELPHI TVS · DELIVERED</span>
         <span class="mono rx" aria-hidden="true">[+]</span>
       </summary>
       <div class="rbody">
-        <p>3-node distributed data logger profiling +50 °C → −20 °C for a diesel fuel-injection manufacturer. Command/ACK protocol with 3-retry logic and session persistence across power cycles; validated on-site before handover.</p>
+        <dl class="pco">
+          <div><dt class="mono">PROBLEM</dt><dd>A diesel fuel-injection plant needed temperature profiling of a cold chamber from +50 °C down to −20 °C across 3 distributed nodes.</dd></div>
+          <div><dt class="mono">CONSTRAINTS</dt><dd>Lossy RF links — command/ACK protocol with 3-retry logic · sessions must survive power cycles.</dd></div>
+          <div><dt class="mono">OUTCOME</dt><dd>Delivered to Delphi TVS; validated on-site before handover.</dd></div>
+        </dl>
         <p class="mono chips">ESP32 ▸ RS485 HALF-DUPLEX ▸ LoRa E32 ~200 m ▸ SPIFFS ▸ PYTHON PC TOOL</p>
       </div>
     </details>
@@ -177,7 +216,10 @@
 
   <div class="eng-grid">
     <figure class="portrait">
-      <img src="./assets/images/profile/karthick.jpg" alt="Karthick A" loading="lazy" width="420" height="420">
+      <picture>
+        <source type="image/webp" srcset="./assets/images/profile/karthick.webp">
+        <img src="./assets/images/profile/karthick.jpg" alt="Portrait of Karthick A" loading="lazy" decoding="async" width="288" height="512">
+      </picture>
       <figcaption class="mono">FIG.1 — KARTHICK A · EMBEDDED PRODUCT ENGINEER</figcaption>
     </figure>
     <div class="eng-copy">
