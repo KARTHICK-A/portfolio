@@ -100,7 +100,9 @@ function initBoard() {
   if (!canvas) return;
   if (!window.THREE) return giveUp();
 
-  const COPPER = 0xe8a33d, SUB = 0x14261d, DARK = 0x0b0d0f;
+  // board palette matches the page: cyan plasma traces, gold pads (PCB
+  // heritage), deep navy substrate
+  const TRACE = 0x22e0e6, PAD = 0xf2a93b, SUB = 0x0a1524, DARK = 0x070b14;
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
@@ -117,9 +119,13 @@ function initBoard() {
   scene.add(board);
   const W = 9, H = 6.6;
 
+  // gold for physical metal (pins, header posts) — copper heritage kept
+  const padMat = new THREE.MeshStandardMaterial({
+    color: PAD, roughness: 0.3, metalness: 0.95, emissive: PAD, emissiveIntensity: 0.08
+  });
   const traceMat = new THREE.MeshStandardMaterial({
-    color: COPPER, roughness: 0.28, metalness: 0.95,
-    emissive: COPPER, emissiveIntensity: 0.14
+    color: TRACE, roughness: 0.24, metalness: 0.9,
+    emissive: TRACE, emissiveIntensity: 0.35
   });
 
   // substrate + soldermask edge
@@ -129,7 +135,7 @@ function initBoard() {
   ));
   const edge = new THREE.Mesh(
     new THREE.BoxGeometry(W + 0.06, 0.02, H + 0.06),
-    new THREE.MeshStandardMaterial({ color: COPPER, roughness: .4, metalness: .9, transparent: true, opacity: .35 })
+    new THREE.MeshStandardMaterial({ color: 0x5b7cff, roughness: .35, metalness: .9, emissive: 0x5b7cff, emissiveIntensity: .5, transparent: true, opacity: .45 })
   );
   edge.position.y = 0.09;
   board.add(edge);
@@ -176,12 +182,12 @@ function initBoard() {
     const c = document.createElement('canvas');
     c.width = c.height = 256;
     const x = c.getContext('2d');
-    x.fillStyle = '#0b0d0f'; x.fillRect(0, 0, 256, 256);
-    x.fillStyle = '#efece3';
+    x.fillStyle = '#070b14'; x.fillRect(0, 0, 256, 256);
+    x.fillStyle = '#edf1fa';
     x.font = '600 84px "IBM Plex Mono", monospace';
     x.textAlign = 'center'; x.textBaseline = 'middle';
     x.fillText(text, 128, 132);
-    x.strokeStyle = 'rgba(239,236,227,.35)'; x.lineWidth = 5;
+    x.strokeStyle = 'rgba(34,224,230,.55)'; x.lineWidth = 5;
     x.beginPath(); x.arc(40, 40, 14, 0, 6.3); x.stroke();
     return new THREE.CanvasTexture(c);
   }
@@ -189,8 +195,8 @@ function initBoard() {
   const hotspots = [];
   PROJECTS.forEach(p => {
     const g = new THREE.Group();
-    const side = new THREE.MeshStandardMaterial({ color: DARK, roughness: 0.42, metalness: 0.4, emissive: COPPER, emissiveIntensity: 0 });
-    const top = new THREE.MeshStandardMaterial({ map: silkscreen(p.ref), roughness: 0.5, metalness: 0.25, emissive: COPPER, emissiveIntensity: 0 });
+    const side = new THREE.MeshStandardMaterial({ color: DARK, roughness: 0.4, metalness: 0.45, emissive: TRACE, emissiveIntensity: 0 });
+    const top = new THREE.MeshStandardMaterial({ map: silkscreen(p.ref), roughness: 0.5, metalness: 0.25, emissive: TRACE, emissiveIntensity: 0 });
     const mats = [side, side, top, side, side, side];
     const body = new THREE.Mesh(new THREE.BoxGeometry(p.w, 0.32, p.d), mats);
     body.position.y = 0.25;
@@ -201,14 +207,14 @@ function initBoard() {
     for (let i = 0; i < pins; i++) {
       const px = -p.w / 2 + (i + 0.5) * (p.w / pins);
       [-1, 1].forEach(side => {
-        const pin = new THREE.Mesh(pinGeo, traceMat);
+        const pin = new THREE.Mesh(pinGeo, padMat);
         pin.position.set(px, 0.12, side * (p.d / 2 + 0.08));
         g.add(pin);
       });
     }
     // pin-1 dot
     const dot = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.02, 10),
-      new THREE.MeshStandardMaterial({ color: 0x6b7076 }));
+      new THREE.MeshStandardMaterial({ color: 0x22e0e6, emissive: 0x22e0e6, emissiveIntensity: .6 }));
     dot.position.set(-p.w / 2 + 0.16, 0.42, -p.d / 2 + 0.16);
     g.add(dot);
 
@@ -244,14 +250,14 @@ function initBoard() {
   headerBase.position.set(-2.7, 0.17, 2.6);
   board.add(headerBase);
   for (let i = 0; i < 8; i++) {
-    const p = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.44, 0.07), traceMat);
+    const p = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.44, 0.07), padMat);
     p.position.set(-3.6 + i * 0.26, 0.37, 2.6);
     board.add(p);
   }
 
   // status LEDs
   const leds = [];
-  [[-4.0, -2.4, 0x3ddc84], [4.0, 2.6, 0xe8a33d]].forEach(([x, z, col]) => {
+  [[-4.0, -2.4, 0x00e7a0], [4.0, 2.6, 0xa96bff]].forEach(([x, z, col]) => {
     const m = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 1.4 });
     const l = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.1, 0.15), m);
     l.position.set(x, 0.15, z);
@@ -264,8 +270,8 @@ function initBoard() {
 
   // lighting
   scene.add(new THREE.AmbientLight(0xffffff, 0.38));
-  const key = new THREE.DirectionalLight(0xfff2dc, 1.6); key.position.set(4, 9, 5); scene.add(key);
-  const rim = new THREE.DirectionalLight(COPPER, 0.9); rim.position.set(-6, 3, -5); scene.add(rim);
+  const key = new THREE.DirectionalLight(0xdfe8ff, 1.5); key.position.set(4, 9, 5); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xa96bff, 1.1); rim.position.set(-6, 3, -5); scene.add(rim);
 
   // ---- interaction ----
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();

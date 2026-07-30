@@ -1,107 +1,206 @@
-/* ===== Karthick A — PCB edition =====
-   Architecture (single file by design — static GitHub Pages, no build step):
-   1. tokens  2. base  3. components (topbar→footer, in page order)
-   4. motion  5. responsive. Every color pairs ≥ 4.5:1 against --bg (WCAG AA):
-   --ink 15.9:1 · --body-text 11.2:1 · --muted 5.9:1 · --copper 8.8:1 */
+/* ===== Karthick A — PCB edition, "Titanium & Plasma" =====
+   Premium hardware-brand look on a PCB skeleton: deep space-black substrate,
+   plasma gradient (cyan → blue → violet) as the hero accent, gold kept as the
+   copper heritage for pads/designators.
+
+   Architecture: 1 tokens · 2 base · 3 atmosphere · 4 components (page order)
+   · 5 motion · 6 responsive. Single file by design — static Pages, no build.
+
+   Contrast on --void (WCAG AA needs 4.5:1 for text):
+     --ink   #EDF1FA  17.8:1     --body  #C2CBDE  11.6:1
+     --muted #8B96AF   6.4:1     --cyan  #22E0E6  11.2:1
+     --gold  #F2A93B   9.3:1
+   --blue and --violet are DECORATION ONLY (gradients, glows, borders) — they
+   are never used for text on the base background. */
+
+/* ---------- 1. TOKENS ---------- */
 :root{
-  --bg:#0a0a0b;
-  --panel:#101113;
-  --ink:#f2efe6;          /* silkscreen white */
-  --muted:#8a8f98;
-  --copper:#e8a33d;
-  --copper-dim:#9a6c26;
-  --line:#26282c;
+  /* substrate */
+  --void:#04060c;
+  --void-2:#070b14;
+  --panel:#0b1120;
+  --glass:rgba(255,255,255,.035);
+  --line:#18213200;
+  --line-1:#1a2334;
+  --line-2:#26314a;
+  /* type */
+  --ink:#edf1fa;
+  --body:#c2cbde;
+  --muted:#8b96af;
+  /* accents */
+  --cyan:#22e0e6;
+  --blue:#5b7cff;
+  --violet:#a96bff;
+  --gold:#f2a93b;
+  --ok:#00e7a0;
+  /* plasma gradient — the signature of the whole page */
+  --grad:linear-gradient(115deg,#22e0e6 0%,#5b7cff 48%,#a96bff 100%);
+  --grad-soft:linear-gradient(115deg,rgba(34,224,230,.16),rgba(91,124,255,.14) 48%,rgba(169,107,255,.16));
+  /* system */
   --max:1180px;
   --disp:'Unbounded',sans-serif;
   --mono:'IBM Plex Mono',monospace;
   --sans:'IBM Plex Sans',sans-serif;
+  --r:14px;
 }
+
+/* ---------- 2. BASE ---------- */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  background:var(--bg);color:var(--ink);
+  background:var(--void);color:var(--ink);
   font-family:var(--sans);line-height:1.65;font-size:16px;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
-}
-/* faint copper routing grid over whole page */
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:
-    repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(232,163,61,.045) 48px),
-    repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(232,163,61,.045) 48px);
 }
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
 .mono{font-family:var(--mono)}
-::selection{background:var(--copper);color:#0a0a0b}
-:focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+::selection{background:var(--cyan);color:#04060c}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
 
-.skip-link{position:absolute;left:-999px;top:0;background:var(--copper);color:#000;padding:.5rem 1rem;z-index:99}
+.skip-link{
+  position:absolute;left:-999px;top:0;z-index:99;
+  background:var(--cyan);color:#04060c;padding:.6rem 1.2rem;font-weight:500;border-radius:0 0 8px 0;
+}
 .skip-link:focus{left:0}
 
-/* ---------- Topbar ---------- */
+/* ---------- 3. ATMOSPHERE ----------
+   Three stacked layers give the page its depth: a routing grid (PCB DNA),
+   drifting plasma blooms (the premium part), and film grain to kill banding. */
+.atmos{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.atmos::before{                       /* routing grid */
+  content:"";position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 47px,rgba(120,160,255,.05) 48px),
+    repeating-linear-gradient(90deg,transparent,transparent 47px,rgba(120,160,255,.05) 48px);
+  mask-image:radial-gradient(ellipse 120% 80% at 50% 0%,#000 35%,transparent 78%);
+}
+.atmos::after{                        /* film grain */
+  content:"";position:absolute;inset:-50%;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+.bloom{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform,opacity}
+.bloom-1{width:46vw;height:46vw;top:-8vw;right:-6vw;background:radial-gradient(closest-side,rgba(34,224,230,.20),transparent 72%);animation:drift1 22s ease-in-out infinite}
+.bloom-2{width:40vw;height:40vw;top:32vh;left:-10vw;background:radial-gradient(closest-side,rgba(169,107,255,.17),transparent 72%);animation:drift2 27s ease-in-out infinite}
+.bloom-3{width:36vw;height:36vw;bottom:-6vw;right:12vw;background:radial-gradient(closest-side,rgba(91,124,255,.15),transparent 72%);animation:drift3 31s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-4vw,4vh,0) scale(1.12)}}
+@keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1.05)}50%{transform:translate3d(5vw,-5vh,0) scale(.94)}}
+@keyframes drift3{0%,100%{transform:translate3d(0,0,0) scale(.96)}50%{transform:translate3d(-3vw,-3vh,0) scale(1.1)}}
+
+/* everything above the atmosphere */
+main,.topbar,.footer{position:relative;z-index:2}
+
+/* ---------- 4. COMPONENTS ---------- */
+
+/* --- Topbar: glass rail, brand badge, live status pill --- */
 .topbar{
   position:fixed;top:0;left:0;right:0;z-index:50;
   display:flex;justify-content:space-between;align-items:center;gap:1rem;
-  padding:.8rem 1.4rem;font-size:.72rem;letter-spacing:.08em;
-  background:rgba(10,10,11,.82);backdrop-filter:blur(10px);
-  border-bottom:1px dashed var(--line);
+  padding:.6rem 1.4rem;font-size:.72rem;letter-spacing:.08em;
+  background:linear-gradient(180deg,rgba(4,6,12,.92),rgba(4,6,12,.66));
+  backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
 }
-.tb-id{color:var(--copper);white-space:nowrap}
-.tb-nav{display:flex;gap:1rem}
-/* padding keeps each link a ≥44px touch target despite the small type */
-.tb-nav a{color:var(--muted);transition:color .2s;white-space:nowrap;padding:1rem .25rem}
-.tb-nav a:hover{color:var(--copper)}
-.tb-state{color:var(--muted);display:flex;align-items:center;gap:.45rem;white-space:nowrap}
-/* scroll progress, drawn like a copper trace under the header */
-.tb-trace{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:var(--copper);box-shadow:0 0 8px rgba(232,163,61,.7)}
-.led{width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 8px #3ddc84;animation:blink 2.4s infinite}
+/* gradient hairline instead of a flat/dashed rule */
+.topbar::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(34,224,230,.5) 18%,rgba(169,107,255,.5) 78%,transparent);
+}
+/* brand badge — the piece that used to read as unfinished */
+.tb-id{
+  position:relative;display:inline-flex;align-items:center;gap:.55rem;
+  padding:.5rem .85rem .5rem .7rem;border-radius:10px;white-space:nowrap;
+  color:var(--ink);background:var(--glass);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),0 6px 20px rgba(0,0,0,.4);
+}
+.tb-id::before{                       /* pin-1 style mark */
+  content:"";width:16px;height:16px;flex:none;border-radius:5px;
+  background:var(--grad);box-shadow:0 0 14px rgba(34,224,230,.55);
+}
+.tb-id b{font-weight:500;letter-spacing:.14em}
+.tb-id i{font-style:normal;color:var(--muted);letter-spacing:.1em}
+
+.tb-nav{display:flex;gap:.4rem}
+.tb-nav a{
+  position:relative;color:var(--muted);white-space:nowrap;
+  padding:1rem .85rem;border-radius:8px;transition:color .22s,background .22s;
+}
+.tb-nav a::after{                     /* trace that routes in on hover */
+  content:"";position:absolute;left:.85rem;right:.85rem;bottom:.55rem;height:1px;
+  background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .3s;
+}
+.tb-nav a:hover{color:var(--ink);background:rgba(255,255,255,.04)}
+.tb-nav a:hover::after{transform:scaleX(1)}
+
+.tb-state{
+  display:inline-flex;align-items:center;gap:.5rem;white-space:nowrap;color:var(--body);
+  padding:.45rem .8rem;border-radius:999px;background:var(--glass);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.led{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 10px var(--ok);animation:blink 2.4s infinite}
 @keyframes blink{0%,92%{opacity:1}96%{opacity:.25}100%{opacity:1}}
-
-/* ---------- Fiducial corners on sections ---------- */
-.fid{position:relative}
-.fid::before,.fid::after{
-  content:"";position:absolute;width:14px;height:14px;border-radius:50%;
-  border:2px solid var(--copper-dim);z-index:1;
+/* scroll progress, drawn like a routed trace under the rail */
+.tb-trace{
+  position:absolute;left:0;bottom:0;height:2px;width:0;z-index:1;
+  background:var(--grad);box-shadow:0 0 12px rgba(34,224,230,.8);
 }
-.fid::before{top:18px;left:18px}
-.fid::after{bottom:18px;right:18px}
 
-/* ---------- Hero ---------- */
+/* --- Fiducial corner brackets (replaces the loose floating dots) --- */
+.fid::before,.fid::after{
+  content:"";position:absolute;width:22px;height:22px;z-index:1;opacity:.5;
+  border:1px solid var(--cyan);
+}
+.fid::before{top:14px;left:14px;border-right:0;border-bottom:0;border-radius:5px 0 0 0}
+.fid::after{bottom:14px;right:14px;border-left:0;border-top:0;border-radius:0 0 5px 0}
+.fid{position:relative}
+
+/* --- Hero --- */
 .hero{
   min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;
-  gap:2rem;max-width:1440px;margin:0 auto;padding:6rem 1.5rem 3rem;overflow:hidden;
+  gap:2rem;max-width:1440px;margin:0 auto;padding:6rem 1.5rem 3rem;
 }
 .hero-copy{position:relative;z-index:2;justify-self:end;max-width:36rem;width:100%}
-.desig{color:var(--copper);font-size:.72rem;letter-spacing:.28em;margin-bottom:1.5rem}
+.desig{
+  display:inline-block;color:var(--cyan);font-size:.7rem;letter-spacing:.26em;margin-bottom:1.4rem;
+  padding:.4rem .8rem;border-radius:999px;background:rgba(34,224,230,.08);
+  box-shadow:inset 0 0 0 1px rgba(34,224,230,.22);
+}
 h1{font-family:var(--disp);font-weight:900;line-height:.94;font-size:clamp(2.4rem,5.6vw,5rem);letter-spacing:-.02em}
 h1 span{display:block}
-h1 .stroke{color:transparent;-webkit-text-stroke:2px var(--copper)}
-.hero-sub{color:var(--muted);font-size:.78rem;line-height:1.95;margin-top:1.5rem;letter-spacing:.04em}
-.hero-cta{margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
-.btn-trace{
-  display:inline-block;font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;
-  color:#0a0a0b;background:var(--copper);padding:1rem 1.7rem;
-  clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px));
-  transition:background .2s,transform .2s;
+/* the plasma word — gradient fill, with a readable fallback if clip is absent */
+h1 .stroke{
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(91,124,255,.35));
 }
-.btn-trace:hover{background:var(--ink);transform:translateY(-2px)}
-.btn-line{
-  display:inline-block;font-size:.78rem;letter-spacing:.14em;color:var(--muted);
-  padding:1rem 1.4rem;border:1px solid var(--line);transition:color .2s,border-color .2s;
-}
-.btn-line:hover{color:var(--copper);border-color:var(--copper)}
-
-/* breathing copper glow behind the hero — pure CSS, GPU-cheap (opacity only) */
-.hero::before{
-  content:"";position:absolute;right:-10%;top:15%;width:60%;height:70%;z-index:0;
-  background:radial-gradient(closest-side,rgba(232,163,61,.11),rgba(232,163,61,.05) 45%,rgba(232,163,61,.02) 62%,transparent 78%);
-  animation:breathe 7s ease-in-out infinite;pointer-events:none;
-}
-@keyframes breathe{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
-/* boot-sequence caret */
-.caret{display:inline-block;width:.55em;height:1.05em;background:var(--copper);margin-left:.2em;vertical-align:text-bottom;animation:caret 1s steps(1) infinite}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){h1 .stroke{color:var(--cyan)}}
+.hero-sub{color:var(--body);font-size:.78rem;line-height:1.95;margin-top:1.5rem;letter-spacing:.04em}
+.caret{display:inline-block;width:.55em;height:1.05em;background:var(--cyan);margin-left:.2em;vertical-align:text-bottom;box-shadow:0 0 10px rgba(34,224,230,.7);animation:caret 1s steps(1) infinite}
 @keyframes caret{50%{opacity:0}}
+.hero-cta{margin-top:2.2rem;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+
+/* primary: plasma fill with a shine that sweeps across on hover */
+.btn-trace{
+  position:relative;overflow:hidden;display:inline-block;
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.14em;
+  color:#04060c;background:var(--grad);padding:1.05rem 1.8rem;border-radius:10px;
+  box-shadow:0 8px 30px rgba(34,224,230,.24),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .22s,box-shadow .22s;
+}
+.btn-trace::after{
+  content:"";position:absolute;top:0;left:-70%;width:45%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-18deg);transition:left .55s ease;
+}
+.btn-trace:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(34,224,230,.36),inset 0 1px 0 rgba(255,255,255,.45)}
+.btn-trace:hover::after{left:125%}
+/* secondary: glass with gradient hairline */
+.btn-line{
+  position:relative;display:inline-block;font-size:.78rem;letter-spacing:.14em;color:var(--body);
+  padding:1.05rem 1.5rem;border-radius:10px;background:var(--glass);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+  transition:color .22s,box-shadow .22s,transform .22s;
+}
+.btn-line:hover{color:var(--ink);transform:translateY(-3px);box-shadow:inset 0 0 0 1px rgba(34,224,230,.55),0 10px 28px rgba(0,0,0,.45)}
 
 /* 3D board panel */
 .hero-board{position:relative;height:min(78vh,680px);z-index:1}
@@ -110,142 +209,166 @@ h1 .stroke{color:transparent;-webkit-text-stroke:2px var(--copper)}
 #pcb3d:active{cursor:grabbing}
 #tip{
   position:absolute;z-index:5;pointer-events:none;transform:translate(-50%,-140%);
-  background:var(--copper);color:#0a0a0b;font-size:.66rem;letter-spacing:.1em;
-  padding:.4rem .7rem;white-space:nowrap;
+  background:var(--grad);color:#04060c;font-size:.66rem;letter-spacing:.1em;font-weight:500;
+  padding:.42rem .75rem;border-radius:7px;box-shadow:0 8px 24px rgba(0,0,0,.5);
 }
-#tip::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:var(--copper);border-bottom:0}
-.board-hint{
-  position:absolute;bottom:0;left:0;right:0;text-align:center;
-  color:var(--muted);font-size:.62rem;letter-spacing:.22em;
-}
+#tip::after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#5b7cff;border-bottom:0}
+.board-hint{position:absolute;bottom:0;left:0;right:0;text-align:center;color:var(--muted);font-size:.62rem;letter-spacing:.22em}
 
-/* ---------- Ticker ---------- */
-.ticker{border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);overflow:hidden;position:relative;z-index:2;background:var(--bg)}
-.ticker-track{display:flex;white-space:nowrap;animation:tick 30s linear infinite;padding:.7rem 0;font-size:.72rem;letter-spacing:.18em;color:var(--copper)}
+/* --- Ticker --- */
+.ticker{
+  position:relative;z-index:2;overflow:hidden;
+  background:linear-gradient(90deg,rgba(34,224,230,.05),rgba(169,107,255,.05));
+  border-block:1px solid var(--line-1);
+}
+.ticker-track{display:flex;white-space:nowrap;animation:tick 30s linear infinite;padding:.75rem 0;font-size:.72rem;letter-spacing:.18em;color:var(--cyan)}
 @keyframes tick{to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.ticker-track{animation:none}.led{animation:none}}
 
-/* ---------- Spec strip ---------- */
+/* --- Spec strip: glass tiles with plasma numerals --- */
 .specs{
-  max-width:var(--max);margin:0 auto;padding:3rem 1.5rem;position:relative;z-index:2;
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;
-  background:var(--line);border:1px solid var(--line);
+  max-width:var(--max);margin:3.5rem auto .5rem;position:relative;z-index:2;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;
+  background:var(--line-1);border:1px solid var(--line-1);border-radius:var(--r);overflow:hidden;
 }
-.specs{margin-top:3.5rem;margin-bottom:.5rem;padding:0}
-.spec{background:var(--bg);padding:1.6rem 1.3rem;display:flex;flex-direction:column;gap:.5rem}
-.spec strong{font-family:var(--disp);font-weight:700;font-size:clamp(1.6rem,3vw,2.3rem);color:var(--copper);line-height:1}
+.spec{background:var(--void-2);padding:1.7rem 1.35rem;display:flex;flex-direction:column;gap:.5rem;transition:background .25s}
+.spec:hover{background:var(--panel)}
+.spec strong{
+  font-family:var(--disp);font-weight:700;font-size:clamp(1.6rem,3vw,2.3rem);line-height:1;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;
+}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){.spec strong{color:var(--cyan)}}
 .spec span{color:var(--muted);font-size:.66rem;letter-spacing:.1em;line-height:1.7}
 
-/* ---------- Sections ---------- */
+/* --- Sections --- */
 .section{max-width:var(--max);margin:0 auto;padding:7rem 1.5rem;position:relative;z-index:2}
 .sec-head{display:grid;grid-template-columns:1fr auto;gap:.8rem 1.5rem;align-items:end;margin-bottom:3.5rem;padding-bottom:1.4rem;position:relative}
-/* the copper rule draws itself like a routed trace when the section reveals */
-.sec-head::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--copper);transform:scaleX(0);transform-origin:left;transition:transform 1.1s cubic-bezier(.6,0,.2,1) .15s}
+.sec-head::after{
+  content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--grad);
+  transform:scaleX(0);transform-origin:left;transition:transform 1.1s cubic-bezier(.6,0,.2,1) .15s;
+}
 .in .sec-head::after,.sec-head.in::after{transform:scaleX(1)}
-.sec-no{grid-column:1;align-self:start;color:var(--copper);font-size:.75rem;letter-spacing:.22em}
-h2{grid-column:1}
-h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,4.6vw,3.2rem);line-height:1.02}
+.sec-no{grid-column:1;align-self:start;color:var(--cyan);font-size:.75rem;letter-spacing:.22em}
+h2{grid-column:1;font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,4.6vw,3.2rem);line-height:1.02}
 .sec-note{color:var(--muted);font-size:.68rem;letter-spacing:.14em;text-align:right}
 
-/* ---------- BOM (projects) ---------- */
-.bom{border:1px dashed var(--line)}
-.row{border-bottom:1px dashed var(--line);background:transparent;transition:background .25s}
+/* --- BOM (projects) --- */
+.bom{border:1px solid var(--line-1);border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.012)}
+.row{border-bottom:1px solid var(--line-1);transition:background .25s}
 .row:last-child{border-bottom:none}
-.row[open]{background:var(--panel)}
-.row.flash{animation:flash .9s ease-out}
-@keyframes flash{0%{background:rgba(232,163,61,.22)}100%{background:var(--panel)}}
-.row summary{
-  list-style:none;cursor:pointer;display:flex;align-items:center;gap:1.2rem;
-  padding:1.5rem 1.4rem;
-}
+.row[open]{background:linear-gradient(180deg,rgba(91,124,255,.07),transparent 60%)}
+.row.flash{animation:flash 1s ease-out}
+@keyframes flash{0%{background:rgba(34,224,230,.2)}100%{background:transparent}}
+.row summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:1.2rem;padding:1.5rem 1.4rem}
 .row summary::-webkit-details-marker{display:none}
 .ref{
-  flex:none;width:3rem;height:3rem;display:grid;place-items:center;
-  border:1px solid var(--copper-dim);color:var(--copper);font-size:.85rem;
-  transition:background .2s,color .2s;
+  flex:none;width:3rem;height:3rem;display:grid;place-items:center;border-radius:9px;
+  color:var(--gold);font-size:.85rem;background:rgba(242,169,59,.08);
+  box-shadow:inset 0 0 0 1px rgba(242,169,59,.35);
+  transition:background .25s,color .25s,box-shadow .25s;
 }
-.row[open] .ref,.row summary:hover .ref{background:var(--copper);color:#0a0a0b;border-color:var(--copper)}
+.row[open] .ref,.row summary:hover .ref{
+  background:var(--grad);color:#04060c;
+  box-shadow:0 0 22px rgba(34,224,230,.45),inset 0 0 0 1px transparent;
+}
 .rname{font-family:var(--disp);font-weight:500;font-size:clamp(.85rem,1.8vw,1.05rem);flex:1;letter-spacing:.01em}
 .rname em{font-style:normal;color:var(--muted)}
 .rtag{color:var(--muted);font-size:.65rem;letter-spacing:.12em}
-.rx{color:var(--copper);font-size:.8rem}
+.star{color:var(--gold);font-weight:400}
+.rx{color:var(--cyan);font-size:.8rem}
 .row[open] .rx{visibility:hidden}
 .rbody{padding:0 1.4rem 1.8rem 5.6rem;max-width:56rem}
-.rbody p{color:#c9c5ba;font-size:.95rem}
-.chips{margin-top:1rem;color:var(--copper) !important;font-size:.68rem !important;letter-spacing:.1em;line-height:2}
-.star{color:var(--copper);font-weight:400}
-/* problem / constraints / outcome definition list */
-.pco div{display:grid;grid-template-columns:7.2rem 1fr;gap:1rem;padding:.55rem 0;border-top:1px dashed var(--line)}
+/* problem / constraints / outcome */
+.pco div{display:grid;grid-template-columns:7.2rem 1fr;gap:1rem;padding:.55rem 0;border-top:1px solid var(--line-1)}
 .pco div:first-child{border-top:none;padding-top:0}
-.pco dt{font-family:var(--mono);color:var(--copper);font-size:.66rem;letter-spacing:.16em;padding-top:.3em}
-.pco dd{color:#c9c5ba;font-size:.92rem}
+.pco dt{font-family:var(--mono);color:var(--cyan);font-size:.66rem;letter-spacing:.16em;padding-top:.3em}
+.pco dd{color:var(--body);font-size:.92rem}
+.chips{margin-top:1rem;color:var(--gold) !important;font-size:.68rem !important;letter-spacing:.1em;line-height:2}
 
-/* ---------- Engineer ---------- */
+/* --- Engineer --- */
 .eng-grid{display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:start}
-.portrait{max-width:300px}
-.portrait img{filter:grayscale(100%) contrast(1.05);border:1px solid var(--line)}
+.portrait{max-width:300px;position:relative}
+.portrait img{border-radius:var(--r);filter:grayscale(100%) contrast(1.06)}
+.portrait::after{                      /* plasma edge light */
+  content:"";position:absolute;inset:0;border-radius:var(--r);pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12),0 0 44px rgba(91,124,255,.22);
+}
 .portrait figcaption{color:var(--muted);font-size:.62rem;letter-spacing:.12em;margin-top:.7rem}
-.eng-copy p{color:#c9c5ba;max-width:40rem}
+.eng-copy p{color:var(--body);max-width:40rem}
 .eng-copy p+p{margin-top:1rem}
 .eng-copy strong{color:var(--ink);font-weight:500}
 .speclist{list-style:none;margin-top:1.8rem;font-size:.75rem;letter-spacing:.03em}
-.speclist li{display:flex;gap:1.2rem;padding:.65rem 0;border-top:1px dashed var(--line);color:#c9c5ba}
-.speclist span{flex:none;width:3.2rem;color:var(--copper)}
+.speclist li{display:flex;gap:1.2rem;padding:.7rem 0;border-top:1px solid var(--line-1);color:var(--body)}
+.speclist span{flex:none;width:3.2rem;color:var(--cyan)}
 
 /* layer stack */
 .stack{margin-top:4.5rem}
 .stack-label{color:var(--muted);font-size:.68rem;letter-spacing:.2em;margin-bottom:1rem}
 .layer{
-  display:grid;grid-template-columns:3rem 1fr auto;gap:1.2rem;align-items:center;
-  padding:.95rem 1.2rem;border:1px solid var(--line);border-top:none;background:var(--panel);
-  transition:border-color .2s,transform .2s;
+  position:relative;display:grid;grid-template-columns:3rem 1fr auto;gap:1.2rem;align-items:center;
+  padding:1rem 1.2rem;background:var(--void-2);border:1px solid var(--line-1);border-top:none;
+  transition:transform .25s,background .25s,border-color .25s;
 }
-.layer:first-of-type{border-top:1px solid var(--line)}
-.layer:hover{border-color:var(--copper-dim);transform:translateX(6px)}
-.lno{color:var(--copper);font-size:.75rem}
+.layer:first-of-type{border-top:1px solid var(--line-1);border-radius:var(--r) var(--r) 0 0}
+.layer:last-of-type{border-radius:0 0 var(--r) var(--r)}
+.layer::before{                        /* copper edge that lights up on hover */
+  content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--grad);
+  opacity:0;transition:opacity .25s;
+}
+.layer:hover{transform:translateX(7px);background:var(--panel);border-color:var(--line-2)}
+.layer:hover::before{opacity:1}
+.lno{color:var(--gold);font-size:.75rem}
 .lname{font-family:var(--disp);font-weight:500;font-size:.82rem;letter-spacing:.03em}
 .ldet{color:var(--muted);font-size:.66rem;letter-spacing:.06em;text-align:right}
 
-/* ---------- Contact ---------- */
-.pads{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem}
+/* --- Contact test pads --- */
+.pads{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:1rem}
 .pad{
-  border:1px solid var(--line);background:var(--panel);padding:1.6rem 1.4rem;
-  display:flex;flex-direction:column;gap:.7rem;position:relative;
-  transition:border-color .2s,transform .2s;
+  position:relative;overflow:hidden;border-radius:var(--r);padding:1.7rem 1.4rem;
+  background:var(--void-2);border:1px solid var(--line-1);
+  display:flex;flex-direction:column;gap:.7rem;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
 }
-.pad::after{content:"";position:absolute;top:.8rem;right:.8rem;width:9px;height:9px;border-radius:50%;background:var(--copper-dim);transition:background .2s,box-shadow .2s}
-.pad:hover{border-color:var(--copper);transform:translateY(-4px)}
-.pad:hover::after{background:var(--copper);box-shadow:0 0 10px var(--copper)}
+.pad::before{                          /* plasma wash on hover */
+  content:"";position:absolute;inset:0;background:var(--grad-soft);opacity:0;transition:opacity .3s;
+}
+.pad::after{                           /* the solder pad itself */
+  content:"";position:absolute;top:.9rem;right:.9rem;width:10px;height:10px;border-radius:50%;
+  background:rgba(242,169,59,.5);transition:background .25s,box-shadow .25s;
+}
+.pad:hover{transform:translateY(-5px);border-color:transparent;box-shadow:0 16px 40px rgba(0,0,0,.55),inset 0 0 0 1px rgba(34,224,230,.5)}
+.pad:hover::before{opacity:1}
+.pad:hover::after{background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.pad span,.pad strong{position:relative;z-index:1}
 .pad span{color:var(--muted);font-size:.65rem;letter-spacing:.16em}
-.pad strong{font-weight:500;font-size:.92rem;word-break:break-all}
-.pad-doc{border-color:var(--copper-dim)}
-.pad-doc strong{color:var(--copper)}
+.pad strong{font-weight:500;font-size:.92rem;word-break:break-word}
+.pad-doc{border-color:rgba(242,169,59,.4)}
+.pad-doc strong{color:var(--gold)}
 
-/* ---------- Footer ---------- */
+/* --- Footer --- */
 .footer{
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;
-  max-width:var(--max);margin:0 auto;padding:1.6rem 1.5rem;position:relative;z-index:2;
-  border-top:1px dashed var(--line);color:var(--muted);font-size:.66rem;letter-spacing:.14em;
+  max-width:var(--max);margin:0 auto;padding:1.8rem 1.5rem;
+  border-top:1px solid var(--line-1);color:var(--muted);font-size:.66rem;letter-spacing:.14em;
 }
 
-/* ---------- Reveal ---------- */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s}
+/* ---------- 5. MOTION ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .75s,transform .75s}
 .reveal.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none;transition:none}
   html{scroll-behavior:auto}
-  .hero::before{animation:none;opacity:.7}
-  .caret{animation:none}
+  .bloom,.ticker-track,.led,.caret{animation:none}
   .sec-head::after{transform:scaleX(1);transition:none}
+  .btn-trace::after{display:none}
 }
 
-/* ---------- Responsive ---------- */
+/* ---------- 6. RESPONSIVE ---------- */
 @media(max-width:980px){
   .hero{grid-template-columns:1fr;padding-top:5rem;min-height:auto;gap:0}
-  .hero::before{display:none} /* gradient bands on small dark screens */
   .hero-copy{justify-self:start;order:2;padding-bottom:2rem}
   .hero-board{order:1;height:44vh;min-height:280px;margin-bottom:1.5rem}
   .board-hint{font-size:.55rem}
+  .bloom{filter:blur(70px)}
 }
 @media(max-width:860px){
   .sec-head{grid-template-columns:1fr;gap:.6rem}
@@ -259,15 +382,19 @@ h2{font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,4.6vw,3.2rem);
   .rtag{margin-left:4.2rem}
   .layer{grid-template-columns:2.4rem 1fr;gap:.6rem}
   .ldet{grid-column:2;text-align:left}
-  .tb-nav{gap:.8rem}
-  .topbar{font-size:.62rem}
+  .topbar{font-size:.62rem;padding:.5rem .9rem}
+  .tb-nav a{padding:.9rem .6rem}
 }
 @media(max-width:560px){
-  .topbar{font-size:.55rem;padding:.7rem .9rem;letter-spacing:.05em}
-  .tb-nav{gap:.55rem}
+  .topbar{font-size:.56rem;letter-spacing:.05em;gap:.4rem}
+  .tb-id{padding:.45rem .6rem;gap:.4rem}
+  .tb-id::before{width:13px;height:13px}
+  .tb-id i{display:none}          /* keep the badge tight on small screens */
   .tb-state{display:none}
+  .tb-nav a{padding:1.05rem .45rem}   /* keeps ≥44px touch target at small type */
   .hero-board{height:38vh}
   .ref{width:2.5rem;height:2.5rem;font-size:.72rem}
   .rtag{margin-left:3.2rem}
   .section{padding:4.5rem 1.2rem}
+  .fid::before,.fid::after{display:none}
 }
