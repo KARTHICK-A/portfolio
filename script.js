@@ -22,6 +22,49 @@ if ('IntersectionObserver' in window) {
   revealEls.forEach(el => el.classList.add('in'));
 }
 
+/* ---------- boot-sequence typing in the hero ---------- */
+/* the full text is in the markup for no-JS/reduced-motion/crawlers; with JS we
+   clear it and retype it like a UART console printing its POST lines */
+const boot = document.getElementById('boot');
+if (boot && !reduce) {
+  const lines = (boot.dataset.lines || '').split('\n');
+  const caret = boot.querySelector('.caret');
+  boot.textContent = '';
+  if (caret) boot.appendChild(caret);
+  let li = 0, ci = 0;
+  (function type() {
+    if (li >= lines.length) return;
+    const line = lines[li];
+    if (ci === 0 && li > 0) boot.insertBefore(document.createElement('br'), caret);
+    if (ci < line.length) {
+      boot.insertBefore(document.createTextNode(line[ci++]), caret);
+      setTimeout(type, 14 + Math.random() * 26);
+    } else { li++; ci = 0; setTimeout(type, 260); }
+  })();
+}
+
+/* ---------- spec strip count-up ---------- */
+const specs = document.querySelectorAll('.spec strong');
+if (specs.length && !reduce && 'IntersectionObserver' in window) {
+  const so = new IntersectionObserver((es, obs) => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      obs.unobserve(e.target);
+      const final = e.target.textContent;           // e.g. "16" or "70 °C"
+      const num = parseInt(final, 10);
+      if (isNaN(num)) return;
+      const suffix = final.replace(/^[0-9]+/, '');
+      const t0 = performance.now(), dur = 900;
+      (function step(t) {
+        const k = Math.min((t - t0) / dur, 1);
+        e.target.textContent = Math.round(num * (1 - Math.pow(1 - k, 3))) + suffix;
+        if (k < 1) requestAnimationFrame(step);
+      })(t0);
+    });
+  }, { threshold: 0.6 });
+  specs.forEach(el => so.observe(el));
+}
+
 /* ---------- scroll progress trace ---------- */
 const bar = document.getElementById('progress');
 if (bar) {
