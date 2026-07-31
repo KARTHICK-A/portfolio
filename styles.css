@@ -264,9 +264,19 @@ h2{grid-column:1;font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,
 
 /* --- BOM (projects) --- */
 .bom{border:1px solid var(--line-1);border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.012)}
-.row{border-bottom:1px solid var(--line-1);transition:background .25s}
+.row{
+  position:relative;border-bottom:1px solid var(--line-1);
+  transition:background .4s,transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s,z-index 0s;
+}
 .row:last-child{border-bottom:none}
 .row[open]{background:linear-gradient(180deg,rgba(91,124,255,.07),transparent 60%)}
+/* the active project lifts off the page rather than just gaining a tint —
+   this is what actually reads as "premium" instead of a flat state toggle */
+.row.is-active{
+  transform:scale(1.012) translateY(-2px);
+  box-shadow:0 26px 70px rgba(0,0,0,.45),0 0 0 1px rgba(34,224,230,.28) inset,0 0 40px rgba(91,124,255,.12);
+  z-index:2;
+}
 .row.flash{animation:flash 1s ease-out}
 @keyframes flash{0%{background:rgba(34,224,230,.2)}100%{background:transparent}}
 .row summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:1.2rem;padding:1.5rem 1.4rem}
@@ -306,7 +316,7 @@ h2{grid-column:1;font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,
   width:9.5rem;height:6.4rem;flex:none;padding:0;background:var(--void-2);cursor:zoom-in;
   transition:transform .25s,border-color .25s;
 }
-.gshot img{width:100%;height:100%;object-fit:cover;display:block}
+.gshot img{width:100%;height:140%;object-fit:cover;display:block;will-change:transform;position:relative;top:-20%}
 .gshot::after{                         /* the inspection-light spotlight */
   content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
   background:radial-gradient(120px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.4),transparent 65%);

@@ -107,16 +107,27 @@ function setRowOpen(details, open) {
     body.style.overflow = 'hidden';
     body.animate(
       [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }],
-      { duration: 340, easing: 'cubic-bezier(.4,0,.2,1)' }
+      { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' }
     ).onfinish = () => { body.style.height = ''; body.style.overflow = ''; };
-    // cascade: each piece of content gets its own turn, not a single block fade
+    // cascade: each piece drifts up and comes into focus out of a slight
+    // blur, rather than a flat fade -- reads as depth, not a state toggle
     const pieces = body.querySelectorAll('.pco > div, .chips, .gshot');
     pieces.forEach((el, i) => {
       el.animate(
-        [{ opacity: 0, transform: 'translateY(12px) scale(.97)' }, { opacity: 1, transform: 'none' }],
-        { duration: 460, delay: 100 + i * 60, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }
+        [
+          { opacity: 0, transform: 'translateY(26px) scale(.94)', filter: 'blur(7px)' },
+          { opacity: 1, transform: 'translateY(-2px) scale(1.005)', filter: 'blur(0)', offset: .82 },
+          { opacity: 1, transform: 'none', filter: 'blur(0)' }
+        ],
+        { duration: 640, delay: 140 + i * 85, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
       );
     });
+    // the ref chip gets a quick bright pulse, like a spotlight landing on it
+    const ref = details.querySelector('.ref');
+    if (ref) ref.animate(
+      [{ boxShadow: '0 0 0 0 rgba(34,224,230,0)' }, { boxShadow: '0 0 26px 4px rgba(34,224,230,.55)' }, { boxShadow: '0 0 0 0 rgba(34,224,230,0)' }],
+      { duration: 900, easing: 'cubic-bezier(.4,0,.2,1)' }
+    );
   } else {
     const h = body.scrollHeight;
     body.style.overflow = 'hidden';
@@ -131,6 +142,8 @@ let suppressAutoUntil = 0;
 function activateRow(row, { jump = false } = {}) {
   document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
   setRowOpen(row, true);
+  document.querySelectorAll('.row.is-active').forEach(r => r.classList.remove('is-active'));
+  row.classList.add('is-active');
   suppressAutoUntil = performance.now() + 700;
   if (jump) row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
 }
@@ -139,10 +152,39 @@ document.querySelectorAll('.row > summary').forEach(summary => {
   summary.addEventListener('click', e => {
     e.preventDefault();
     const row = summary.parentElement;
-    if (row.open) { suppressAutoUntil = performance.now() + 700; setRowOpen(row, false); return; }
+    if (row.open) {
+      suppressAutoUntil = performance.now() + 700;
+      setRowOpen(row, false);
+      row.classList.remove('is-active');
+      return;
+    }
     activateRow(row, { jump: true });
   });
 });
+
+/* ---------- parallax on the active row's photos ----------
+   While a row is open, its gallery images drift a few px against the
+   scroll instead of sitting dead still — a small continuous "living"
+   motion under the one-shot cascade entrance, tied directly to how far
+   you've scrolled rather than a fixed timer. */
+if (!reduce) {
+  let parallaxTicking = false;
+  addEventListener('scroll', () => {
+    if (parallaxTicking) return;
+    parallaxTicking = true;
+    requestAnimationFrame(() => {
+      parallaxTicking = false;
+      const active = document.querySelector('.row.is-active');
+      if (!active) return;
+      const r = active.getBoundingClientRect();
+      const centerOffset = (r.top + r.height / 2) - innerHeight / 2; // 0 when row is centered
+      const shift = Math.max(-14, Math.min(14, centerOffset * 0.03));
+      active.querySelectorAll('.gshot img').forEach(img => {
+        img.style.transform = `translateY(${shift}px)`;
+      });
+    });
+  }, { passive: true });
+}
 
 /* ---------- open a project row from anywhere (e.g. the 3D board) ---------- */
 function openProject(ref) {
