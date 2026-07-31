@@ -83,24 +83,51 @@ if (bar) {
   drawProgress(); // reloading mid-page must not start the trace at 0%
 }
 
-/* ---------- animated BOM accordion ----------
-   Native <details> snaps open with no way to transition height, so the
-   content — which is the whole point of clicking a row — just appears.
-   This slides + fades it open/closed via WAAPI, keeping the <details>
-   element as the source of truth (so no-JS and screen readers still get a
-   plain working accordion; this only adds the motion on top). */
+/* ---------- animated BOM showcase ----------
+   Native <details> snaps open with no way to transition height, so this
+   drives it with WAAPI instead, keeping <details> as the source of truth
+   (no-JS and screen readers still get a plain working accordion — the
+   motion is additive). Two layers on top of that base:
+   1. Cascade: PROBLEM/CONSTRAINTS/OUTCOME, the chip line and each photo
+      reveal in sequence rather than popping in as one block.
+   2. Auto-advance: as you scroll, whichever row is centered in the
+      viewport opens itself and the previous one closes — a guided
+      walk-through instead of a static list you have to click through.
+      Manual clicks still work and take priority; a short cooldown after
+      one stops the scroll-driven logic from immediately overriding it
+      mid-scroll-into-view. */
 function setRowOpen(details, open) {
   const body = details.querySelector('.rbody');
   if (!body || reduce || typeof body.animate !== 'function') { details.open = open; return; }
   if (open === details.open) return;
+  body.getAnimations().forEach(a => a.cancel()); // defensive: never let two open/close calls overlap on one row
   if (open) {
     details.open = true;
     const h = body.scrollHeight;
     body.style.overflow = 'hidden';
     body.animate(
       [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }],
-      { duration: 300, easing: 'cubic-bezier(.4,0,.2,1)' }
+      { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' }
     ).onfinish = () => { body.style.height = ''; body.style.overflow = ''; };
+    // cascade: each piece drifts up and comes into focus out of a slight
+    // blur, rather than a flat fade -- reads as depth, not a state toggle
+    const pieces = body.querySelectorAll('.pco > div, .chips, .gshot');
+    pieces.forEach((el, i) => {
+      el.animate(
+        [
+          { opacity: 0, transform: 'translateY(26px) scale(.94)', filter: 'blur(7px)' },
+          { opacity: 1, transform: 'translateY(-2px) scale(1.005)', filter: 'blur(0)', offset: .82 },
+          { opacity: 1, transform: 'none', filter: 'blur(0)' }
+        ],
+        { duration: 640, delay: 140 + i * 85, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
+      );
+    });
+    // the ref chip gets a quick bright pulse, like a spotlight landing on it
+    const ref = details.querySelector('.ref');
+    if (ref) ref.animate(
+      [{ boxShadow: '0 0 0 0 rgba(34,224,230,0)' }, { boxShadow: '0 0 26px 4px rgba(34,224,230,.55)' }, { boxShadow: '0 0 0 0 rgba(34,224,230,0)' }],
+      { duration: 900, easing: 'cubic-bezier(.4,0,.2,1)' }
+    );
   } else {
     const h = body.scrollHeight;
     body.style.overflow = 'hidden';
@@ -110,27 +137,98 @@ function setRowOpen(details, open) {
     ).onfinish = () => { details.open = false; body.style.height = ''; body.style.overflow = ''; };
   }
 }
+
+let suppressAutoUntil = 0;
+function activateRow(row, { jump = false } = {}) {
+  document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
+  setRowOpen(row, true);
+  document.querySelectorAll('.row.is-active').forEach(r => r.classList.remove('is-active'));
+  row.classList.add('is-active');
+  suppressAutoUntil = performance.now() + 700;
+  if (jump) row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+}
+
 document.querySelectorAll('.row > summary').forEach(summary => {
   summary.addEventListener('click', e => {
     e.preventDefault();
     const row = summary.parentElement;
-    const willOpen = !row.open;
-    if (willOpen) document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
-    setRowOpen(row, willOpen);
+    if (row.open) {
+      suppressAutoUntil = performance.now() + 700;
+      setRowOpen(row, false);
+      row.classList.remove('is-active');
+      return;
+    }
+    activateRow(row, { jump: true });
   });
 });
 
-/* ---------- open a project row from anywhere ---------- */
+/* ---------- parallax on the active row's photos ----------
+   While a row is open, its gallery images drift a few px against the
+   scroll instead of sitting dead still — a small continuous "living"
+   motion under the one-shot cascade entrance, tied directly to how far
+   you've scrolled rather than a fixed timer. */
+if (!reduce) {
+  let parallaxTicking = false;
+  addEventListener('scroll', () => {
+    if (parallaxTicking) return;
+    parallaxTicking = true;
+    requestAnimationFrame(() => {
+      parallaxTicking = false;
+      const active = document.querySelector('.row.is-active');
+      if (!active) return;
+      const r = active.getBoundingClientRect();
+      const centerOffset = (r.top + r.height / 2) - innerHeight / 2; // 0 when row is centered
+      const shift = Math.max(-14, Math.min(14, centerOffset * 0.03));
+      active.querySelectorAll('.gshot img').forEach(img => {
+        img.style.transform = `translateY(${shift}px)`;
+      });
+    });
+  }, { passive: true });
+}
+
+/* ---------- open a project row from anywhere (e.g. the 3D board) ---------- */
 function openProject(ref) {
   const row = document.querySelector(`.row [data-ref="${ref}"]`)?.closest('.row')
     || [...document.querySelectorAll('.row')].find(r => r.querySelector('.ref')?.textContent.trim() === ref);
   if (!row) return;
-  document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
-  setRowOpen(row, true);
-  row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  activateRow(row, { jump: true });
   row.classList.add('flash');
   setTimeout(() => row.classList.remove('flash'), 1200);
 }
+
+/* ---------- scroll-driven auto-advance ----------
+   Whichever row's center is nearest the viewport's center becomes the
+   active one. The decision only fires once scrolling settles (~130ms of
+   no new scroll events), not on every tick — a fast scroll flick would
+   otherwise call activateRow faster than a 220-340ms open/close animation
+   can finish, leaving rows in an inconsistent state. This also happens to
+   read as calmer and more deliberate, which suits a "guided tour" better
+   than something that strobes open/closed while you're still scrolling. */
+(function initAutoAdvance() {
+  if (reduce) return;
+  const rows = [...document.querySelectorAll('#work .row')];
+  if (!rows.length) return;
+  let settleTimer = null;
+  function closestRow() {
+    const vh = innerHeight, centerY = vh / 2;
+    let best = null, bestDist = Infinity;
+    for (const row of rows) {
+      const r = row.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) continue;
+      const dist = Math.abs((r.top + r.height / 2) - centerY);
+      if (dist < bestDist) { bestDist = dist; best = row; }
+    }
+    return best;
+  }
+  addEventListener('scroll', () => {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(() => {
+      if (performance.now() < suppressAutoUntil) return;
+      const target = closestRow();
+      if (target && !target.open) activateRow(target);
+    }, 130);
+  }, { passive: true });
+})();
 
 /* ---------- 3D board ---------- */
 function initBoard() {
