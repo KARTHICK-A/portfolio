@@ -5,6 +5,11 @@
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* worldY positions where a section just "powered on" — drained by the flow
+   rail below to spark a pulse there, so the current visibly arrives at a
+   section the moment it reveals */
+window.__flowPulses = [];
+
 /* ---------- scroll reveal ---------- */
 document.querySelectorAll('.section, .eng-grid, .stack, .bom').forEach(el => el.classList.add('reveal'));
 const revealEls = document.querySelectorAll('.reveal');
@@ -14,6 +19,7 @@ if ('IntersectionObserver' in window) {
       if (e.isIntersecting) {
         e.target.classList.add('in');
         obs.unobserve(e.target);
+        window.__flowPulses.push(e.target.getBoundingClientRect().top + scrollY);
       }
     });
   }, { threshold: 0.06 });
@@ -365,3 +371,138 @@ function initBoard() {
 
 if (document.readyState === 'complete') initBoard();
 else addEventListener('load', initBoard);
+
+/* ---------- current-flow rail ----------
+   A live copper bus that runs the height of the page. The trace shape is
+   generated from world-Y with a seeded hash, so it looks identical on every
+   load and never "jumps" as you scroll — same trick real layout tools use
+   for infinite procedural routing. Electrons drift on their own (idle
+   current) and surge with scroll velocity (you moving = current moving).
+   Reveal.js pushes a worldY into window.__flowPulses whenever a section
+   powers on; this loop turns each into a brief bright ring right on the
+   trace, so current visibly arrives exactly when a section does. */
+(function initFlow() {
+  const canvas = document.getElementById('flow');
+  if (!canvas || reduce) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const mq = matchMedia('(min-width: 1180px)');
+  let active = mq.matches;
+  const onMq = e => { active = e.matches; };
+  mq.addEventListener ? mq.addEventListener('change', onMq) : mq.addListener(onMq);
+
+  const CYAN = '34,224,230', BLUE = '91,124,255', VIOLET = '169,107,255', GOLD = '242,169,59';
+  const COLORS = [CYAN, BLUE, VIOLET];
+  const W = 64, SEG = 220, AMP = 20, CENTER = 30;
+
+  function hashX(i) {
+    const s = Math.sin(i * 12.9898) * 43758.5453;
+    return CENTER + ((s - Math.floor(s)) * 2 - 1) * AMP;
+  }
+  function traceX(worldY) {
+    const i = Math.floor(worldY / SEG);
+    const t = (worldY % SEG) / SEG;
+    const xA = hashX(i), xB = hashX(i + 1);
+    const chamfer = Math.min(Math.max((t - 0.7) / 0.3, 0), 1); // last 30% of each run doglegs to the next x
+    return xA + (xB - xA) * chamfer;
+  }
+
+  let dpr = 1;
+  function resize() {
+    dpr = Math.min(devicePixelRatio, 2);
+    canvas.width = W * dpr;
+    canvas.height = innerHeight * dpr;
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  const docH = () => Math.max(document.body.scrollHeight, innerHeight * 2);
+  const N = 6;
+  const electrons = Array.from({ length: N }, (_, i) => ({ y: (docH() / N) * i, c: COLORS[i % COLORS.length] }));
+  const sparks = [];
+
+  let lastY = scrollY, boost = 0, lastT = performance.now();
+  // the hero uses its own wider grid, so the rail's fixed offset isn't
+  // guaranteed clear of the headline there; simplest correct fix is to have
+  // the current switch on as you leave the hero, like power reaching the
+  // rest of the circuit — also reads as an intentional reveal, not a dodge
+  const heroEndY = () => { const el = document.getElementById('work'); return el ? el.getBoundingClientRect().top + scrollY : 0; };
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    if (!active || document.hidden) return;
+    const now = performance.now();
+    const dt = Math.min((now - lastT) / 1000, 0.05);
+    lastT = now;
+
+    const sy = scrollY;
+    canvas.style.opacity = Math.min(Math.max((sy - (heroEndY() - 320)) / 320, 0), 1);
+    boost = boost * 0.9 + Math.abs(sy - lastY) * 1.4; // scroll velocity feeds the surge, then decays
+    lastY = sy;
+    const speed = 26 + Math.min(boost, 1400); // px/sec: idle drift + surge
+
+    const H = docH();
+    const wrap = y => ((y % H) + H) % H;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, innerHeight);
+
+    // dormant trace + vias for the visible slice
+    ctx.beginPath();
+    for (let y = sy - 40; y <= sy + innerHeight + 40; y += 8) {
+      const x = traceX(wrap(y));
+      if (y === sy - 40) ctx.moveTo(x, y - sy); else ctx.lineTo(x, y - sy);
+    }
+    ctx.strokeStyle = 'rgba(120,150,200,.16)';
+    ctx.lineWidth = 1.4;
+    ctx.stroke();
+    for (let y = Math.ceil((sy - 40) / SEG) * SEG; y < sy + innerHeight + 40; y += SEG) {
+      const x = traceX(wrap(y));
+      ctx.beginPath();
+      ctx.arc(x, y - sy, 2.6, 0, 6.29);
+      ctx.fillStyle = 'rgba(' + GOLD + ',.35)';
+      ctx.fill();
+    }
+
+    if (window.__flowPulses.length) {
+      window.__flowPulses.forEach(y => sparks.push({ y, age: 0 }));
+      window.__flowPulses.length = 0;
+    }
+
+    electrons.forEach(e => {
+      e.y = wrap(e.y + speed * dt);
+      const localY = e.y - sy;
+      if (localY < -60 || localY > innerHeight + 60) return;
+      for (let k = 5; k >= 0; k--) {
+        const ty = e.y - k * 10, tLocal = ty - sy;
+        if (tLocal < -60 || tLocal > innerHeight + 60) continue;
+        const x = traceX(wrap(ty));
+        const a = k === 0 ? 1 : (1 - k / 6) * 0.5;
+        if (k === 0) {                    // cheap glow first: soft wide circle behind the bright core
+          ctx.beginPath();
+          ctx.arc(x, tLocal, 8, 0, 6.29);
+          ctx.fillStyle = 'rgba(' + e.c + ',.22)';
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(x, tLocal, k === 0 ? 3.4 : 2, 0, 6.29);
+        ctx.fillStyle = 'rgba(' + e.c + ',' + a.toFixed(2) + ')';
+        ctx.fill();
+      }
+    });
+
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.age += dt;
+      if (s.age > 1.1) { sparks.splice(i, 1); continue; }
+      const localY = s.y - sy;
+      if (localY < -80 || localY > innerHeight + 80) continue;
+      const k = s.age / 1.1;
+      ctx.beginPath();
+      ctx.arc(traceX(wrap(s.y)), localY, 3 + k * 16, 0, 6.29);
+      ctx.strokeStyle = 'rgba(' + GOLD + ',' + (1 - k).toFixed(2) + ')';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  })();
+})();
