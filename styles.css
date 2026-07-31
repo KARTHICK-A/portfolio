@@ -87,6 +87,17 @@ img{max-width:100%;display:block}
 @keyframes drift2{0%,100%{transform:translate3d(0,0,0) scale(1.05)}50%{transform:translate3d(5vw,-5vh,0) scale(.94)}}
 @keyframes drift3{0%,100%{transform:translate3d(0,0,0) scale(.96)}50%{transform:translate3d(-3vw,-3vh,0) scale(1.1)}}
 
+/* current-flow rail: fixed, viewport-sized only (cheap to redraw); the trace
+   pattern is generated procedurally from world-Y so it reads as continuous
+   no matter how far you've scrolled. Electrons drift on their own and surge
+   with scroll velocity — see script.js. Sits above atmosphere, below content.
+   Positioned to track the centered content column with a fixed 16px gap to
+   its left edge (matches .section's 1.5rem padding), so it can never sit
+   under a heading; hidden entirely below 1180px where there is no margin
+   left to put it in. */
+#flow{position:fixed;top:0;width:64px;height:100vh;z-index:1;pointer-events:none;display:none;opacity:0}
+@media(min-width:1180px){#flow{display:block;left:calc(50vw - 646px)}}
+
 /* everything above the atmosphere */
 main,.topbar,.footer{position:relative;z-index:2}
 
@@ -360,6 +371,7 @@ h2{grid-column:1;font-family:var(--disp);font-weight:700;font-size:clamp(1.7rem,
   .bloom,.ticker-track,.led,.caret{animation:none}
   .sec-head::after{transform:scaleX(1);transition:none}
   .btn-trace::after{display:none}
+  #flow{display:none}
 }
 
 /* ---------- 6. RESPONSIVE ---------- */
