@@ -83,13 +83,50 @@ if (bar) {
   drawProgress(); // reloading mid-page must not start the trace at 0%
 }
 
+/* ---------- animated BOM accordion ----------
+   Native <details> snaps open with no way to transition height, so the
+   content — which is the whole point of clicking a row — just appears.
+   This slides + fades it open/closed via WAAPI, keeping the <details>
+   element as the source of truth (so no-JS and screen readers still get a
+   plain working accordion; this only adds the motion on top). */
+function setRowOpen(details, open) {
+  const body = details.querySelector('.rbody');
+  if (!body || reduce || typeof body.animate !== 'function') { details.open = open; return; }
+  if (open === details.open) return;
+  if (open) {
+    details.open = true;
+    const h = body.scrollHeight;
+    body.style.overflow = 'hidden';
+    body.animate(
+      [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }],
+      { duration: 300, easing: 'cubic-bezier(.4,0,.2,1)' }
+    ).onfinish = () => { body.style.height = ''; body.style.overflow = ''; };
+  } else {
+    const h = body.scrollHeight;
+    body.style.overflow = 'hidden';
+    body.animate(
+      [{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
+      { duration: 220, easing: 'cubic-bezier(.4,0,.2,1)' }
+    ).onfinish = () => { details.open = false; body.style.height = ''; body.style.overflow = ''; };
+  }
+}
+document.querySelectorAll('.row > summary').forEach(summary => {
+  summary.addEventListener('click', e => {
+    e.preventDefault();
+    const row = summary.parentElement;
+    const willOpen = !row.open;
+    if (willOpen) document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
+    setRowOpen(row, willOpen);
+  });
+});
+
 /* ---------- open a project row from anywhere ---------- */
 function openProject(ref) {
   const row = document.querySelector(`.row [data-ref="${ref}"]`)?.closest('.row')
     || [...document.querySelectorAll('.row')].find(r => r.querySelector('.ref')?.textContent.trim() === ref);
   if (!row) return;
-  document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) r.open = false; });
-  row.open = true;
+  document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
+  setRowOpen(row, true);
   row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
   row.classList.add('flash');
   setTimeout(() => row.classList.remove('flash'), 1200);
@@ -506,3 +543,42 @@ else addEventListener('load', initBoard);
     }
   })();
 })();
+
+/* ---------- project galleries: inspection-light hover + lightbox ---------- */
+document.querySelectorAll('.gshot').forEach(shot => {
+  if (!reduce) {
+    shot.addEventListener('pointermove', e => {
+      const r = shot.getBoundingClientRect();
+      shot.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      shot.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  }
+  shot.addEventListener('click', () => openLightbox(shot.dataset.full, shot.dataset.alt));
+});
+
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCap = document.getElementById('lbCap');
+let lbReturnFocus = null;
+
+function openLightbox(src, alt) {
+  if (!lightbox) return;
+  lbReturnFocus = document.activeElement;
+  lbImg.src = src;
+  lbImg.alt = alt || '';
+  lbCap.textContent = alt || '';
+  lightbox.hidden = false;
+  requestAnimationFrame(() => lightbox.classList.add('in'));
+  lightbox.querySelector('.lb-close').focus();
+}
+function closeLightbox() {
+  if (!lightbox || lightbox.hidden) return;
+  lightbox.classList.remove('in');
+  setTimeout(() => { lightbox.hidden = true; lbImg.src = ''; }, reduce ? 0 : 250);
+  if (lbReturnFocus) lbReturnFocus.focus();
+}
+if (lightbox) {
+  lightbox.querySelector('.lb-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+}
