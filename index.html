@@ -126,6 +126,12 @@
           <div><dt class="mono">OUTCOME</dt><dd>V1 verified on a running marine engine under operating load; final build shrank to a bare ATtiny3216 after ATmega/ESP32 pilots.</dd></div>
         </dl>
         <p class="mono chips">ATTINY 3216 (FINAL) ▸ ATMEGA/ARDUINO ▸ ESP32 (PILOT) ▸ ADS1115 ▸ MAP/EGT/RPM ▸ CAN ▸ EMBEDDED C ▸ PLATFORMIO</p>
+        <div class="gallery">
+        <button class="gshot" type="button" data-full="./assets/images/products/ecu/pcb-render.jpg" data-alt="Dual-fuel ECU PCB design render"><img src="./assets/images/products/ecu/pcb-render.webp" alt="Dual-fuel ECU PCB design render" loading="lazy" decoding="async"><span class="gtag mono">PCB DESIGN</span></button>
+        <button class="gshot" type="button" data-full="./assets/images/products/ecu/bench-test.jpg" data-alt="Firmware and RPM/MAP data-logging bench setup"><img src="./assets/images/products/ecu/bench-test.webp" alt="Firmware and RPM/MAP data-logging bench setup" loading="lazy" decoding="async"><span class="gtag mono">BENCH TEST</span></button>
+        <button class="gshot" type="button" data-full="./assets/images/products/ecu/scope-test.jpg" data-alt="Oscilloscope capture of injector drive signal"><img src="./assets/images/products/ecu/scope-test.webp" alt="Oscilloscope capture of injector drive signal" loading="lazy" decoding="async"><span class="gtag mono">SCOPE</span></button>
+        <button class="gshot" type="button" data-full="./assets/images/products/ecu/field-test.jpg" data-alt="ECU running on a marine engine at sea"><img src="./assets/images/products/ecu/field-test.webp" alt="ECU running on a marine engine at sea" loading="lazy" decoding="async"><span class="gtag mono">FIELD TEST</span></button>
+        </div>
       </div>
     </details>
 
@@ -143,6 +149,11 @@
           <div><dt class="mono">OUTCOME</dt><dd>4 channels multiplied to 16 — big engines run on a low-channel, low-cost ECU.</dd></div>
         </dl>
         <p class="mono chips">MOSFET DRIVE ▸ FLYBACK PROT ▸ REV-POLARITY PROT ▸ CUSTOM PCB</p>
+        <div class="gallery">
+        <button class="gshot" type="button" data-full="./assets/images/products/injector/product-1.jpg" data-alt="Injector multiplier unit with 4 output harnesses"><img src="./assets/images/products/injector/product-1.webp" alt="Injector multiplier unit with 4 output harnesses" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
+        <button class="gshot" type="button" data-full="./assets/images/products/injector/product-2.jpg" data-alt="Injector multiplier enclosure, front"><img src="./assets/images/products/injector/product-2.webp" alt="Injector multiplier enclosure, front" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
+        <button class="gshot" type="button" data-full="./assets/images/products/injector/product-3.jpg" data-alt="Injector multiplier enclosure, OBD-style connector"><img src="./assets/images/products/injector/product-3.webp" alt="Injector multiplier enclosure, OBD-style connector" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
+        </div>
       </div>
     </details>
 
@@ -177,6 +188,9 @@
           <div><dt class="mono">OUTCOME</dt><dd>Two hardware versions designed, manufactured and verified — RPM-based regulation protecting LPG-converted marine engines.</dd></div>
         </dl>
         <p class="mono chips">ESP8266 ▸ PWM ▸ MOSFET/TIP122 STAGE ▸ CUSTOM PCB</p>
+        <div class="gallery">
+        <button class="gshot" type="button" data-full="./assets/images/products/ocu/scope-test.jpg" data-alt="Oscilloscope capture during RPM and injector testing"><img src="./assets/images/products/ocu/scope-test.webp" alt="Oscilloscope capture during RPM and injector testing" loading="lazy" decoding="async"><span class="gtag mono">SCOPE TEST</span></button>
+        </div>
       </div>
     </details>
 
@@ -194,6 +208,10 @@
           <div><dt class="mono">OUTCOME</dt><dd>POC completed for Indo Tech Transformers with on-site validation.</dd></div>
         </dl>
         <p class="mono chips">ESP ▸ PT100 ▸ ZMPT101B ▸ SCT013 ▸ RTC ▸ SD LOG ▸ HTTP/JSON ▸ P10 LED</p>
+        <div class="gallery">
+        <button class="gshot" type="button" data-full="./assets/images/products/compressor/deployed.jpg" data-alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel"><img src="./assets/images/products/compressor/deployed.webp" alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel" loading="lazy" decoding="async"><span class="gtag mono">DEPLOYED</span></button>
+        <button class="gshot" type="button" data-full="./assets/images/products/compressor/onsite.jpg" data-alt="On-site validation at Indo Tech Transformers"><img src="./assets/images/products/compressor/onsite.webp" alt="On-site validation at Indo Tech Transformers" loading="lazy" decoding="async"><span class="gtag mono">ON-SITE</span></button>
+        </div>
       </div>
     </details>
 
@@ -318,6 +336,13 @@
   <span>© KARTHICK A · CHENNAI, INDIA</span>
   <span>EMBEDDED SYSTEMS ENGINEER</span>
 </footer>
+
+<!-- lightbox: shared by every gallery -->
+<div id="lightbox" class="lightbox" hidden>
+  <button class="lb-close mono" type="button" aria-label="Close image">✕</button>
+  <img id="lbImg" src="" alt="">
+  <p id="lbCap" class="mono lb-cap"></p>
+</div>
 
 <script src="./assets/vendor/three.min.js" defer></script>
 <script src="./script.js" defer></script>

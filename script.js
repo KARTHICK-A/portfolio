@@ -543,3 +543,42 @@ else addEventListener('load', initBoard);
     }
   })();
 })();
+
+/* ---------- project galleries: inspection-light hover + lightbox ---------- */
+document.querySelectorAll('.gshot').forEach(shot => {
+  if (!reduce) {
+    shot.addEventListener('pointermove', e => {
+      const r = shot.getBoundingClientRect();
+      shot.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      shot.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  }
+  shot.addEventListener('click', () => openLightbox(shot.dataset.full, shot.dataset.alt));
+});
+
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCap = document.getElementById('lbCap');
+let lbReturnFocus = null;
+
+function openLightbox(src, alt) {
+  if (!lightbox) return;
+  lbReturnFocus = document.activeElement;
+  lbImg.src = src;
+  lbImg.alt = alt || '';
+  lbCap.textContent = alt || '';
+  lightbox.hidden = false;
+  requestAnimationFrame(() => lightbox.classList.add('in'));
+  lightbox.querySelector('.lb-close').focus();
+}
+function closeLightbox() {
+  if (!lightbox || lightbox.hidden) return;
+  lightbox.classList.remove('in');
+  setTimeout(() => { lightbox.hidden = true; lbImg.src = ''; }, reduce ? 0 : 250);
+  if (lbReturnFocus) lbReturnFocus.focus();
+}
+if (lightbox) {
+  lightbox.querySelector('.lb-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+}
