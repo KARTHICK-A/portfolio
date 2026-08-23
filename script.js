@@ -10,22 +10,47 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
    section the moment it reveals */
 window.__flowPulses = [];
 
-/* ---------- scroll reveal ---------- */
+/* ---------- scroll reveal ----------
+   Every section starts at opacity 0 and is revealed from here, so this code
+   failing means a blank page below the hero. IntersectionObserver alone is
+   not a safe enough guarantee: browsers suspend observer delivery in
+   background and heavily throttled tabs, which includes the in-app browsers
+   people arrive from (LinkedIn, WhatsApp). So the observer handles the nice
+   staggered entrance, and three independent backstops guarantee the content
+   is never left hidden. */
 document.querySelectorAll('.section, .eng-grid, .stack, .bom').forEach(el => el.classList.add('reveal'));
-const revealEls = document.querySelectorAll('.reveal');
+const revealEls = [...document.querySelectorAll('.reveal')];
+
+function revealNow(el) {
+  if (el.classList.contains('in')) return;
+  el.classList.add('in');
+  window.__flowPulses.push(el.getBoundingClientRect().top + scrollY);
+}
+const revealAll = () => revealEls.forEach(revealNow);
+
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries, obs) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        obs.unobserve(e.target);
-        window.__flowPulses.push(e.target.getBoundingClientRect().top + scrollY);
-      }
+      if (!e.isIntersecting) return;
+      revealNow(e.target);
+      obs.unobserve(e.target);
     });
-  }, { threshold: 0.06 });
+  }, { threshold: 0.02, rootMargin: '0px 0px -6% 0px' });
   revealEls.forEach(el => io.observe(el));
+
+  // 1. anything already on screen once the page has loaded
+  addEventListener('load', () => setTimeout(() => {
+    revealEls.forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) revealNow(el);
+    });
+  }, 100));
+  // 2. a tab that was hidden while loading gets a second chance
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) io.takeRecords(); });
+  // 3. absolute backstop — content wins over choreography
+  setTimeout(revealAll, 4000);
 } else {
-  revealEls.forEach(el => el.classList.add('in'));
+  revealAll();
 }
 
 /* ---------- boot-sequence typing in the hero ---------- */
@@ -96,6 +121,16 @@ if (bar) {
       Manual clicks still work and take priority; a short cooldown after
       one stops the scroll-driven logic from immediately overriding it
       mid-scroll-into-view. */
+/* A row's open/closed state must never depend on an animation finishing.
+   Browsers suspend Web Animations in background/throttled tabs, so an
+   onfinish callback can simply never fire — which previously left rows
+   stuck open with their height locked. Every state commit now runs once,
+   from whichever fires first: the animation or a timeout backstop. */
+function settleOnce(fn) {
+  let done = false;
+  return () => { if (done) return; done = true; fn(); };
+}
+
 function setRowOpen(details, open) {
   const body = details.querySelector('.rbody');
   if (!body || reduce || typeof body.animate !== 'function') { details.open = open; return; }
@@ -105,10 +140,12 @@ function setRowOpen(details, open) {
     details.open = true;
     const h = body.scrollHeight;
     body.style.overflow = 'hidden';
+    const clear = settleOnce(() => { body.style.height = ''; body.style.overflow = ''; });
     body.animate(
       [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }],
       { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' }
-    ).onfinish = () => { body.style.height = ''; body.style.overflow = ''; };
+    ).onfinish = clear;
+    setTimeout(clear, 600);
     // cascade: each piece drifts up and comes into focus out of a slight
     // blur, rather than a flat fade -- reads as depth, not a state toggle
     const pieces = body.querySelectorAll('.pco > div, .chips, .gshot');
@@ -131,10 +168,14 @@ function setRowOpen(details, open) {
   } else {
     const h = body.scrollHeight;
     body.style.overflow = 'hidden';
+    const shut = settleOnce(() => {
+      details.open = false; body.style.height = ''; body.style.overflow = '';
+    });
     body.animate(
       [{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
       { duration: 220, easing: 'cubic-bezier(.4,0,.2,1)' }
-    ).onfinish = () => { details.open = false; body.style.height = ''; body.style.overflow = ''; };
+    ).onfinish = shut;
+    setTimeout(shut, 400);
   }
 }
 
@@ -158,33 +199,9 @@ document.querySelectorAll('.row > summary').forEach(summary => {
       row.classList.remove('is-active');
       return;
     }
-    activateRow(row, { jump: true });
+    activateRow(row);
   });
 });
-
-/* ---------- parallax on the active row's photos ----------
-   While a row is open, its gallery images drift a few px against the
-   scroll instead of sitting dead still — a small continuous "living"
-   motion under the one-shot cascade entrance, tied directly to how far
-   you've scrolled rather than a fixed timer. */
-if (!reduce) {
-  let parallaxTicking = false;
-  addEventListener('scroll', () => {
-    if (parallaxTicking) return;
-    parallaxTicking = true;
-    requestAnimationFrame(() => {
-      parallaxTicking = false;
-      const active = document.querySelector('.row.is-active');
-      if (!active) return;
-      const r = active.getBoundingClientRect();
-      const centerOffset = (r.top + r.height / 2) - innerHeight / 2; // 0 when row is centered
-      const shift = Math.max(-14, Math.min(14, centerOffset * 0.03));
-      active.querySelectorAll('.gshot img').forEach(img => {
-        img.style.transform = `translateY(${shift}px)`;
-      });
-    });
-  }, { passive: true });
-}
 
 /* ---------- open a project row from anywhere (e.g. the 3D board) ---------- */
 function openProject(ref) {
@@ -196,38 +213,19 @@ function openProject(ref) {
   setTimeout(() => row.classList.remove('flash'), 1200);
 }
 
-/* ---------- scroll-driven auto-advance ----------
-   Whichever row's center is nearest the viewport's center becomes the
-   active one. The decision only fires once scrolling settles (~130ms of
-   no new scroll events), not on every tick — a fast scroll flick would
-   otherwise call activateRow faster than a 220-340ms open/close animation
-   can finish, leaving rows in an inconsistent state. This also happens to
-   read as calmer and more deliberate, which suits a "guided tour" better
-   than something that strobes open/closed while you're still scrolling. */
-(function initAutoAdvance() {
-  if (reduce) return;
+/* ---------- project rows open on click only ----------
+   An earlier build advanced these automatically as you scrolled: whichever
+   row sat nearest the viewport centre opened itself and the previous one
+   closed. Each of those transitions changes page height by several hundred
+   pixels, so the content under the reader's finger jumped and photos
+   appeared unbidden — the page felt like it was scrolling itself. Reading
+   is now entirely reader-driven; the first row starts open so the section
+   still reads at a glance. */
+(function openFirstRow() {
   const rows = [...document.querySelectorAll('#work .row')];
-  if (!rows.length) return;
-  let settleTimer = null;
-  function closestRow() {
-    const vh = innerHeight, centerY = vh / 2;
-    let best = null, bestDist = Infinity;
-    for (const row of rows) {
-      const r = row.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > vh) continue;
-      const dist = Math.abs((r.top + r.height / 2) - centerY);
-      if (dist < bestDist) { bestDist = dist; best = row; }
-    }
-    return best;
-  }
-  addEventListener('scroll', () => {
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(() => {
-      if (performance.now() < suppressAutoUntil) return;
-      const target = closestRow();
-      if (target && !target.open) activateRow(target);
-    }, 130);
-  }, { passive: true });
+  if (!rows.length || rows.some(r => r.open)) return;
+  rows[0].open = true;
+  rows[0].classList.add('is-active');
 })();
 
 /* ---------- 3D board ---------- */
@@ -235,79 +233,98 @@ function initBoard() {
   const canvas = document.getElementById('pcb3d');
   const tip = document.getElementById('tip');
   const panel = document.querySelector('.hero-board');
-  // without three.js or WebGL there is nothing to show: drop the panel entirely
-  // rather than leave a hole in the hero
   const giveUp = () => { if (panel) panel.hidden = true; };
   if (!canvas) return;
   if (!window.THREE) return giveUp();
 
-  // board palette matches the page: cyan plasma traces, gold pads (PCB
-  // heritage), deep navy substrate
-  const TRACE = 0x22e0e6, PAD = 0xf2a93b, SUB = 0x0a1524, DARK = 0x070b14;
+  /* Physically-plausible palette. Real boards are not neon: the substrate is a
+     dark soldermask, copper is warm brown-gold, pads are plated gold. Only the
+     signal pulses emit — everything else is lit, not glowing. That, plus tone
+     mapping and an environment to reflect, is what stops it reading cartoon. */
+  const SUB = 0x0d2029, COPPER = 0x9a6b3f, PAD = 0xd8a34a, SIGNAL = 0x22e0e6, DARK = 0x0a0e15;
+
   let renderer;
   try {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   } catch (e) { return giveUp(); }
   if (!renderer.getContext()) return giveUp();
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-  camera.position.set(0, 7.4, 8.2);
-  camera.lookAt(0, 0, 0);
+
+  /* Studio environment, generated in a canvas so nothing extra downloads.
+     Metals with no environment have nothing to mirror and go flat plastic —
+     this one addition does most of the "looks real" work. */
+  (function buildEnv() {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 128;
+    const g = c.getContext('2d');
+    const grad = g.createLinearGradient(0, 0, 0, 128);
+    grad.addColorStop(0.00, '#cdd8e6');
+    grad.addColorStop(0.34, '#5d6b7d');
+    grad.addColorStop(0.52, '#1b222c');
+    grad.addColorStop(1.00, '#070a0e');
+    g.fillStyle = grad; g.fillRect(0, 0, 256, 128);
+    g.fillStyle = 'rgba(255,255,255,.85)';
+    g.beginPath(); g.ellipse(74, 20, 40, 15, 0, 0, 6.29); g.fill();
+    g.fillStyle = 'rgba(150,200,225,.5)';
+    g.beginPath(); g.ellipse(196, 34, 30, 12, 0, 0, 6.29); g.fill();
+    const tex = new THREE.CanvasTexture(c);
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromEquirectangular(tex).texture;
+    tex.dispose(); pmrem.dispose();
+  })();
 
   const board = new THREE.Group();
   scene.add(board);
   const W = 9, H = 6.6;
 
-  // gold for physical metal (pins, header posts) — copper heritage kept
-  const padMat = new THREE.MeshStandardMaterial({
-    color: PAD, roughness: 0.3, metalness: 0.95, emissive: PAD, emissiveIntensity: 0.08
-  });
-  const traceMat = new THREE.MeshStandardMaterial({
-    color: TRACE, roughness: 0.24, metalness: 0.9,
-    emissive: TRACE, emissiveIntensity: 0.35
-  });
+  const padMat = new THREE.MeshStandardMaterial({ color: PAD, roughness: 0.26, metalness: 1.0 });
+  const copperMat = new THREE.MeshStandardMaterial({ color: COPPER, roughness: 0.32, metalness: 1.0 });
+  const subMat = new THREE.MeshStandardMaterial({ color: SUB, roughness: 0.68, metalness: 0.05 });
 
-  // substrate + soldermask edge
-  board.add(new THREE.Mesh(
-    new THREE.BoxGeometry(W, 0.18, H),
-    new THREE.MeshStandardMaterial({ color: SUB, roughness: 0.62, metalness: 0.2 })
-  ));
-  const edge = new THREE.Mesh(
-    new THREE.BoxGeometry(W + 0.06, 0.02, H + 0.06),
-    new THREE.MeshStandardMaterial({ color: 0x5b7cff, roughness: .35, metalness: .9, emissive: 0x5b7cff, emissiveIntensity: .5, transparent: true, opacity: .45 })
-  );
-  edge.position.y = 0.09;
-  board.add(edge);
-
-  // routed copper traces
-  function trace(x, z, len, horizontal) {
-    const g = horizontal ? new THREE.BoxGeometry(len, 0.03, 0.06) : new THREE.BoxGeometry(0.06, 0.03, len);
-    const m = new THREE.Mesh(g, traceMat);
-    m.position.set(x, 0.1, z);
+  /* Bevelled substrate — a chamfered edge catches the key light and reads as a
+     manufactured part; a plain box does not. */
+  (function substrate() {
+    const r = 0.34, hw = W / 2, hh = H / 2, s = new THREE.Shape();
+    s.moveTo(-hw + r, -hh);
+    s.lineTo(hw - r, -hh); s.quadraticCurveTo(hw, -hh, hw, -hh + r);
+    s.lineTo(hw, hh - r); s.quadraticCurveTo(hw, hh, hw - r, hh);
+    s.lineTo(-hw + r, hh); s.quadraticCurveTo(-hw, hh, -hw, hh - r);
+    s.lineTo(-hw, -hh + r); s.quadraticCurveTo(-hw, -hh, -hw + r, -hh);
+    const geo = new THREE.ExtrudeGeometry(s, {
+      depth: 0.2, bevelEnabled: true, bevelSize: 0.035, bevelThickness: 0.035,
+      bevelSegments: 2, curveSegments: 14
+    });
+    const m = new THREE.Mesh(geo, subMat);
+    m.rotation.x = -Math.PI / 2;
+    m.position.y = 0.1;
     board.add(m);
-  }
-  for (let i = 0; i < 30; i++) {
-    let x = (Math.random() - 0.5) * (W - 1.4);
-    let z = (Math.random() - 0.5) * (H - 1.4);
-    let horiz = Math.random() > 0.5;
-    for (let s = 0, segs = 2 + Math.floor(Math.random() * 3); s < segs; s++) {
-      const len = 0.6 + Math.random() * 2;
-      if (horiz) { trace(x + len / 2, z, len, true); x += len; }
-      else { trace(x, z + len / 2, len, false); z += len; }
-      horiz = !horiz;
-      if (Math.abs(x) > W / 2 || Math.abs(z) > H / 2) break;
-    }
-  }
+  })();
 
-  // vias
-  const viaGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.22, 8);
-  for (let i = 0; i < 44; i++) {
-    const v = new THREE.Mesh(viaGeo, traceMat);
-    v.position.set((Math.random() - 0.5) * (W - 0.7), 0.08, (Math.random() - 0.5) * (H - 0.7));
-    board.add(v);
-  }
+  /* Soft contact shadow so the board sits in space instead of floating. */
+  (function contactShadow() {
+    const c = document.createElement('canvas');
+    c.width = c.height = 128;
+    const g = c.getContext('2d');
+    const rg = g.createRadialGradient(64, 64, 4, 64, 64, 62);
+    rg.addColorStop(0, 'rgba(0,0,0,.55)');
+    rg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = rg; g.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c);
+    const p = new THREE.Mesh(
+      new THREE.PlaneGeometry(W * 1.5, H * 1.7),
+      new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false })
+    );
+    p.rotation.x = -Math.PI / 2;
+    p.position.y = -0.32;
+    board.add(p);
+  })();
 
   // ---- interactive ICs = projects ----
   const PROJECTS = [
@@ -316,103 +333,153 @@ function initBoard() {
     { ref: 'U3', label: 'U3 · AVAS (EV SAFETY)', x: 3.0, z: -1.4, w: 0.95, d: 0.8 },
     { ref: 'U4', label: 'U4 · OIL CONTROL UNIT', x: -1.1, z: 1.5, w: 1.0, d: 0.85 },
     { ref: 'U5', label: 'U5 · TRANSFORMER MONITOR', x: 1.7, z: 1.1, w: 1.2, d: 1.0 },
-    { ref: 'U6', label: 'U6 · COLD CHAMBER LOGGER', x: 3.3, z: 1.9, w: 1.0, d: 0.9 },
+    { ref: 'U6', label: 'U6 · COLD CHAMBER LOGGER', x: 3.3, z: 1.9, w: 1.0, d: 0.9 }
   ];
-  // silkscreen designator printed on the top of each IC
+
+  /* Deterministic orthogonal routing between the ICs and the header — real
+     layout, not scattered random sticks. Each route also carries a pulse. */
+  const ROUTES = [
+    [[-3.0, 2.6], [-2.5, 2.6], [-2.5, 0.1]],
+    [[-2.5, -1.9], [-2.5, -2.6], [0.6, -2.6], [0.6, -2.5]],
+    [[1.3, -1.9], [2.2, -1.9], [2.2, -1.4], [2.5, -1.4]],
+    [[-1.1, 0.95], [-1.1, 0.2], [0.9, 0.2], [0.9, 1.1], [1.1, 1.1]],
+    [[2.3, 1.1], [3.3, 1.1], [3.3, 1.45]],
+    [[-1.6, 1.5], [-3.4, 1.5], [-3.4, -1.4], [-2.9, -1.4]],
+    [[3.0, -1.0], [3.0, 0.3], [4.0, 0.3]],
+    [[0.6, -1.4], [0.6, -0.4], [-0.2, -0.4], [-0.2, 1.5], [-1.6, 1.5]]
+  ];
+  const pulses = [];
+  const pulseGeo = new THREE.BoxGeometry(0.16, 0.05, 0.09);
+  const pulseMat = new THREE.MeshBasicMaterial({ color: SIGNAL });
+
+  ROUTES.forEach((pts, ri) => {
+    const segs = [];
+    let total = 0;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = new THREE.Vector3(pts[i][0], 0.215, pts[i][1]);
+      const b = new THREE.Vector3(pts[i + 1][0], 0.215, pts[i + 1][1]);
+      const len = a.distanceTo(b);
+      if (len < 0.001) continue;
+      segs.push({ a, b, len, start: total });
+      total += len;
+      const horiz = Math.abs(b.x - a.x) > Math.abs(b.z - a.z);
+      const t = new THREE.Mesh(
+        new THREE.BoxGeometry(horiz ? len : 0.075, 0.022, horiz ? 0.075 : len), copperMat
+      );
+      t.position.set((a.x + b.x) / 2, 0.205, (a.z + b.z) / 2);
+      board.add(t);
+      const via = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.06, 12), padMat);
+      via.position.set(b.x, 0.215, b.z);
+      board.add(via);
+    }
+    if (!segs.length) return;
+    const mesh = new THREE.Mesh(pulseGeo, pulseMat);
+    board.add(mesh);
+    pulses.push({ mesh, segs, total, t: (ri / ROUTES.length) * total, speed: 1.8 + (ri % 3) * 0.5 });
+  });
+
   function silkscreen(text) {
     const c = document.createElement('canvas');
     c.width = c.height = 256;
     const x = c.getContext('2d');
-    x.fillStyle = '#070b14'; x.fillRect(0, 0, 256, 256);
-    x.fillStyle = '#edf1fa';
-    x.font = '600 84px "IBM Plex Mono", monospace';
+    x.fillStyle = '#0a0e15'; x.fillRect(0, 0, 256, 256);
+    x.fillStyle = '#c9d2e0';
+    x.font = '600 84px monospace';
     x.textAlign = 'center'; x.textBaseline = 'middle';
     x.fillText(text, 128, 132);
-    x.strokeStyle = 'rgba(34,224,230,.55)'; x.lineWidth = 5;
+    x.strokeStyle = 'rgba(200,210,225,.5)'; x.lineWidth = 5;
     x.beginPath(); x.arc(40, 40, 14, 0, 6.3); x.stroke();
-    return new THREE.CanvasTexture(c);
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
   }
 
   const hotspots = [];
   PROJECTS.forEach(p => {
     const g = new THREE.Group();
-    const side = new THREE.MeshStandardMaterial({ color: DARK, roughness: 0.4, metalness: 0.45, emissive: TRACE, emissiveIntensity: 0 });
-    const top = new THREE.MeshStandardMaterial({ map: silkscreen(p.ref), roughness: 0.5, metalness: 0.25, emissive: TRACE, emissiveIntensity: 0 });
+    const side = new THREE.MeshStandardMaterial({ color: DARK, roughness: 0.44, metalness: 0.25, emissive: SIGNAL, emissiveIntensity: 0 });
+    const top = new THREE.MeshStandardMaterial({ map: silkscreen(p.ref), roughness: 0.52, metalness: 0.2, emissive: SIGNAL, emissiveIntensity: 0 });
     const mats = [side, side, top, side, side, side];
     const body = new THREE.Mesh(new THREE.BoxGeometry(p.w, 0.32, p.d), mats);
     body.position.y = 0.25;
     g.add(body);
-    // pin rows
     const pins = Math.max(3, Math.round(p.w / 0.24));
     const pinGeo = new THREE.BoxGeometry(0.08, 0.05, 0.2);
     for (let i = 0; i < pins; i++) {
       const px = -p.w / 2 + (i + 0.5) * (p.w / pins);
-      [-1, 1].forEach(side => {
+      [-1, 1].forEach(s => {
         const pin = new THREE.Mesh(pinGeo, padMat);
-        pin.position.set(px, 0.12, side * (p.d / 2 + 0.08));
+        pin.position.set(px, 0.12, s * (p.d / 2 + 0.08));
         g.add(pin);
       });
     }
-    // pin-1 dot
-    const dot = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.02, 10),
-      new THREE.MeshStandardMaterial({ color: 0x22e0e6, emissive: 0x22e0e6, emissiveIntensity: .6 }));
+    const dot = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.02, 12),
+      new THREE.MeshStandardMaterial({ color: 0x2a3340, roughness: 0.5, metalness: 0.3 }));
     dot.position.set(-p.w / 2 + 0.16, 0.42, -p.d / 2 + 0.16);
     g.add(dot);
 
-    g.position.set(p.x, 0.09, p.z);
+    g.position.set(p.x, 0.2, p.z);
     board.add(g);
-    body.userData = { ref: p.ref, label: p.label, group: g, mats: [side, top], baseY: 0.09 };
+    body.userData = { ref: p.ref, label: p.label, group: g, mats: [side, top], baseY: 0.2 };
     hotspots.push(body);
   });
 
-  // passives
-  const capMat = new THREE.MeshStandardMaterial({ color: 0x1a1c20, roughness: 0.4, metalness: 0.65 });
+  // passives — deterministic placement, muted ceramic and metal
+  const capMat = new THREE.MeshStandardMaterial({ color: 0x1c222b, roughness: 0.42, metalness: 0.55 });
   [[-3.7, 1.9, 0.32], [-0.4, -0.2, 0.24], [3.9, 0.2, 0.28]].forEach(([x, z, r]) => {
-    const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, r * 2.4, 20), capMat);
-    c.position.set(x, 0.09 + r * 1.2, z);
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, r * 2.4, 24), capMat);
+    c.position.set(x, 0.2 + r * 1.2, z);
     board.add(c);
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 1.02, 0.022, 8, 22),
-      new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: .5, metalness: .85 }));
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(r * 1.02, 0.022, 10, 26),
+      new THREE.MeshStandardMaterial({ color: 0xb9c0c8, roughness: 0.34, metalness: 1.0 }));
     ring.rotation.x = Math.PI / 2;
-    ring.position.set(x, 0.09 + r * 2.1, z);
+    ring.position.set(x, 0.2 + r * 2.1, z);
     board.add(ring);
   });
-  const smdMat = new THREE.MeshStandardMaterial({ color: 0x2b2d31, roughness: 0.6 });
-  for (let i = 0; i < 26; i++) {
+  const smdMat = new THREE.MeshStandardMaterial({ color: 0x252b34, roughness: 0.55, metalness: 0.2 });
+  const SMD = [[-4.0, 0.9], [-3.2, -0.3], [-1.9, 2.3], [-0.9, -2.4], [0.2, 2.5], [1.4, -0.9],
+    [2.1, 2.4], [2.8, -2.5], [3.6, -0.6], [4.1, 1.7], [-4.1, -1.9], [1.0, 0.8]];
+  SMD.forEach(([x, z], i) => {
     const r = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.07, 0.13), smdMat);
-    r.position.set((Math.random() - 0.5) * (W - 1), 0.13, (Math.random() - 0.5) * (H - 1));
-    r.rotation.y = Math.random() > 0.5 ? Math.PI / 2 : 0;
+    r.position.set(x, 0.235, z);
+    r.rotation.y = i % 2 ? Math.PI / 2 : 0;
     board.add(r);
-  }
+    [-1, 1].forEach(s => {
+      const cap = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.07, 0.13), padMat);
+      cap.position.set(x + (i % 2 ? 0 : s * 0.13), 0.235, z + (i % 2 ? s * 0.13 : 0));
+      cap.rotation.y = i % 2 ? Math.PI / 2 : 0;
+      board.add(cap);
+    });
+  });
 
   // pin header
   const headerBase = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.16, 0.3),
-    new THREE.MeshStandardMaterial({ color: 0x0e1013, roughness: .65 }));
-  headerBase.position.set(-2.7, 0.17, 2.6);
+    new THREE.MeshStandardMaterial({ color: 0x14181f, roughness: 0.6, metalness: 0.1 }));
+  headerBase.position.set(-3.0, 0.28, 2.6);
   board.add(headerBase);
   for (let i = 0; i < 8; i++) {
     const p = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.44, 0.07), padMat);
-    p.position.set(-3.6 + i * 0.26, 0.37, 2.6);
+    p.position.set(-3.9 + i * 0.26, 0.48, 2.6);
     board.add(p);
   }
 
-  // status LEDs
+  // status LEDs — restrained, two only
   const leds = [];
-  [[-4.0, -2.4, 0x00e7a0], [4.0, 2.6, 0xa96bff]].forEach(([x, z, col]) => {
-    const m = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 1.4 });
-    const l = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.1, 0.15), m);
-    l.position.set(x, 0.15, z);
+  [[-4.0, -2.4, 0x33d17a], [4.0, 2.6, 0xe8b13c]].forEach(([x, z, col]) => {
+    const m = new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.9, roughness: 0.3 });
+    const l = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.09, 0.14), m);
+    l.position.set(x, 0.25, z);
     board.add(l);
-    const light = new THREE.PointLight(col, 0.6, 2.6);
-    light.position.set(x, 0.5, z);
+    const light = new THREE.PointLight(col, 0.35, 2.4);
+    light.position.set(x, 0.55, z);
     board.add(light);
-    leds.push({ m, light, phase: Math.random() * 6.28, speed: 1.5 + Math.random() * 2 });
+    leds.push({ m, light, phase: x, speed: 1.4 });
   });
 
-  // lighting
-  scene.add(new THREE.AmbientLight(0xffffff, 0.38));
-  const key = new THREE.DirectionalLight(0xdfe8ff, 1.5); key.position.set(4, 9, 5); scene.add(key);
-  const rim = new THREE.DirectionalLight(0xa96bff, 1.1); rim.position.set(-6, 3, -5); scene.add(rim);
+  // lighting — the environment carries most of it; these shape it
+  scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+  const key = new THREE.DirectionalLight(0xf4f8ff, 1.6); key.position.set(4, 9, 5); scene.add(key);
+  const fill = new THREE.DirectionalLight(0x7f9ec4, 0.45); fill.position.set(-6, 3, -5); scene.add(fill);
 
   // ---- interaction ----
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
@@ -432,7 +499,6 @@ function initBoard() {
       ty = Math.max(-0.35, Math.min(0.5, ty + (e.clientY - py) * 0.004));
       px = e.clientX; py = e.clientY;
     }
-    // hover test
     ray.setFromCamera(ptr, camera);
     const hit = ray.intersectObjects(hotspots, false)[0];
     const obj = hit ? hit.object : null;
@@ -458,7 +524,6 @@ function initBoard() {
     if (hit) openProject(hit.object.userData.ref);
   });
 
-  // frame the whole board whatever the panel shape is
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
     if (!w || !h) return;
@@ -474,34 +539,51 @@ function initBoard() {
   addEventListener('resize', resize);
   resize();
 
-  let t = 0, visible = true;
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(canvas);
-  }
+  let visible = true, last = performance.now(), raf = null;
 
-  (function loop() {
-    requestAnimationFrame(loop);
-    if (!visible) return;
-    t += 0.016;
+  function frame() {
+    raf = requestAnimationFrame(frame);
+    const now = performance.now();
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+
     cx += (tx - cx) * 0.06;
     cy += (ty - cy) * 0.06;
-    board.rotation.y = cx + (reduce ? 0 : t * 0.05);
+    board.rotation.y = cx + (reduce ? 0 : (now / 1000) * 0.035);
     board.rotation.x = -0.42 + cy;
-    if (!reduce) board.position.y = Math.sin(t * 0.7) * 0.1;
 
     hotspots.forEach(h => {
       const on = h === hover;
       const g = h.userData.group;
-      g.position.y += ((on ? h.userData.baseY + 0.42 : h.userData.baseY) - g.position.y) * 0.18;
-      h.userData.mats.forEach(m => { m.emissiveIntensity += ((on ? 0.5 : 0) - m.emissiveIntensity) * 0.18; });
+      g.position.y += ((on ? h.userData.baseY + 0.38 : h.userData.baseY) - g.position.y) * 0.18;
+      h.userData.mats.forEach(m => { m.emissiveIntensity += ((on ? 0.42 : 0) - m.emissiveIntensity) * 0.18; });
     });
-    if (!reduce) leds.forEach(l => {
-      const v = 0.35 + Math.abs(Math.sin(t * l.speed + l.phase)) * 1.5;
-      l.m.emissiveIntensity = v;
-      l.light.intensity = v * 0.5;
-    });
+
+    if (!reduce) {
+      pulses.forEach(p => {
+        p.t = (p.t + dt * p.speed) % p.total;
+        const seg = p.segs.find(s => p.t >= s.start && p.t <= s.start + s.len) || p.segs[0];
+        p.mesh.position.lerpVectors(seg.a, seg.b, (p.t - seg.start) / seg.len);
+      });
+      leds.forEach(l => {
+        const v = 0.5 + Math.abs(Math.sin(now / 1000 * l.speed + l.phase)) * 0.8;
+        l.m.emissiveIntensity = v;
+        l.light.intensity = v * 0.3;
+      });
+    }
     renderer.render(scene, camera);
-  })();
+  }
+  function sync() {
+    const run = visible && !document.hidden;
+    if (run && raf === null) { last = performance.now(); raf = requestAnimationFrame(frame); }
+    else if (!run && raf !== null) { cancelAnimationFrame(raf); raf = null; }
+  }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; sync(); }).observe(canvas);
+  }
+  document.addEventListener('visibilitychange', sync);
+  sync();
 }
 
 if (document.readyState === 'complete') initBoard();
@@ -563,6 +645,11 @@ else addEventListener('load', initBoard);
   // the current switch on as you leave the hero, like power reaching the
   // rest of the circuit — also reads as an intentional reveal, not a dodge
   const heroEndY = () => { const el = document.getElementById('work'); return el ? el.getBoundingClientRect().top + scrollY : 0; };
+  // Cache both: reading them per frame forced a layout on every frame.
+  let cachedH = docH(), heroY = heroEndY();
+  const recache = () => { cachedH = docH(); heroY = heroEndY(); };
+  addEventListener('resize', recache);
+  if ('ResizeObserver' in window) new ResizeObserver(recache).observe(document.body);
 
   (function loop() {
     requestAnimationFrame(loop);
@@ -572,12 +659,12 @@ else addEventListener('load', initBoard);
     lastT = now;
 
     const sy = scrollY;
-    canvas.style.opacity = Math.min(Math.max((sy - (heroEndY() - 320)) / 320, 0), 1);
+    canvas.style.opacity = Math.min(Math.max((sy - (heroY - 320)) / 320, 0), 1);
     boost = boost * 0.9 + Math.abs(sy - lastY) * 1.4; // scroll velocity feeds the surge, then decays
     lastY = sy;
     const speed = 26 + Math.min(boost, 1400); // px/sec: idle drift + surge
 
-    const H = docH();
+    const H = cachedH;
     const wrap = y => ((y % H) + H) % H;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, innerHeight);
