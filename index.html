@@ -35,7 +35,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=8">
+<link rel="stylesheet" href="./styles.css?v=9">
 </head>
 <body>
 
@@ -83,7 +83,7 @@
   <div class="hero-board">
     <canvas id="pcb3d" aria-label="Interactive 3D circuit board — each chip opens a project" role="img"></canvas>
     <div id="tip" class="mono" hidden></div>
-    <p class="mono board-hint" aria-hidden="true">DRAG TO ROTATE · TAP A CHIP TO OPEN ITS PROJECT</p>
+    <p class="mono board-hint" aria-hidden="true">DRAG TO ROTATE · TAP A CHIP TO JUMP TO ITS PROJECT</p>
   </div>
 </section>
 
@@ -108,18 +108,17 @@
   <div class="sec-head">
     <p class="mono sec-no">/// 01</p>
     <h2>BILL OF<br>PROJECTS</h2>
-    <p class="mono sec-note">REFDES · QTY 7 · ALL PLACED &amp; SOLDERED — tap a row to inspect</p>
+    <p class="mono sec-note">REFDES · QTY 7 · ALL PLACED &amp; SOLDERED</p>
   </div>
 
   <div class="bom">
 
-    <details class="row" open>
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U1</span>
         <span class="rname">DUAL-FUEL ENGINE CONTROL UNIT <em>(LPG/CNG)</em></span>
         <span class="mono rtag"><b class="star" title="Featured project">★</b> AUTOMOTIVE · MARINE-VERIFIED</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>Converting IC engines to LPG/CNG needs an ECU that senses and doses fuel in real time — imported units cost too much for retrofit markets, targeting marine engines and generator sets.</dd></div>
@@ -135,15 +134,14 @@
         <button class="gshot" type="button" data-full="./assets/images/products/ecu/field-test.jpg" data-alt="ECU running on a marine engine at sea"><img src="./assets/images/products/ecu/field-test.webp" alt="ECU running on a marine engine at sea" loading="lazy" decoding="async"><span class="gtag mono">FIELD TEST</span></button>
         </div>
       </div>
-    </details>
+    </div>
 
-    <details class="row">
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U2</span>
         <span class="rname">INJECTOR MULTIPLIER</span>
         <span class="mono rtag"><b class="star" title="Featured project">★</b> POWER ELECTRONICS · 4→16 CH</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>Affordable ECUs ship with 4 injector channels; large multi-cylinder engines need up to 16.</dd></div>
@@ -155,15 +153,14 @@
         <button class="gshot" type="button" data-full="./assets/images/products/injector/product.jpg" data-alt="Injector multiplier unit with 4 output harnesses"><img src="./assets/images/products/injector/product.webp" alt="Injector multiplier unit with 4 output harnesses" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
         </div>
       </div>
-    </details>
+    </div>
 
-    <details class="row">
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U3</span>
         <span class="rname">ACOUSTIC VEHICLE ALERTING SYSTEM</span>
         <span class="mono rtag">EV SAFETY · PROTOTYPE</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>Quiet EVs are a pedestrian hazard; regulation is moving toward mandatory acoustic alerting.</dd></div>
@@ -172,15 +169,14 @@
         </dl>
         <p class="mono chips">ESP32-S3 ▸ PWM AUDIO ▸ ANALOG SPEED INPUT ▸ C/C++ ▸ PLATFORMIO</p>
       </div>
-    </details>
+    </div>
 
-    <details class="row">
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U4</span>
         <span class="rname">OIL CONTROL UNIT</span>
         <span class="mono rtag">AUTOMOTIVE · 2 HW VERSIONS</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>Marine engines converted to LPG run hotter — full gas conversion raises operating temperature and risks seizure without regulated oil delivery.</dd></div>
@@ -193,15 +189,14 @@
         <button class="gshot" type="button" data-full="./assets/images/products/ocu/scope-test.jpg" data-alt="Oscilloscope capture during RPM and injector testing"><img src="./assets/images/products/ocu/scope-test.webp" alt="Oscilloscope capture during RPM and injector testing" loading="lazy" decoding="async"><span class="gtag mono">SCOPE TEST</span></button>
         </div>
       </div>
-    </details>
+    </div>
 
-    <details class="row">
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U5</span>
         <span class="rname">COMPRESSOR HEALTH &amp; POWER MONITORING</span>
         <span class="mono rtag">INDO TECH · POC DONE</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>Indo Tech Transformers needed live compressor health data — temperature, filter condition, pressure, current and voltage — off the factory floor.</dd></div>
@@ -214,15 +209,14 @@
         <button class="gshot" type="button" data-full="./assets/images/products/compressor/onsite.jpg" data-alt="On-site validation at Indo Tech Transformers"><img src="./assets/images/products/compressor/onsite.webp" alt="On-site validation at Indo Tech Transformers" loading="lazy" decoding="async"><span class="gtag mono">ON-SITE</span></button>
         </div>
       </div>
-    </details>
+    </div>
 
-    <details class="row">
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U6</span>
         <span class="rname">COLD CHAMBER DATA LOGGING SYSTEM</span>
         <span class="mono rtag"><b class="star" title="Featured project">★</b> DELPHI TVS · DELIVERED</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>Cold-start engine testing assumed the −20 °C soak was reached — it needed to be measured, from 3 distributed nodes across the chamber.</dd></div>
@@ -231,15 +225,14 @@
         </dl>
         <p class="mono chips">ESP32 ▸ RS485 HALF-DUPLEX ▸ LoRa E32 ~200 m ▸ SPIFFS FLASH LOG ▸ PYTHON PC TOOL</p>
       </div>
-    </details>
+    </div>
 
-    <details class="row">
-      <summary>
+    <div class="row">
+      <div class="rsummary">
         <span class="mono ref">U7</span>
         <span class="rname">PRODUCTION QUANTITY MONITORING</span>
         <span class="mono rtag">FI AUTO COMPONENTS · POC DONE</span>
-        <span class="mono rx" aria-hidden="true">[+]</span>
-      </summary>
+      </div>
       <div class="rbody">
         <dl class="pco">
           <div><dt class="mono">PROBLEM</dt><dd>A shop floor had no live count of produced components — output tracking was manual and after the fact.</dd></div>
@@ -248,7 +241,7 @@
         </dl>
         <p class="mono chips">ESP + MICROCONTROLLER ▸ SENSOR INPUT ▸ HTTP/JSON DASHBOARD</p>
       </div>
-    </details>
+    </div>
 
   </div>
 
@@ -345,7 +338,7 @@
   <p id="lbCap" class="mono lb-cap"></p>
 </div>
 
-<script src="./assets/vendor/three.min.js?v=8" defer></script>
-<script src="./script.js?v=8" defer></script>
+<script src="./assets/vendor/three.min.js?v=9" defer></script>
+<script src="./script.js?v=9" defer></script>
 </body>
 </html>

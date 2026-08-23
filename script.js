@@ -108,107 +108,49 @@ if (bar) {
   drawProgress(); // reloading mid-page must not start the trace at 0%
 }
 
-/* ---------- animated BOM showcase ----------
-   Native <details> snaps open with no way to transition height, so this
-   drives it with WAAPI instead, keeping <details> as the source of truth
-   (no-JS and screen readers still get a plain working accordion — the
-   motion is additive). Two layers on top of that base:
-   1. Cascade: PROBLEM/CONSTRAINTS/OUTCOME, the chip line and each photo
-      reveal in sequence rather than popping in as one block.
-   2. Auto-advance: as you scroll, whichever row is centered in the
-      viewport opens itself and the previous one closes — a guided
-      walk-through instead of a static list you have to click through.
-      Manual clicks still work and take priority; a short cooldown after
-      one stops the scroll-driven logic from immediately overriding it
-      mid-scroll-into-view. */
-/* A row's open/closed state must never depend on an animation finishing.
-   Browsers suspend Web Animations in background/throttled tabs, so an
-   onfinish callback can simply never fire — which previously left rows
-   stuck open with their height locked. Every state commit now runs once,
-   from whichever fires first: the animation or a timeout backstop. */
-function settleOnce(fn) {
-  let done = false;
-  return () => { if (done) return; done = true; fn(); };
-}
-
-function setRowOpen(details, open) {
-  const body = details.querySelector('.rbody');
-  if (!body || reduce || typeof body.animate !== 'function') { details.open = open; return; }
-  if (open === details.open) return;
-  body.getAnimations().forEach(a => a.cancel()); // defensive: never let two open/close calls overlap on one row
-  if (open) {
-    details.open = true;
-    const h = body.scrollHeight;
-    body.style.overflow = 'hidden';
-    const clear = settleOnce(() => { body.style.height = ''; body.style.overflow = ''; });
-    body.animate(
-      [{ height: '0px', opacity: 0 }, { height: h + 'px', opacity: 1 }],
-      { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' }
-    ).onfinish = clear;
-    setTimeout(clear, 600);
-    // cascade: each piece drifts up and comes into focus out of a slight
-    // blur, rather than a flat fade -- reads as depth, not a state toggle
-    const pieces = body.querySelectorAll('.pco > div, .chips, .gshot');
-    pieces.forEach((el, i) => {
-      el.animate(
-        [
-          { opacity: 0, transform: 'translateY(26px) scale(.94)', filter: 'blur(7px)' },
-          { opacity: 1, transform: 'translateY(-2px) scale(1.005)', filter: 'blur(0)', offset: .82 },
-          { opacity: 1, transform: 'none', filter: 'blur(0)' }
-        ],
-        { duration: 640, delay: 140 + i * 85, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
-      );
+/* ---------- BOM showcase ----------
+   Every project is on the page and visible the moment its section scrolls
+   into view — nothing to click open, nothing collapsed. This used to be a
+   click-to-expand accordion (and, briefly, one that opened rows on its own
+   as you scrolled past them); both made the page feel like a form you had
+   to operate rather than something you could just read top to bottom.
+   What's left: a per-row entrance cascade the first time it comes on
+   screen, and a "you are here" highlight when the 3D board sends you to a
+   specific project. */
+document.querySelectorAll('.row').forEach(row => {
+  const pieces = row.querySelectorAll('.pco > div, .chips, .gshot');
+  if (!pieces.length || reduce || typeof row.animate !== 'function') return;
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      obs.unobserve(en.target);
+      pieces.forEach((el, i) => {
+        el.animate(
+          [
+            { opacity: 0, transform: 'translateY(22px) scale(.96)', filter: 'blur(5px)' },
+            { opacity: 1, transform: 'none', filter: 'blur(0)' }
+          ],
+          { duration: 560, delay: i * 55, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
+        );
+      });
     });
-    // the ref chip gets a quick bright pulse, like a spotlight landing on it
-    const ref = details.querySelector('.ref');
-    if (ref) ref.animate(
-      [{ boxShadow: '0 0 0 0 rgba(34,224,230,0)' }, { boxShadow: '0 0 26px 4px rgba(34,224,230,.55)' }, { boxShadow: '0 0 0 0 rgba(34,224,230,0)' }],
-      { duration: 900, easing: 'cubic-bezier(.4,0,.2,1)' }
-    );
-  } else {
-    const h = body.scrollHeight;
-    body.style.overflow = 'hidden';
-    const shut = settleOnce(() => {
-      details.open = false; body.style.height = ''; body.style.overflow = '';
-    });
-    body.animate(
-      [{ height: h + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
-      { duration: 220, easing: 'cubic-bezier(.4,0,.2,1)' }
-    ).onfinish = shut;
-    setTimeout(shut, 400);
-  }
-}
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  io.observe(row);
+});
 
-let suppressAutoUntil = 0;
-function activateRow(row, { jump = false } = {}) {
-  document.querySelectorAll('.row[open]').forEach(r => { if (r !== row) setRowOpen(r, false); });
-  setRowOpen(row, true);
+function activateRow(row) {
   document.querySelectorAll('.row.is-active').forEach(r => r.classList.remove('is-active'));
   row.classList.add('is-active');
-  suppressAutoUntil = performance.now() + 700;
-  if (jump) row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
 }
-
-document.querySelectorAll('.row > summary').forEach(summary => {
-  summary.addEventListener('click', e => {
-    e.preventDefault();
-    const row = summary.parentElement;
-    if (row.open) {
-      suppressAutoUntil = performance.now() + 700;
-      setRowOpen(row, false);
-      row.classList.remove('is-active');
-      return;
-    }
-    activateRow(row);
-  });
-});
 
 /* ---------- open a project row from anywhere (e.g. the 3D board) ---------- */
 function openProject(ref) {
   const row = document.querySelector(`.row [data-ref="${ref}"]`)?.closest('.row')
     || [...document.querySelectorAll('.row')].find(r => r.querySelector('.ref')?.textContent.trim() === ref);
   if (!row) return;
-  activateRow(row, { jump: true });
+  activateRow(row);
   row.classList.add('flash');
   setTimeout(() => row.classList.remove('flash'), 1200);
 }
