@@ -155,19 +155,13 @@ function openProject(ref) {
   setTimeout(() => row.classList.remove('flash'), 1200);
 }
 
-/* ---------- project rows open on click only ----------
-   An earlier build advanced these automatically as you scrolled: whichever
-   row sat nearest the viewport centre opened itself and the previous one
-   closed. Each of those transitions changes page height by several hundred
-   pixels, so the content under the reader's finger jumped and photos
-   appeared unbidden — the page felt like it was scrolling itself. Reading
-   is now entirely reader-driven; the first row starts open so the section
-   still reads at a glance. */
-(function openFirstRow() {
-  const rows = [...document.querySelectorAll('#work .row')];
-  if (!rows.length || rows.some(r => r.open)) return;
-  rows[0].open = true;
-  rows[0].classList.add('is-active');
+/* ---------- first row reads as "you are here" by default ----------
+   Rows are plain, always-visible divs now (no open/closed state to
+   track), so this just seeds the is-active highlight on U1 until the
+   3D board or a click moves it elsewhere. */
+(function highlightFirstRow() {
+  const row = document.querySelector('#work .row');
+  if (row) row.classList.add('is-active');
 })();
 
 /* ---------- 3D board ---------- */
