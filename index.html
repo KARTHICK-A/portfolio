@@ -35,7 +35,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=9">
+<link rel="stylesheet" href="./styles.css?v=10">
 </head>
 <body>
 
@@ -111,137 +111,101 @@
     <p class="mono sec-note">REFDES · QTY 7 · ALL PLACED &amp; SOLDERED</p>
   </div>
 
-  <div class="bom">
+  <div class="pcards">
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U1</span>
-        <span class="rname">DUAL-FUEL ENGINE CONTROL UNIT <em>(LPG/CNG)</em></span>
-        <span class="mono rtag"><b class="star" title="Featured project">★</b> AUTOMOTIVE · MARINE-VERIFIED</span>
+    <article class="pcard featured" data-ref="U1" style="--i:0">
+      <div class="pcard-media">
+        <button class="gshot hero-shot" type="button" data-full="./assets/images/products/ecu/field-test.jpg" data-alt="ECU running on a marine engine at sea"><img src="./assets/images/products/ecu/field-test.webp" alt="ECU running on a marine engine at sea" loading="lazy" decoding="async"><span class="gtag mono">FIELD TEST</span></button>
+        <span class="mono pcard-ref">U1</span>
+        <span class="mono pcard-tag"><b class="star" title="Featured project">★</b> AUTOMOTIVE · MARINE-VERIFIED</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>Converting IC engines to LPG/CNG needs an ECU that senses and doses fuel in real time — imported units cost too much for retrofit markets, targeting marine engines and generator sets.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>Low-cost, customizable architecture · in-house sensor calibration (MAP, EGT, RPM via precision ADC) across multiple firmware versions.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>V1 verified on a running marine engine under operating load; final build shrank to a bare ATtiny3216 after ATmega/ESP32 pilots.</dd></div>
-        </dl>
-        <p class="mono chips">ATTINY 3216 (FINAL) ▸ ATMEGA/ARDUINO ▸ ESP32 (PILOT) ▸ ADS1115 ▸ MAP/EGT/RPM ▸ CAN ▸ EMBEDDED C ▸ PLATFORMIO</p>
-        <div class="gallery">
-        <button class="gshot" type="button" data-full="./assets/images/products/ecu/pcb-render.jpg" data-alt="Dual-fuel ECU PCB design render"><img src="./assets/images/products/ecu/pcb-render.webp" alt="Dual-fuel ECU PCB design render" loading="lazy" decoding="async"><span class="gtag mono">PCB DESIGN</span></button>
-        <button class="gshot" type="button" data-full="./assets/images/products/ecu/product.jpg" data-alt="Dual-fuel ECU V2 enclosure"><img src="./assets/images/products/ecu/product.webp" alt="Dual-fuel ECU V2 enclosure" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
-        <button class="gshot" type="button" data-full="./assets/images/products/ecu/bench-test.jpg" data-alt="Firmware and RPM/MAP data-logging bench setup"><img src="./assets/images/products/ecu/bench-test.webp" alt="Firmware and RPM/MAP data-logging bench setup" loading="lazy" decoding="async"><span class="gtag mono">BENCH TEST</span></button>
-        <button class="gshot" type="button" data-full="./assets/images/products/ecu/scope-test.jpg" data-alt="Oscilloscope capture of injector drive signal"><img src="./assets/images/products/ecu/scope-test.webp" alt="Oscilloscope capture of injector drive signal" loading="lazy" decoding="async"><span class="gtag mono">SCOPE</span></button>
-        <button class="gshot" type="button" data-full="./assets/images/products/ecu/field-test.jpg" data-alt="ECU running on a marine engine at sea"><img src="./assets/images/products/ecu/field-test.webp" alt="ECU running on a marine engine at sea" loading="lazy" decoding="async"><span class="gtag mono">FIELD TEST</span></button>
-        </div>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Dual-Fuel Engine Control Unit <em>(LPG/CNG)</em></h3>
+        <p class="pcard-line">Verified on a running marine engine under load. Final build shrank to a bare ATtiny3216.</p>
+        <ul class="pcard-chips mono"><li>ATTINY 3216</li><li>ADS1115</li><li>MAP/EGT/RPM</li><li>CAN</li><li>EMBEDDED C</li></ul>
+        <div class="pcard-strip"><button class="gshot" type="button" data-full="./assets/images/products/ecu/pcb-render.jpg" data-alt="Dual-fuel ECU PCB design render"><img src="./assets/images/products/ecu/pcb-render.webp" alt="Dual-fuel ECU PCB design render" loading="lazy" decoding="async"><span class="gtag mono">PCB DESIGN</span></button><button class="gshot" type="button" data-full="./assets/images/products/ecu/product.jpg" data-alt="Dual-fuel ECU V2 enclosure"><img src="./assets/images/products/ecu/product.webp" alt="Dual-fuel ECU V2 enclosure" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button><button class="gshot" type="button" data-full="./assets/images/products/ecu/bench-test.jpg" data-alt="Firmware and RPM/MAP data-logging bench setup"><img src="./assets/images/products/ecu/bench-test.webp" alt="Firmware and RPM/MAP data-logging bench setup" loading="lazy" decoding="async"><span class="gtag mono">BENCH TEST</span></button><button class="gshot" type="button" data-full="./assets/images/products/ecu/scope-test.jpg" data-alt="Oscilloscope capture of injector drive signal"><img src="./assets/images/products/ecu/scope-test.webp" alt="Oscilloscope capture of injector drive signal" loading="lazy" decoding="async"><span class="gtag mono">SCOPE</span></button></div>
       </div>
-    </div>
+    </article>
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U2</span>
-        <span class="rname">INJECTOR MULTIPLIER</span>
-        <span class="mono rtag"><b class="star" title="Featured project">★</b> POWER ELECTRONICS · 4→16 CH</span>
+    <article class="pcard featured" data-ref="U2" style="--i:1">
+      <div class="pcard-media">
+        <button class="gshot hero-shot" type="button" data-full="./assets/images/products/injector/product.jpg" data-alt="Injector multiplier unit with 4 output harnesses"><img src="./assets/images/products/injector/product.webp" alt="Injector multiplier unit with 4 output harnesses" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
+        <span class="mono pcard-ref">U2</span>
+        <span class="mono pcard-tag"><b class="star" title="Featured project">★</b> POWER ELECTRONICS · 4→16 CH</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>Affordable ECUs ship with 4 injector channels; large multi-cylinder engines need up to 16.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>12 V / 8 A peak per channel · inductive loads demand flyback and reverse-polarity protection · custom PCB.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>4 channels multiplied to 16 — big engines run on a low-channel, low-cost ECU.</dd></div>
-        </dl>
-        <p class="mono chips">MOSFET DRIVE ▸ FLYBACK PROT ▸ REV-POLARITY PROT ▸ CUSTOM PCB</p>
-        <div class="gallery">
-        <button class="gshot" type="button" data-full="./assets/images/products/injector/product.jpg" data-alt="Injector multiplier unit with 4 output harnesses"><img src="./assets/images/products/injector/product.webp" alt="Injector multiplier unit with 4 output harnesses" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
-        </div>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Injector Multiplier</h3>
+        <p class="pcard-line">Four injector channels multiplied to sixteen, at 12 V / 8 A peak per channel.</p>
+        <ul class="pcard-chips mono"><li>MOSFET DRIVE</li><li>FLYBACK PROT</li><li>REV-POLARITY PROT</li><li>CUSTOM PCB</li></ul>
       </div>
-    </div>
+    </article>
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U3</span>
-        <span class="rname">ACOUSTIC VEHICLE ALERTING SYSTEM</span>
-        <span class="mono rtag">EV SAFETY · PROTOTYPE</span>
+    <article class="pcard" data-ref="U3" style="--i:2">
+      <div class="pcard-media no-photo" aria-hidden="true">
+        <span class="mono np-ref">U3</span>
+        <span class="mono pcard-ref">U3</span>
+        <span class="mono pcard-tag">EV SAFETY · PROTOTYPE</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>Quiet EVs are a pedestrian hazard; regulation is moving toward mandatory acoustic alerting.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>Tone and volume must track vehicle speed continuously from an analog speed input.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>Working prototype on ESP32-S3 — engine-sensing work extended into EV safety hardware.</dd></div>
-        </dl>
-        <p class="mono chips">ESP32-S3 ▸ PWM AUDIO ▸ ANALOG SPEED INPUT ▸ C/C++ ▸ PLATFORMIO</p>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Acoustic Vehicle Alerting System</h3>
+        <p class="pcard-line">Pedestrian alert for silent EVs, with tone and volume tracking vehicle speed.</p>
+        <ul class="pcard-chips mono"><li>ESP32-S3</li><li>PWM AUDIO</li><li>ANALOG SPEED IN</li><li>C/C++</li></ul>
       </div>
-    </div>
+    </article>
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U4</span>
-        <span class="rname">OIL CONTROL UNIT</span>
-        <span class="mono rtag">AUTOMOTIVE · 2 HW VERSIONS</span>
+    <article class="pcard" data-ref="U4" style="--i:3">
+      <div class="pcard-media">
+        <button class="gshot hero-shot" type="button" data-full="./assets/images/products/ocu/product.jpg" data-alt="Oil Control Unit enclosure"><img src="./assets/images/products/ocu/product.webp" alt="Oil Control Unit enclosure" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
+        <span class="mono pcard-ref">U4</span>
+        <span class="mono pcard-tag">AUTOMOTIVE · 2 HW VERSIONS</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>Marine engines converted to LPG run hotter — full gas conversion raises operating temperature and risks seizure without regulated oil delivery.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>Oil delivery must track live engine RPM, not a fixed feed · compact custom PCB · MOSFET/TIP122 power stage with protection.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>Two hardware versions designed, manufactured and verified — RPM-based regulation protecting LPG-converted marine engines.</dd></div>
-        </dl>
-        <p class="mono chips">ESP8266 ▸ PWM ▸ MOSFET/TIP122 STAGE ▸ CUSTOM PCB</p>
-        <div class="gallery">
-        <button class="gshot" type="button" data-full="./assets/images/products/ocu/product.jpg" data-alt="Oil Control Unit enclosure"><img src="./assets/images/products/ocu/product.webp" alt="Oil Control Unit enclosure" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
-        <button class="gshot" type="button" data-full="./assets/images/products/ocu/scope-test.jpg" data-alt="Oscilloscope capture during RPM and injector testing"><img src="./assets/images/products/ocu/scope-test.webp" alt="Oscilloscope capture during RPM and injector testing" loading="lazy" decoding="async"><span class="gtag mono">SCOPE TEST</span></button>
-        </div>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Oil Control Unit</h3>
+        <p class="pcard-line">RPM-based oil regulation protecting LPG-converted marine engines. Two hardware versions built and verified.</p>
+        <ul class="pcard-chips mono"><li>ESP8266</li><li>PWM</li><li>MOSFET/TIP122</li><li>CUSTOM PCB</li></ul>
+        <div class="pcard-strip"><button class="gshot" type="button" data-full="./assets/images/products/ocu/scope-test.jpg" data-alt="Oscilloscope capture during RPM and injector testing"><img src="./assets/images/products/ocu/scope-test.webp" alt="Oscilloscope capture during RPM and injector testing" loading="lazy" decoding="async"><span class="gtag mono">SCOPE TEST</span></button></div>
       </div>
-    </div>
+    </article>
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U5</span>
-        <span class="rname">COMPRESSOR HEALTH &amp; POWER MONITORING</span>
-        <span class="mono rtag">INDO TECH · POC DONE</span>
+    <article class="pcard" data-ref="U5" style="--i:4">
+      <div class="pcard-media">
+        <button class="gshot hero-shot" type="button" data-full="./assets/images/products/compressor/deployed.jpg" data-alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel"><img src="./assets/images/products/compressor/deployed.webp" alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel" loading="lazy" decoding="async"><span class="gtag mono">DEPLOYED</span></button>
+        <span class="mono pcard-ref">U5</span>
+        <span class="mono pcard-tag">INDO TECH · POC DONE</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>Indo Tech Transformers needed live compressor health data — temperature, filter condition, pressure, current and voltage — off the factory floor.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>Instrumentation-grade sensors with signal conditioning and calibration · RTC-timestamped local storage · cloud sync over HTTP/JSON · P10 LED for on-site readout.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>POC completed for Indo Tech Transformers with on-site validation.</dd></div>
-        </dl>
-        <p class="mono chips">ESP ▸ PT100 ▸ ZMPT101B ▸ SCT013 ▸ RTC ▸ SD LOG ▸ HTTP/JSON ▸ P10 LED</p>
-        <div class="gallery">
-        <button class="gshot" type="button" data-full="./assets/images/products/compressor/deployed.jpg" data-alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel"><img src="./assets/images/products/compressor/deployed.webp" alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel" loading="lazy" decoding="async"><span class="gtag mono">DEPLOYED</span></button>
-        <button class="gshot" type="button" data-full="./assets/images/products/compressor/onsite.jpg" data-alt="On-site validation at Indo Tech Transformers"><img src="./assets/images/products/compressor/onsite.webp" alt="On-site validation at Indo Tech Transformers" loading="lazy" decoding="async"><span class="gtag mono">ON-SITE</span></button>
-        </div>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Compressor Health &amp; Power Monitoring</h3>
+        <p class="pcard-line">Live compressor health off the factory floor. POC validated on-site at Indo Tech Transformers.</p>
+        <ul class="pcard-chips mono"><li>PT100</li><li>ZMPT101B</li><li>SCT013</li><li>RTC + SD LOG</li><li>HTTP/JSON</li><li>P10 LED</li></ul>
+        <div class="pcard-strip"><button class="gshot" type="button" data-full="./assets/images/products/compressor/onsite.jpg" data-alt="On-site validation at Indo Tech Transformers"><img src="./assets/images/products/compressor/onsite.webp" alt="On-site validation at Indo Tech Transformers" loading="lazy" decoding="async"><span class="gtag mono">ON-SITE</span></button></div>
       </div>
-    </div>
+    </article>
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U6</span>
-        <span class="rname">COLD CHAMBER DATA LOGGING SYSTEM</span>
-        <span class="mono rtag"><b class="star" title="Featured project">★</b> DELPHI TVS · DELIVERED</span>
+    <article class="pcard featured" data-ref="U6" style="--i:5">
+      <div class="pcard-media no-photo" aria-hidden="true">
+        <span class="mono np-ref">U6</span>
+        <span class="mono pcard-ref">U6</span>
+        <span class="mono pcard-tag"><b class="star" title="Featured project">★</b> DELPHI TVS · DELIVERED</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>Cold-start engine testing assumed the −20 °C soak was reached — it needed to be measured, from 3 distributed nodes across the chamber.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>Lossy RF links — command/ACK protocol with 3-retry logic · dual-mode operation (live transmit / silent store) · sessions survive power cycles.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>Delivered to Delphi TVS; true temperature saturation now measured, not assumed, before cold-start testing.</dd></div>
-        </dl>
-        <p class="mono chips">ESP32 ▸ RS485 HALF-DUPLEX ▸ LoRa E32 ~200 m ▸ SPIFFS FLASH LOG ▸ PYTHON PC TOOL</p>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Cold Chamber Data Logging System</h3>
+        <p class="pcard-line">Three distributed nodes proving the −20 °C soak is reached, not assumed. Delivered to Delphi TVS.</p>
+        <ul class="pcard-chips mono"><li>ESP32</li><li>RS485 HALF-DUPLEX</li><li>LoRa E32</li><li>SPIFFS LOG</li><li>PYTHON PC TOOL</li></ul>
       </div>
-    </div>
+    </article>
 
-    <div class="row">
-      <div class="rsummary">
-        <span class="mono ref">U7</span>
-        <span class="rname">PRODUCTION QUANTITY MONITORING</span>
-        <span class="mono rtag">FI AUTO COMPONENTS · POC DONE</span>
+    <article class="pcard" data-ref="U7" style="--i:6">
+      <div class="pcard-media no-photo" aria-hidden="true">
+        <span class="mono np-ref">U7</span>
+        <span class="mono pcard-ref">U7</span>
+        <span class="mono pcard-tag">FI AUTO COMPONENTS · POC DONE</span>
       </div>
-      <div class="rbody">
-        <dl class="pco">
-          <div><dt class="mono">PROBLEM</dt><dd>A shop floor had no live count of produced components — output tracking was manual and after the fact.</dd></div>
-          <div><dt class="mono">CONSTRAINTS</dt><dd>Retrofit onto existing machines · ESP module with sensor input · live dashboard, not a batch report.</dd></div>
-          <div><dt class="mono">OUTCOME</dt><dd>POC completed for FI Auto Components; under evaluation for plant-wide rollout.</dd></div>
-        </dl>
-        <p class="mono chips">ESP + MICROCONTROLLER ▸ SENSOR INPUT ▸ HTTP/JSON DASHBOARD</p>
+      <div class="pcard-body">
+        <h3 class="pcard-title">Production Quantity Monitoring</h3>
+        <p class="pcard-line">Live component count retrofitted onto existing machines. POC completed for FI Auto Components.</p>
+        <ul class="pcard-chips mono"><li>ESP + MCU</li><li>SENSOR INPUT</li><li>HTTP/JSON DASHBOARD</li></ul>
       </div>
-    </div>
+    </article>
 
   </div>
 
@@ -338,7 +302,7 @@
   <p id="lbCap" class="mono lb-cap"></p>
 </div>
 
-<script src="./assets/vendor/three.min.js?v=9" defer></script>
-<script src="./script.js?v=9" defer></script>
+<script src="./assets/vendor/three.min.js?v=10" defer></script>
+<script src="./script.js?v=10" defer></script>
 </body>
 </html>

@@ -18,7 +18,7 @@ window.__flowPulses = [];
    people arrive from (LinkedIn, WhatsApp). So the observer handles the nice
    staggered entrance, and three independent backstops guarantee the content
    is never left hidden. */
-document.querySelectorAll('.section, .eng-grid, .stack, .bom').forEach(el => el.classList.add('reveal'));
+document.querySelectorAll('.section, .eng-grid, .stack').forEach(el => el.classList.add('reveal'));
 const revealEls = [...document.querySelectorAll('.reveal')];
 
 function revealNow(el) {
@@ -108,51 +108,44 @@ if (bar) {
   drawProgress(); // reloading mid-page must not start the trace at 0%
 }
 
-/* ---------- BOM showcase ----------
-   Every project is on the page and visible the moment its section scrolls
-   into view — nothing to click open, nothing collapsed. This used to be a
-   click-to-expand accordion (and, briefly, one that opened rows on its own
-   as you scrolled past them); both made the page feel like a form you had
-   to operate rather than something you could just read top to bottom.
-   What's left: a per-row entrance cascade the first time it comes on
-   screen, and a "you are here" highlight when the 3D board sends you to a
-   specific project. */
-document.querySelectorAll('.row').forEach(row => {
-  const pieces = row.querySelectorAll('.pco > div, .chips, .gshot');
-  if (!pieces.length || reduce || typeof row.animate !== 'function') return;
-  if (!('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver((entries, obs) => {
+/* ---------- project cards ----------
+   Cards arrive one at a time as each scrolls into view, so the section
+   plays as a sequence instead of landing all at once. The .in class only
+   ever *adds* the entrance; the content is in the DOM and readable
+   regardless, and the reveal backstops above cover a throttled tab. */
+const cards = [...document.querySelectorAll('.pcard')];
+if (cards.length && 'IntersectionObserver' in window) {
+  const cardIO = new IntersectionObserver((entries, obs) => {
     entries.forEach(en => {
       if (!en.isIntersecting) return;
       obs.unobserve(en.target);
-      pieces.forEach((el, i) => {
-        el.animate(
-          [
-            { opacity: 0, transform: 'translateY(22px) scale(.96)', filter: 'blur(5px)' },
-            { opacity: 1, transform: 'none', filter: 'blur(0)' }
-          ],
-          { duration: 560, delay: i * 55, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' }
-        );
-      });
+      en.target.classList.add('in');
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-  io.observe(row);
-});
+  }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
+  cards.forEach(c => cardIO.observe(c));
 
-function activateRow(row) {
-  document.querySelectorAll('.row.is-active').forEach(r => r.classList.remove('is-active'));
-  row.classList.add('is-active');
-  row.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  // same three guarantees the section reveal uses
+  addEventListener('load', () => setTimeout(() => {
+    cards.forEach(c => {
+      const r = c.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) c.classList.add('in');
+    });
+  }, 100));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) cardIO.takeRecords(); });
+  setTimeout(() => cards.forEach(c => c.classList.add('in')), 4000);
+} else {
+  cards.forEach(c => c.classList.add('in'));
 }
 
-/* ---------- open a project row from anywhere (e.g. the 3D board) ---------- */
+/* ---------- jump to a project from the 3D board ---------- */
 function openProject(ref) {
-  const row = document.querySelector(`.row [data-ref="${ref}"]`)?.closest('.row')
-    || [...document.querySelectorAll('.row')].find(r => r.querySelector('.ref')?.textContent.trim() === ref);
-  if (!row) return;
-  activateRow(row);
-  row.classList.add('flash');
-  setTimeout(() => row.classList.remove('flash'), 1200);
+  const card = document.querySelector(`.pcard[data-ref="${ref}"]`);
+  if (!card) return;
+  document.querySelectorAll('.pcard.is-active').forEach(c => c.classList.remove('is-active'));
+  card.classList.add('in', 'is-active');
+  card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  card.classList.add('flash');
+  setTimeout(() => card.classList.remove('flash'), 1200);
 }
 
 /* ---------- project rows open on click only ----------
