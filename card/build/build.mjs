@@ -110,7 +110,8 @@ writeFileSync(join(ROOT, 'print.html'), print, 'utf8');
 
 // Cache version is derived from the files themselves, so shipping a change
 // always invalidates the old cache and never needs a manual bump.
-const assets = ['index.html', 'print.html', 'contact.vcf', 'og.png',
+const assets = ['index.html', 'print.html', 'contact.vcf', 'og.png', 'portrait.webp',
+  '../assets/docs/Karthick_A_Resume.pdf',
   'vendor/qrcode.js', ...readdirSync(join(ROOT, 'fonts')).map((f) => 'fonts/' + f)];
 const h = createHash('sha256');
 for (const a of assets) { try { h.update(readFileSync(join(ROOT, a))); } catch { h.update(a); } }

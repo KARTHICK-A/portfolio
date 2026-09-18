@@ -67,6 +67,9 @@ a{color:inherit}
 
 /* ---- identity ---- */
 .id{padding:28px 0 22px;border-bottom:1px solid var(--line-2)}
+.who{display:flex;align-items:center;gap:14px}
+.avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;
+  border:1px solid var(--line-2);flex:0 0 auto;filter:grayscale(1) contrast(1.05)}
 .refdes{font-size:.72rem;letter-spacing:.16em;color:var(--accent);margin:0 0 10px;font-weight:500}
 h1{font-family:var(--disp);font-weight:700;font-size:clamp(1.85rem,8vw,2.6rem);
    line-height:1;letter-spacing:-.02em;color:var(--ink);margin:0}
@@ -137,7 +140,10 @@ footer a{color:var(--accent)}
 <main>
   <header class="id">
     <p class="refdes">TP1 · CONTACT</p>
-    <h1>Karthick A</h1>
+    <div class="who">
+      <img class="avatar" src="portrait.webp" width="72" height="72" alt="" loading="lazy">
+      <h1>Karthick A</h1>
+    </div>
     <p class="role">Embedded Systems Engineer</p>
     <p class="org">Spark Invotech Pvt Ltd · Chennai, India</p>
     <p class="blurb">Automotive ECU electronics, PCB design and industrial IoT.</p>
@@ -173,6 +179,7 @@ footer a{color:var(--accent)}
     <li><a href="https://karthick-a.github.io/portfolio/" target="_blank" rel="noopener"><span class="lk">PORTFOLIO</span><span class="lv">karthick-a.github.io/portfolio</span></a></li>
     <li><a href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener"><span class="lk">LINKEDIN</span><span class="lv">in/karthick-a-83a352211</span></a></li>
     <li><a href="https://github.com/KARTHICK-A" target="_blank" rel="noopener"><span class="lk">GITHUB</span><span class="lv">KARTHICK-A</span></a></li>
+    <li><a href="../assets/docs/Karthick_A_Resume.pdf" download><span class="lk">RÉSUMÉ</span><span class="lv">Karthick_A_Resume.pdf &nbsp;·&nbsp; download</span></a></li>
   </ul>
 
   <footer>
