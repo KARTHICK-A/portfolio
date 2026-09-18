@@ -36,3 +36,19 @@ always correct wherever the page is served; `CARD_URL` only affects the print sh
   real data (the "Pvt Ltd" suffix, or the `N:` line), so it was left at 11.
 - `og.png` is committed because the build needs Pillow and fonttools, which are
   not part of the site's runtime.
+
+## Deploying this folder on its own
+
+`card/` is self-contained — no file outside it is referenced — so it can be
+deployed as its own site, with the card at the domain root instead of `/card/`.
+
+On Vercel: import `KARTHICK-A/portfolio`, then in project settings set
+**Root Directory → `card`** and **Framework Preset → Other**. `card/vercel.json`
+carries the `text/vcard` header for `contact.vcf`.
+
+After the first deploy, point the print sheet at the real address:
+
+```sh
+CARD_URL=https://<your-project>.vercel.app/ node card/build/build.mjs
+node card/build/details.mjs && node card/build/pdf.mjs
+```
