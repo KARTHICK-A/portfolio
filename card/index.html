@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Karthick A — contact card</title>
+<meta name="description" content="Scan to save the contact details of Karthick A, Embedded Systems Engineer at Spark Invotech Pvt Ltd — automotive ECU electronics, PCB design and industrial IoT.">
+<link rel="canonical" href="https://karthick-a.github.io/portfolio/card/">
+<meta name="theme-color" content="#04060c">
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Karthick A — Embedded Systems Engineer">
+<meta property="og:description" content="Scan to save my contact. Automotive ECU electronics, PCB design and industrial IoT.">
+<meta property="og:url" content="https://karthick-a.github.io/portfolio/card/">
+<meta property="og:image" content="https://karthick-a.github.io/portfolio/card/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Karthick A, Embedded Systems Engineer, Spark Invotech Pvt Ltd">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2304060c'/%3E%3Cg fill='%2322e0e6'%3E%3Crect x='2' y='2' width='5' height='5'/%3E%3Crect x='9' y='2' width='5' height='5'/%3E%3Crect x='2' y='9' width='5' height='5'/%3E%3Crect x='9' y='9' width='2' height='2'/%3E%3Crect x='12' y='12' width='2' height='2'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+/* ---- self-hosted faces: one display (Unbounded), one text (IBM Plex Mono) ---- */
+@font-face{font-family:'Unbounded';src:url(fonts/unbounded-latin-var.woff2) format('woff2');
+  font-weight:200 900;font-style:normal;font-display:swap;
+  unicode-range:U+0000-00FF,U+2000-206F,U+2212;}
+@font-face{font-family:'Plex Mono';src:url(fonts/plexmono-400-latin.woff2) format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Plex Mono';src:url(fonts/plexmono-500-latin.woff2) format('woff2');
+  font-weight:500;font-style:normal;font-display:swap;}
+
+/* ---- tokens ----
+   Dark is the default (it matches the owner's portfolio). Light is a real
+   inversion, not a tint. Contrast on --bg, measured:
+     dark  : --ink 17.8:1  --body 11.6:1  --muted 6.4:1  --accent 11.2:1
+     light : --ink 17.4:1  --body  9.6:1  --muted 5.0:1  --accent  5.3:1
+   The QR plate is always #fff / #000 regardless of theme. */
+:root{
+  --bg:#04060c; --plate:#070b14; --line:#1b2437; --line-2:#2a3550;
+  --ink:#edf1fa; --body:#c2cbde; --muted:#8b96af;
+  --accent:#22e0e6; --accent-ink:#04060c;
+  --disp:'Unbounded',system-ui,sans-serif;
+  --text:'Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --pad:20px; --r:4px;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --bg:#eef1f6; --plate:#ffffff; --line:#c9d1e0; --line-2:#aab5c9;
+    --ink:#0a0f1a; --body:#333d51;
+    --muted:#5b667d; --accent:#0d7c85; --accent-ink:#ffffff;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--body);
+  font-family:var(--text);font-size:15px;line-height:1.6;
+  /* faint copper grid — reads as a board substrate, not decoration */
+  background-image:
+    linear-gradient(var(--line) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px;
+  background-position:center top;
+}
+@media (prefers-color-scheme:light){body{background-image:none}}
+main{max-width:520px;margin:0 auto;padding:var(--pad) var(--pad) 56px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ---- identity ---- */
+.id{padding:28px 0 22px;border-bottom:1px solid var(--line-2)}
+.who{display:flex;align-items:center;gap:14px}
+.avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;
+  border:1px solid var(--line-2);flex:0 0 auto;filter:grayscale(1) contrast(1.05)}
+.refdes{font-size:.72rem;letter-spacing:.16em;color:var(--accent);margin:0 0 10px;font-weight:500}
+h1{font-family:var(--disp);font-weight:700;font-size:clamp(1.85rem,8vw,2.6rem);
+   line-height:1;letter-spacing:-.02em;color:var(--ink);margin:0}
+.role{margin:12px 0 0;color:var(--ink);font-weight:500}
+.org{margin:2px 0 0;color:var(--muted)}
+.blurb{margin:12px 0 0;color:var(--body);max-width:34ch}
+
+/* ---- the QR is the hero ---- */
+.stage{margin:26px 0 0}
+.plate{
+  background:#fff;border:1px solid var(--line-2);border-radius:var(--r);
+  padding:18px;display:flex;align-items:center;justify-content:center;
+}
+.plate canvas,.plate svg{display:block;width:100%;height:auto;image-rendering:pixelated}
+.plate .nojs{color:#000;font-size:.8rem;text-align:center;padding:36px 12px;line-height:1.5}
+.caption{display:flex;gap:10px;align-items:baseline;justify-content:space-between;
+  margin:10px 2px 0;font-size:.78rem;color:var(--muted)}
+.caption b{color:var(--ink);font-weight:500;letter-spacing:.04em}
+
+/* ---- controls ---- */
+.seg{display:flex;margin:16px 0 0;border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden}
+.seg button{flex:1;appearance:none;background:transparent;border:0;border-right:1px solid var(--line-2);
+  color:var(--muted);font:inherit;font-size:.78rem;letter-spacing:.06em;padding:11px 8px;cursor:pointer;min-height:44px}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);font-weight:500}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 0}
+.acts a,.acts button{
+  appearance:none;display:flex;align-items:center;justify-content:center;gap:8px;
+  min-height:48px;padding:12px;border:1px solid var(--line-2);border-radius:var(--r);
+  background:var(--plate);color:var(--ink);font:inherit;font-size:.82rem;
+  text-decoration:none;cursor:pointer}
+.acts .primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:500}
+.acts button:hover,.acts a:hover{border-color:var(--accent)}
+.wide{grid-column:1/-1}
+
+/* ---- link list ---- */
+h2{font-family:var(--disp);font-weight:500;font-size:.9rem;color:var(--muted);
+   margin:34px 0 0;letter-spacing:.02em}
+ul{list-style:none;margin:10px 0 0;padding:0;border-top:1px solid var(--line)}
+li{border-bottom:1px solid var(--line)}
+li a{display:flex;align-items:baseline;gap:14px;padding:14px 2px;text-decoration:none;min-height:44px}
+li a:hover .lv{color:var(--accent)}
+.lk{flex:0 0 5.8rem;font-size:.74rem;letter-spacing:.1em;color:var(--muted)}
+.lv{color:var(--ink);word-break:break-word}
+footer{margin:30px 0 0;font-size:.72rem;color:var(--muted);line-height:1.7}
+footer a{color:var(--accent)}
+
+/* ---- badge mode ---- */
+#badge[hidden]{display:none}
+#badge{position:fixed;inset:0;z-index:50;background:#fff;display:flex;
+  align-items:center;justify-content:center;padding:4vmin;cursor:pointer}
+#badge canvas{width:min(92vw,92vh);height:auto;image-rendering:pixelated}
+#badge .hint{position:fixed;left:0;right:0;bottom:12px;text-align:center;
+  color:#555;font-size:.72rem;letter-spacing:.08em}
+
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:var(--r);
+  font-size:.78rem;z-index:60}
+.toast[hidden]{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (min-width:640px){:root{--pad:32px} main{max-width:560px}}
+@media print{body{background:#fff}.seg,.acts,#badge{display:none}}
+</style>
+</head>
+<body>
+<main>
+  <header class="id">
+    <p class="refdes">TP1 · CONTACT</p>
+    <div class="who">
+      <img class="avatar" src="portrait.webp" width="72" height="72" alt="" loading="lazy">
+      <h1>Karthick A</h1>
+    </div>
+    <p class="role">Embedded Systems Engineer</p>
+    <p class="org">Spark Invotech Pvt Ltd · Chennai, India</p>
+    <p class="blurb">Automotive ECU electronics, PCB design and industrial IoT.</p>
+  </header>
+
+  <section class="stage" aria-labelledby="qrh">
+    <h2 id="qrh" class="sr">Scan code</h2>
+    <div class="plate">
+      <canvas id="qr" width="1" height="1" role="img"
+              aria-label="QR code containing the contact details of Karthick A"></canvas>
+      <noscript><p class="nojs">Scannable code needs JavaScript.<br>All contact details are listed below, and
+        <a href="contact.vcf">contact.vcf</a> downloads without it.</p></noscript>
+    </div>
+    <p class="caption"><b id="qrname">CONTACT CARD</b><span id="qrmeta"></span></p>
+
+    <div class="seg" role="group" aria-label="Choose what the code contains">
+      <button type="button" id="tab-vcard" aria-pressed="true">CONTACT</button>
+      <button type="button" id="tab-url" aria-pressed="false">THIS PAGE</button>
+    </div>
+
+    <div class="acts">
+      <a class="primary" href="contact.vcf" download="karthick-a.vcf">Save my contact</a>
+      <button type="button" id="badgebtn">Badge mode</button>
+      <button type="button" id="copybtn" class="wide">Copy email address</button>
+    </div>
+  </section>
+
+  <h2>Direct links</h2>
+  <ul>
+    <li><a href="mailto:karthick24092003@gmail.com"><span class="lk">EMAIL</span><span class="lv">karthick24092003@gmail.com</span></a></li>
+    <li><a href="tel:+917094828457"><span class="lk">PHONE</span><span class="lv">+91 70948 28457</span></a></li>
+    <li><a href="https://wa.me/917094828457" target="_blank" rel="noopener"><span class="lk">WHATSAPP</span><span class="lv">+91 70948 28457</span></a></li>
+    <li><a href="https://karthick-a.github.io/portfolio/" target="_blank" rel="noopener"><span class="lk">PORTFOLIO</span><span class="lv">karthick-a.github.io/portfolio</span></a></li>
+    <li><a href="https://linkedin.com/in/karthick-a-83a352211" target="_blank" rel="noopener"><span class="lk">LINKEDIN</span><span class="lv">in/karthick-a-83a352211</span></a></li>
+    <li><a href="https://github.com/KARTHICK-A" target="_blank" rel="noopener"><span class="lk">GITHUB</span><span class="lv">KARTHICK-A</span></a></li>
+    <li><a href="../assets/docs/Karthick_A_Resume.pdf" download><span class="lk">RÉSUMÉ</span><span class="lv">Karthick_A_Resume.pdf &nbsp;·&nbsp; download</span></a></li>
+  </ul>
+
+  <footer>
+    <p>Works offline once loaded. <a href="print.html">Print sheet</a> — business card and A5 table tent.</p>
+  </footer>
+</main>
+
+<div id="badge" hidden role="dialog" aria-modal="true" aria-label="Full screen code">
+  <canvas id="bqr" width="1" height="1" role="img" aria-label="Full screen QR code"></canvas>
+  <p class="hint">TAP ANYWHERE OR PRESS ESC TO EXIT</p>
+</div>
+<p class="toast" id="toast" role="status" aria-live="polite" hidden></p>
+
+<script src="vendor/qrcode.js"></script>
+<script>
+(function(){
+  var CRLF='\r\n';
+  var VCARD=['BEGIN:VCARD','VERSION:3.0','N:A;Karthick;;;','FN:Karthick A',
+    'TITLE:Embedded Systems Engineer','ORG:Spark Invotech Pvt Ltd',
+    'TEL:+917094828457','EMAIL:karthick24092003@gmail.com',
+    'URL:https://karthick-a.github.io/portfolio/','END:VCARD'].join(CRLF)+CRLF;
+  var PAGE=(location.origin+location.pathname).replace(/index\.html$/,'');
+
+  var mode='vcard';
+  function payload(){return mode==='vcard'?VCARD:PAGE}
+
+  function build(text){
+    var c=qrcode(0,'M'); c.addData(text,'Byte'); c.make(); return c;
+  }
+  // Always dark-on-white: inverted codes fail on a lot of scanners.
+  function paint(cv,code,px){
+    var n=code.getModuleCount(), q=4, size=(n+q*2)*px;
+    cv.width=size; cv.height=size;
+    var g=cv.getContext('2d');
+    g.fillStyle='#fff'; g.fillRect(0,0,size,size);
+    g.fillStyle='#000';
+    for(var r=0;r<n;r++)for(var col=0;col<n;col++)
+      if(code.isDark(r,col)) g.fillRect((col+q)*px,(r+q)*px,px,px);
+    return n;
+  }
+  var meta=document.getElementById('qrmeta'), name=document.getElementById('qrname');
+  function render(){
+    var code=build(payload());
+    var n=paint(document.getElementById('qr'),code,8);
+    name.textContent = mode==='vcard' ? 'CONTACT CARD' : 'THIS PAGE';
+    meta.textContent = 'v'+((n-17)/4)+' · ECC M';
+    if(!badge.hidden) paint(document.getElementById('bqr'),code,12);
+  }
+  function setMode(m){
+    mode=m;
+    tv.setAttribute('aria-pressed',String(m==='vcard'));
+    tu.setAttribute('aria-pressed',String(m==='url'));
+    render();
+  }
+  var tv=document.getElementById('tab-vcard'), tu=document.getElementById('tab-url');
+  tv.onclick=function(){setMode('vcard')}; tu.onclick=function(){setMode('url')};
+
+  var badge=document.getElementById('badge'), badgebtn=document.getElementById('badgebtn');
+  function openBadge(){
+    badge.hidden=false; paint(document.getElementById('bqr'),build(payload()),12);
+    badge.focus&&badge.focus();
+    if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(function(){});
+  }
+  function closeBadge(){
+    badge.hidden=true;
+    if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen().catch(function(){});
+    badgebtn.focus();
+  }
+  badgebtn.onclick=openBadge; badge.onclick=closeBadge;
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!badge.hidden) closeBadge(); });
+
+  var toast=document.getElementById('toast'), tt;
+  function say(msg){ toast.textContent=msg; toast.hidden=false;
+    clearTimeout(tt); tt=setTimeout(function(){toast.hidden=true},2600); }
+  document.getElementById('copybtn').onclick=function(){
+    var mail='karthick24092003@gmail.com';
+    var done=function(){say('Email address copied')};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(mail).then(done,function(){say('Copy failed — '+mail)});
+    } else {
+      var t=document.createElement('textarea'); t.value=mail; document.body.appendChild(t);
+      t.select(); try{document.execCommand('copy');done()}catch(e){say('Copy failed — '+mail)}
+      document.body.removeChild(t);
+    }
+  };
+
+  render();
+  if('serviceWorker' in navigator) addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+})();
+</script>
+</body>
+</html>
