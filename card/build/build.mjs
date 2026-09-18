@@ -65,6 +65,7 @@ const print = `<!doctype html>
   .tent .who{font-size:13pt;line-height:1.5;margin:0 0 5mm}
   .tent .who b{font-size:20pt;display:block}
   .qr{display:block}
+  .tent .qr{margin:0 auto}
   @media print{html,body{background:#fff}.sheet{padding:0;max-width:none}.piece{border-color:#ccc}}
 </style>
 </head>

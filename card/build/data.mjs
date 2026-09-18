@@ -22,6 +22,10 @@ export const person = {
   github: 'https://github.com/KARTHICK-A',
 };
 
+// vCard 3.0 text values must escape backslash, comma, semicolon and newline,
+// or a comma silently truncates the value in strict parsers.
+const esc = (v) => String(v).replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\n/g, '\\n');
+
 // The QR payload is deliberately leaner than the .vcf file: parameters such as
 // TYPE=INTERNET are dropped because they cost bytes and change nothing for any
 // scanner. The .vcf download carries the full record.
@@ -30,8 +34,8 @@ export const vcardQR = [
   'VERSION:3.0',
   `N:${person.last};${person.first};;;`,
   `FN:${person.fullName}`,
-  `TITLE:${person.title}`,
-  `ORG:${person.company}`,
+  `TITLE:${esc(person.title)}`,
+  `ORG:${esc(person.company)}`,
   `TEL:${person.phoneDigits}`,
   `EMAIL:${person.email}`,
   `URL:${person.website}`,
@@ -44,15 +48,15 @@ export const vcardFile = [
   'VERSION:3.0',
   `N:${person.last};${person.first};;;`,
   `FN:${person.fullName}`,
-  `TITLE:${person.title}`,
-  `ORG:${person.company}`,
+  `TITLE:${esc(person.title)}`,
+  `ORG:${esc(person.company)}`,
   `TEL;TYPE=CELL,VOICE:${person.phoneDigits}`,
   `EMAIL;TYPE=INTERNET,PREF:${person.email}`,
   `URL:${person.website}`,
-  `ADR;TYPE=WORK:;;;Chennai;Tamil Nadu;;India`,
+  'ADR;TYPE=WORK:;;;Chennai;Tamil Nadu;;India',
   `X-SOCIALPROFILE;TYPE=linkedin:${person.linkedin}`,
   `X-SOCIALPROFILE;TYPE=github:${person.github}`,
-  `NOTE:${person.blurb}`,
+  `NOTE:${esc(person.blurb)}`,
   'END:VCARD',
 ].join('\r\n') + '\r\n';
 
