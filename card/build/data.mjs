@@ -13,7 +13,8 @@ export const person = {
   company: 'Spark Invotech Pvt Ltd',
   blurb: 'Automotive ECU electronics, PCB design and industrial IoT.',
   city: 'Chennai, India',
-  email: 'karthick24092003@gmail.com',
+  email: 'karthick.rd.dev@gmail.com',        // technical
+  emailBiz: 'sparkinvotech.ceo@gmail.com',    // business / everything else
   phone: '+91 70948 28457',
   phoneDigits: '+917094828457',
   whatsapp: '917094828457',
@@ -38,6 +39,7 @@ export const vcardQR = [
   `ORG:${esc(person.company)}`,
   `TEL:${person.phoneDigits}`,
   `EMAIL:${person.email}`,
+  `EMAIL:${person.emailBiz}`,
   `URL:${person.website}`,
   'END:VCARD',
 ].join('\r\n') + '\r\n';
@@ -52,6 +54,7 @@ export const vcardFile = [
   `ORG:${esc(person.company)}`,
   `TEL;TYPE=CELL,VOICE:${person.phoneDigits}`,
   `EMAIL;TYPE=INTERNET,PREF:${person.email}`,
+  `EMAIL;TYPE=INTERNET,WORK:${person.emailBiz}`,
   `URL:${person.website}`,
   'ADR;TYPE=WORK:;;;Chennai;Tamil Nadu;;India',
   `X-SOCIALPROFILE;TYPE=linkedin:${person.linkedin}`,
@@ -62,6 +65,7 @@ export const vcardFile = [
 
 export const links = [
   { label: 'Email',    sub: person.email,              href: `mailto:${person.email}`, ext: false },
+  { label: 'Business', sub: person.emailBiz,           href: `mailto:${person.emailBiz}`, ext: false },
   { label: 'Phone',    sub: person.phone,              href: `tel:${person.phoneDigits}`, ext: false },
   { label: 'WhatsApp', sub: person.phone,              href: `https://wa.me/${person.whatsapp}`, ext: true },
   { label: 'Website',  sub: 'karthick-a.github.io/portfolio', href: person.website, ext: true },

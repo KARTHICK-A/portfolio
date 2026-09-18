@@ -42,7 +42,8 @@ const projects = [
 ];
 
 const rows = [
-  ['Phone', person.phone], ['WhatsApp', person.phone], ['Email', person.email],
+  ['Phone', person.phone], ['WhatsApp', person.phone], ['Email · technical', person.email],
+  ['Email · business', person.emailBiz],
   ['Portfolio', 'karthick-a.github.io/portfolio'],
   ['LinkedIn', 'linkedin.com/in/karthick-a-83a352211'],
   ['GitHub', 'github.com/KARTHICK-A'],
