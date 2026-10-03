@@ -10,12 +10,14 @@
 <meta property="og:title" content="Karthick A — Embedded Systems Engineer">
 <meta property="og:description" content="Automotive ECU electronics · Custom PCB design · Embedded C/C++ · Industrial IoT">
 <meta property="og:url" content="https://karthick-a.github.io/portfolio/">
-<meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg">
-<meta property="og:image:alt" content="Karthick A, Embedded Systems Engineer">
+<meta property="og:image" content="https://karthick-a.github.io/portfolio/assets/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Karthick A, Embedded Systems Engineer — automotive ECU electronics, PCB design and industrial IoT">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Karthick A — Embedded Systems Engineer">
 <meta name="twitter:description" content="Automotive ECU electronics · Custom PCB design · Embedded C/C++ · Industrial IoT">
-<meta name="twitter:image" content="https://karthick-a.github.io/portfolio/assets/images/profile/karthick.jpg">
+<meta name="twitter:image" content="https://karthick-a.github.io/portfolio/assets/images/og.png">
 <meta name="theme-color" content="#04060c">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322e0e6'/%3E%3Cstop offset='.5' stop-color='%235b7cff'/%3E%3Cstop offset='1' stop-color='%23a96bff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='7' fill='%2304060c'/%3E%3Ccircle cx='7.5' cy='7.5' r='2.5' fill='none' stroke='url(%23g)' stroke-width='1.8'/%3E%3Ccircle cx='24.5' cy='24.5' r='2.5' fill='none' stroke='url(%23g)' stroke-width='1.8'/%3E%3Cpath d='M9.5 7.5h10v10h6M7.5 9.5v8h8v8' fill='none' stroke='url(%23g)' stroke-width='1.8'/%3E%3C/svg%3E">
 <script>document.documentElement.classList.add('js');</script>
@@ -35,7 +37,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles.css?v=10">
+<link rel="stylesheet" href="./styles.css?v=11">
 </head>
 <body>
 
@@ -59,6 +61,7 @@
     <a href="#board">[ ENGINEER ]</a>
     <a href="#contact">[ CONTACT ]</a>
   </nav>
+  <button class="tb-pause mono" id="pauseAnim" type="button" aria-pressed="false" hidden>PAUSE MOTION</button>
   <span class="tb-state"><i class="led" aria-hidden="true"></i> PWR·OK</span>
   <i class="tb-trace" id="progress" aria-hidden="true"></i>
 </header>
@@ -81,9 +84,18 @@
     </div>
   </div>
   <div class="hero-board">
-    <canvas id="pcb3d" aria-label="Interactive 3D circuit board — each chip opens a project" role="img"></canvas>
+    <canvas id="pcb3d" role="img" aria-label="Decorative 3D circuit board. Each chip stands for one project; the same projects are listed as links below the board."></canvas>
     <div id="tip" class="mono" hidden></div>
-    <p class="mono board-hint" aria-hidden="true">DRAG TO ROTATE · TAP A CHIP TO JUMP TO ITS PROJECT</p>
+    <nav class="chip-index mono" id="chipIndex" aria-label="Projects">
+      <a href="#p-U1" data-ref="U1">U1<span class="vh"> Dual-fuel ECU</span></a>
+      <a href="#p-U2" data-ref="U2">U2<span class="vh"> Injector multiplier</span></a>
+      <a href="#p-U3" data-ref="U3">U3<span class="vh"> Acoustic vehicle alerting system</span></a>
+      <a href="#p-U4" data-ref="U4">U4<span class="vh"> Oil control unit</span></a>
+      <a href="#p-U5" data-ref="U5">U5<span class="vh"> Compressor monitoring</span></a>
+      <a href="#p-U6" data-ref="U6">U6<span class="vh"> Cold chamber logger</span></a>
+      <a href="#p-U7" data-ref="U7">U7<span class="vh"> Production quantity monitoring</span></a>
+    </nav>
+    <p class="mono board-hint" aria-hidden="true">DRAG TO ROTATE · TAP A CHIP OR REFDES TO OPEN ITS PROJECT</p>
   </div>
 </section>
 
@@ -96,8 +108,8 @@
 
 <!-- absolute-maximum-ratings style spec strip -->
 <section class="specs" aria-label="Key figures">
-  <div class="spec"><strong>7</strong><span class="mono">products designed<br>end-to-end</span></div>
-  <div class="spec"><strong>3</strong><span class="mono">commercial deployments<br>Delphi · Indo Tech · FI Auto</span></div>
+  <div class="spec"><strong>7</strong><span class="mono">products designed<br>prototype → delivered</span></div>
+  <div class="spec"><strong>3</strong><span class="mono">client engagements<br>1 delivered · 2 POC</span></div>
   <div class="spec"><strong>16</strong><span class="mono">injector channels<br>driven from 4</span></div>
   <div class="spec"><strong>70 °C</strong><span class="mono">validated span<br>+50 to −20 °C</span></div>
   <div class="spec"><strong>1</strong><span class="mono">marine engine<br>running on my ECU</span></div>
@@ -113,7 +125,7 @@
 
   <div class="pcards">
 
-    <article class="pcard featured" data-ref="U1" style="--i:0">
+    <article class="pcard featured" id="p-U1" data-ref="U1" style="--i:0">
       <div class="pcard-media">
         <button class="gshot hero-shot" type="button" data-full="./assets/images/products/ecu/field-test.jpg" data-alt="ECU running on a marine engine at sea"><img src="./assets/images/products/ecu/field-test.webp" alt="ECU running on a marine engine at sea" loading="lazy" decoding="async"><span class="gtag mono">FIELD TEST</span></button>
         <span class="mono pcard-ref">U1</span>
@@ -127,7 +139,7 @@
       </div>
     </article>
 
-    <article class="pcard featured" data-ref="U2" style="--i:1">
+    <article class="pcard featured" id="p-U2" data-ref="U2" style="--i:1">
       <div class="pcard-media">
         <button class="gshot hero-shot" type="button" data-full="./assets/images/products/injector/product.jpg" data-alt="Injector multiplier unit with 4 output harnesses"><img src="./assets/images/products/injector/product.webp" alt="Injector multiplier unit with 4 output harnesses" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
         <span class="mono pcard-ref">U2</span>
@@ -140,9 +152,9 @@
       </div>
     </article>
 
-    <article class="pcard" data-ref="U3" style="--i:2">
-      <div class="pcard-media no-photo" aria-hidden="true">
-        <span class="mono np-ref">U3</span>
+    <article class="pcard" id="p-U3" data-ref="U3" style="--i:2">
+      <div class="pcard-media no-photo">
+        <span class="mono np-ref" aria-hidden="true">U3</span>
         <span class="mono pcard-ref">U3</span>
         <span class="mono pcard-tag">EV SAFETY · PROTOTYPE</span>
       </div>
@@ -153,7 +165,7 @@
       </div>
     </article>
 
-    <article class="pcard" data-ref="U4" style="--i:3">
+    <article class="pcard" id="p-U4" data-ref="U4" style="--i:3">
       <div class="pcard-media">
         <button class="gshot hero-shot" type="button" data-full="./assets/images/products/ocu/product.jpg" data-alt="Oil Control Unit enclosure"><img src="./assets/images/products/ocu/product.webp" alt="Oil Control Unit enclosure" loading="lazy" decoding="async"><span class="gtag mono">PRODUCT</span></button>
         <span class="mono pcard-ref">U4</span>
@@ -167,7 +179,7 @@
       </div>
     </article>
 
-    <article class="pcard" data-ref="U5" style="--i:4">
+    <article class="pcard" id="p-U5" data-ref="U5" style="--i:4">
       <div class="pcard-media">
         <button class="gshot hero-shot" type="button" data-full="./assets/images/products/compressor/deployed.jpg" data-alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel"><img src="./assets/images/products/compressor/deployed.webp" alt="Compressor monitoring unit deployed in an Indo Tech Transformers panel" loading="lazy" decoding="async"><span class="gtag mono">DEPLOYED</span></button>
         <span class="mono pcard-ref">U5</span>
@@ -181,9 +193,9 @@
       </div>
     </article>
 
-    <article class="pcard featured" data-ref="U6" style="--i:5">
-      <div class="pcard-media no-photo" aria-hidden="true">
-        <span class="mono np-ref">U6</span>
+    <article class="pcard featured" id="p-U6" data-ref="U6" style="--i:5">
+      <div class="pcard-media no-photo">
+        <span class="mono np-ref" aria-hidden="true">U6</span>
         <span class="mono pcard-ref">U6</span>
         <span class="mono pcard-tag"><b class="star" title="Featured project">★</b> DELPHI TVS · DELIVERED</span>
       </div>
@@ -194,9 +206,9 @@
       </div>
     </article>
 
-    <article class="pcard" data-ref="U7" style="--i:6">
-      <div class="pcard-media no-photo" aria-hidden="true">
-        <span class="mono np-ref">U7</span>
+    <article class="pcard" id="p-U7" data-ref="U7" style="--i:6">
+      <div class="pcard-media no-photo">
+        <span class="mono np-ref" aria-hidden="true">U7</span>
         <span class="mono pcard-ref">U7</span>
         <span class="mono pcard-tag">FI AUTO COMPONENTS · POC DONE</span>
       </div>
@@ -302,7 +314,7 @@
   <p id="lbCap" class="mono lb-cap"></p>
 </div>
 
-<script src="./assets/vendor/three.min.js?v=10" defer></script>
-<script src="./script.js?v=10" defer></script>
+<script src="./assets/vendor/three.min.js?v=11" defer></script>
+<script src="./script.js?v=11" defer></script>
 </body>
 </html>
