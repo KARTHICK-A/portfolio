@@ -468,6 +468,7 @@ function initBoard() {
   });
   canvas.addEventListener('pointerdown', e => { dragging = true; moved = false; px = e.clientX; py = e.clientY; });
   addEventListener('pointerup', () => { dragging = false; });
+  addEventListener('pointercancel', () => { dragging = false; });   // browser took the gesture (e.g. vertical scroll)
   canvas.addEventListener('pointerleave', () => { if (tip) tip.hidden = true; hover = null; });
   canvas.addEventListener('click', e => {
     if (moved) return;
@@ -476,6 +477,11 @@ function initBoard() {
     const hit = ray.intersectObjects(hotspots, false)[0];
     if (hit) openProject(hit.object.userData.ref);
   });
+
+  /* GPU reset / tab eviction: stop drawing, then resume when the context returns */
+  let lost = false;
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; sync(); });
+  canvas.addEventListener('webglcontextrestored', () => { lost = false; sync(); });
 
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -528,7 +534,7 @@ function initBoard() {
     renderer.render(scene, camera);
   }
   function sync() {
-    const run = visible && !document.hidden;
+    const run = visible && !document.hidden && !lost;
     if (run && raf === null) { last = performance.now(); raf = requestAnimationFrame(frame); }
     else if (!run && raf !== null) { cancelAnimationFrame(raf); raf = null; }
   }
@@ -540,8 +546,8 @@ function initBoard() {
   sync();
 }
 
-if (document.readyState === 'complete') initBoard();
-else addEventListener('load', initBoard);
+/* script is deferred, so the DOM is ready: no need to wait for every image and font */
+initBoard();
 
 /* ---------- current-flow rail ----------
    A live copper bus that runs the height of the page. The trace shape is
