@@ -2,7 +2,7 @@
 
 Working log of how this site got its current shape, and the review that drives it.
 Static HTML/CSS/JS on GitHub Pages, no build step. three.js is vendored
-(`assets/vendor/`) so there is no CDN dependency.
+(`assets/vendor/`) so there is no CDN dependency for the library. Google Fonts CSS is still a third-party request.
 
 ## Design history
 
@@ -16,7 +16,7 @@ Static HTML/CSS/JS on GitHub Pages, no build step. three.js is vendored
 ## Decisions on record
 
 - **No dates anywhere.** Projects and experience are presented by outcome, not chronology (owner request).
-- **The board is the navigation.** Each IC on the 3D hero board (U1–U6) opens its project row. The BOM list duplicates this fully, so keyboard/no-WebGL users lose nothing.
+- **The board is the navigation — and never the only one.** Each IC on the 3D hero board (U1–U7) opens its project card. A real link row (`#chipIndex`) under the board does the same for keyboard, screen-reader and touch users, and the cards themselves are plain DOM.
 - **Reduced motion ≠ less content.** `prefers-reduced-motion` keeps the board visible and clickable but stops all self-running animation (rotation, LED, ticker, typing, count-up). No three.js / no WebGL removes the board panel entirely.
 - **Single page, single CSS file.** GitHub Pages with no build step; the CSS is organized tokens → base → components → motion → responsive instead of split files.
 - **Copilot suggestions adopted on merit, not blindly:** IntersectionObserver guards and empty-panel fallback were real bugs (fixed); "remove board for reduced motion" was declined for the reason above.
@@ -57,7 +57,7 @@ Static HTML/CSS/JS on GitHub Pages, no build step. three.js is vendored
 - [x] New motion: boot-sequence typing, spec count-up, trace-draw section rules, breathing hero glow — all disabled under reduced motion
 - [x] CSS architecture + contrast ratios documented in file header
 
-## Lighthouse expectations (GitHub Pages, throttled mobile)
+## Lighthouse expectations (NOT measured — targets only; no Lighthouse run has been recorded)
 
 - Performance ~85–92 (three.js ~160 KB gzip is the floor; everything else is < 40 KB total)
 - Accessibility 95+ · Best Practices 95+ · SEO 100
@@ -73,3 +73,25 @@ assets/docs/Karthick_A_Resume.pdf
 assets/images/profile/karthick.{jpg,webp}
 robots.txt · sitemap.xml · NOTES.md (this file)
 ```
+
+## Standards pass (v6.2) — what changed
+
+Driven by a review against WCAG 2.2 AA, Core Web Vitals and OWASP basics.
+
+- [x] Status tags on U3/U6/U7 no longer `aria-hidden` (client + maturity text was invisible to screen readers)
+- [x] Canvas label now says what it is (decorative); `#chipIndex` U1–U7 links give keyboard/AT/touch access
+- [x] **Pause motion** switch (WCAG 2.2.2), persisted in `localStorage` (try/catch), hidden when the OS already asks for reduced motion; board spin is accumulated so pausing never snaps it
+- [x] U7 added to the 3D board (was 6 chips for 7 projects)
+- [x] Spec strip no longer says "3 commercial deployments": it is 3 client engagements, 1 delivered, 2 POC, matching the card tags
+- [x] Smallest text raised to 12px (was ~8–11px in places)
+- [x] Wide 1200×630 `og.png` for link previews (was a 288×512 portrait)
+- [x] Removed dead `openFirstRow()`; docs corrected
+
+## Known gaps / next (not done)
+
+1. Replace the deprecated UMD `three.min.js` (r160) with ES modules + a bundler (tree-shaken, current release)
+2. Render on demand (the loop still renders every frame while visible), instance repeated meshes, adaptive pixel ratio
+3. `webglcontextlost` / `pointercancel` handling; start the board on DOMContentLoaded rather than `load`
+4. Self-host fonts (already done in `card/fonts`), add a meta CSP
+5. Tests/CI: Playwright smoke, axe-core, Lighthouse CI
+6. Confirm the three client names may be shown publicly

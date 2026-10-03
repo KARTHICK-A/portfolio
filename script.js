@@ -5,6 +5,26 @@
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* User-controlled motion switch (WCAG 2.2.2 Pause, Stop, Hide). The OS setting
+   is honoured first; this lets everyone else stop the self-running motion too.
+   `calm` is read live by the render loops. */
+let calm = false;
+try { calm = localStorage.getItem('calm') === '1'; } catch (e) { /* storage blocked */ }
+const pauseBtn = document.getElementById('pauseAnim');
+function setCalm(on) {
+  calm = on;
+  document.documentElement.classList.toggle('calm', on);
+  if (pauseBtn) {
+    pauseBtn.setAttribute('aria-pressed', String(on));
+  }
+  try { localStorage.setItem('calm', on ? '1' : '0'); } catch (e) { /* storage blocked */ }
+}
+if (pauseBtn && !reduce) {
+  pauseBtn.hidden = false;
+  pauseBtn.addEventListener('click', () => setCalm(!calm));
+  setCalm(calm);
+}
+
 /* worldY positions where a section just "powered on" — drained by the flow
    rail below to spark a pulse there, so the current visibly arrives at a
    section the moment it reveals */
@@ -148,20 +168,16 @@ function openProject(ref) {
   setTimeout(() => card.classList.remove('flash'), 1200);
 }
 
-/* ---------- project rows open on click only ----------
-   An earlier build advanced these automatically as you scrolled: whichever
-   row sat nearest the viewport centre opened itself and the previous one
-   closed. Each of those transitions changes page height by several hundred
-   pixels, so the content under the reader's finger jumped and photos
-   appeared unbidden — the page felt like it was scrolling itself. Reading
-   is now entirely reader-driven; the first row starts open so the section
-   still reads at a glance. */
-(function openFirstRow() {
-  const rows = [...document.querySelectorAll('#work .row')];
-  if (!rows.length || rows.some(r => r.open)) return;
-  rows[0].open = true;
-  rows[0].classList.add('is-active');
-})();
+/* ---------- chip index: the board's keyboard / screen-reader / touch twin ---------- */
+document.querySelectorAll('#chipIndex a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    openProject(a.dataset.ref);
+    const card = document.getElementById('p-' + a.dataset.ref);
+    // move focus with the scroll so keyboard users land on the project
+    if (card) { card.setAttribute('tabindex', '-1'); card.focus({ preventScroll: true }); }
+  });
+});
 
 /* ---------- 3D board ---------- */
 function initBoard() {
@@ -268,7 +284,8 @@ function initBoard() {
     { ref: 'U3', label: 'U3 · AVAS (EV SAFETY)', x: 3.0, z: -1.4, w: 0.95, d: 0.8 },
     { ref: 'U4', label: 'U4 · OIL CONTROL UNIT', x: -1.1, z: 1.5, w: 1.0, d: 0.85 },
     { ref: 'U5', label: 'U5 · TRANSFORMER MONITOR', x: 1.7, z: 1.1, w: 1.2, d: 1.0 },
-    { ref: 'U6', label: 'U6 · COLD CHAMBER LOGGER', x: 3.3, z: 1.9, w: 1.0, d: 0.9 }
+    { ref: 'U6', label: 'U6 · COLD CHAMBER LOGGER', x: 3.3, z: 1.9, w: 1.0, d: 0.9 },
+    { ref: 'U7', label: 'U7 · PRODUCTION MONITOR', x: 1.6, z: -0.35, w: 0.9, d: 0.7 }
   ];
 
   /* Deterministic orthogonal routing between the ICs and the header — real
@@ -281,7 +298,8 @@ function initBoard() {
     [[2.3, 1.1], [3.3, 1.1], [3.3, 1.45]],
     [[-1.6, 1.5], [-3.4, 1.5], [-3.4, -1.4], [-2.9, -1.4]],
     [[3.0, -1.0], [3.0, 0.3], [4.0, 0.3]],
-    [[0.6, -1.4], [0.6, -0.4], [-0.2, -0.4], [-0.2, 1.5], [-1.6, 1.5]]
+    [[0.6, -1.4], [0.6, -0.4], [-0.2, -0.4], [-0.2, 1.5], [-1.6, 1.5]],
+    [[2.05, -0.35], [2.65, -0.35], [2.65, 0.9], [2.3, 0.9]]
   ];
   const pulses = [];
   const pulseGeo = new THREE.BoxGeometry(0.16, 0.05, 0.09);
@@ -372,7 +390,7 @@ function initBoard() {
     board.add(ring);
   });
   const smdMat = new THREE.MeshStandardMaterial({ color: 0x252b34, roughness: 0.55, metalness: 0.2 });
-  const SMD = [[-4.0, 0.9], [-3.2, -0.3], [-1.9, 2.3], [-0.9, -2.4], [0.2, 2.5], [1.4, -0.9],
+  const SMD = [[-4.0, 0.9], [-3.2, -0.3], [-1.9, 2.3], [-0.9, -2.4], [0.2, 2.5], [1.0, -1.1],
     [2.1, 2.4], [2.8, -2.5], [3.6, -0.6], [4.1, 1.7], [-4.1, -1.9], [1.0, 0.8]];
   SMD.forEach(([x, z], i) => {
     const r = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.07, 0.13), smdMat);
@@ -450,6 +468,7 @@ function initBoard() {
   });
   canvas.addEventListener('pointerdown', e => { dragging = true; moved = false; px = e.clientX; py = e.clientY; });
   addEventListener('pointerup', () => { dragging = false; });
+  addEventListener('pointercancel', () => { dragging = false; });   // browser took the gesture (e.g. vertical scroll)
   canvas.addEventListener('pointerleave', () => { if (tip) tip.hidden = true; hover = null; });
   canvas.addEventListener('click', e => {
     if (moved) return;
@@ -458,6 +477,11 @@ function initBoard() {
     const hit = ray.intersectObjects(hotspots, false)[0];
     if (hit) openProject(hit.object.userData.ref);
   });
+
+  /* GPU reset / tab eviction: stop drawing, then resume when the context returns */
+  let lost = false;
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; sync(); });
+  canvas.addEventListener('webglcontextrestored', () => { lost = false; sync(); });
 
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -474,7 +498,7 @@ function initBoard() {
   addEventListener('resize', resize);
   resize();
 
-  let visible = true, last = performance.now(), raf = null;
+  let visible = true, last = performance.now(), raf = null, spin = 0;
 
   function frame() {
     raf = requestAnimationFrame(frame);
@@ -484,7 +508,8 @@ function initBoard() {
 
     cx += (tx - cx) * 0.06;
     cy += (ty - cy) * 0.06;
-    board.rotation.y = cx + (reduce ? 0 : (now / 1000) * 0.035);
+    if (!reduce && !calm) spin += dt * 0.035;   // accumulated, so pausing never snaps the board
+    board.rotation.y = cx + spin;
     board.rotation.x = -0.42 + cy;
 
     hotspots.forEach(h => {
@@ -494,7 +519,7 @@ function initBoard() {
       h.userData.mats.forEach(m => { m.emissiveIntensity += ((on ? 0.42 : 0) - m.emissiveIntensity) * 0.18; });
     });
 
-    if (!reduce) {
+    if (!reduce && !calm) {
       pulses.forEach(p => {
         p.t = (p.t + dt * p.speed) % p.total;
         const seg = p.segs.find(s => p.t >= s.start && p.t <= s.start + s.len) || p.segs[0];
@@ -509,7 +534,7 @@ function initBoard() {
     renderer.render(scene, camera);
   }
   function sync() {
-    const run = visible && !document.hidden;
+    const run = visible && !document.hidden && !lost;
     if (run && raf === null) { last = performance.now(); raf = requestAnimationFrame(frame); }
     else if (!run && raf !== null) { cancelAnimationFrame(raf); raf = null; }
   }
@@ -521,8 +546,8 @@ function initBoard() {
   sync();
 }
 
-if (document.readyState === 'complete') initBoard();
-else addEventListener('load', initBoard);
+/* script is deferred, so the DOM is ready: no need to wait for every image and font */
+initBoard();
 
 /* ---------- current-flow rail ----------
    A live copper bus that runs the height of the page. The trace shape is
@@ -588,7 +613,7 @@ else addEventListener('load', initBoard);
 
   (function loop() {
     requestAnimationFrame(loop);
-    if (!active || document.hidden) return;
+    if (!active || calm || document.hidden) return;
     const now = performance.now();
     const dt = Math.min((now - lastT) / 1000, 0.05);
     lastT = now;
